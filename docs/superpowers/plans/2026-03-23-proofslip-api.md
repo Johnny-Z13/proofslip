@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript, Hono, Drizzle ORM, Neon Postgres, Vercel, nanoid
 
-**Spec:** `docs/superpowers/specs/2026-03-23-agent-receipts-api-design.md`
+**Spec:** `docs/superpowers/specs/2026-03-23-proofslip-api-design.md`
 
 ---
 
@@ -31,7 +31,7 @@ Two endpoints, verify page with viral CTA, manually seeded API keys, deployed to
 ## File Structure (Phase 1)
 
 ```
-agent-receipt-api/
+proofslip/
 ├── api/
 │   └── index.ts                  # Vercel serverless entry point
 ├── src/
@@ -81,7 +81,7 @@ agent-receipt-api/
 - [ ] **Step 1: Initialize project**
 
 ```bash
-cd D:/Projects/agent-receipt-api
+cd D:/Projects/proofslip
 npm init -y
 ```
 
@@ -1263,7 +1263,7 @@ npx vercel --prod
 
 During setup:
 - Link to your Vercel account
-- Set environment variables: `DATABASE_URL`, `BASE_URL` (your Vercel URL e.g. `https://agent-receipts.vercel.app`)
+- Set environment variables: `DATABASE_URL`, `BASE_URL` (your Vercel URL e.g. `https://proofslip.vercel.app`)
 
 - [ ] **Step 7: Verify production deployment**
 

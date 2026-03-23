@@ -1,10 +1,10 @@
-# **Agent Receipts API PRD**
+# **ProofSlip API PRD**
 
 24-hour live receipts for agent workflows, with optional saved and archive tiers
 
 ## **1\. Product summary**
 
-Agent Receipts API is a simple infrastructure API for issuing short-lived, machine-readable receipts that help agents verify what just happened, what was approved, what was allowed, and whether it is safe to continue.
+ProofSlip API is a simple infrastructure API for issuing short-lived, machine-readable receipts that help agents verify what just happened, what was approved, what was allowed, and whether it is safe to continue.
 
 By default, receipts are ephemeral and expire after 24 hours. This keeps the product lightweight, cheap to run, easy to adopt, and less burdened by long-term storage and legal/compliance overhead.
 
@@ -78,7 +78,7 @@ The full enterprise/audit solution is heavy and overkill for many early agent wo
 
 ## **3\. Vision**
 
-Agent Receipts API becomes the lightweight transactional memory layer for agents.
+ProofSlip API becomes the lightweight transactional memory layer for agents.
 
 It gives developers and products a clean way to issue short-lived receipts around:
 
@@ -202,7 +202,7 @@ Most receipts should disappear unless the customer intentionally saves them.
 
 ## **7\. Non-goals**
 
-Agent Receipts API is not:
+ProofSlip API is not:
 
 * a full audit/compliance system for MVP
 
@@ -1536,7 +1536,7 @@ Mitigation: default ephemerality, paid retention only, no broad compliance promi
 
 ### **One-line pitch**
 
-Agent Receipts API gives agents short-lived receipts they can check before continuing — so workflows stay safe, resumable, and duplicate-free.
+ProofSlip API gives agents short-lived receipts they can check before continuing — so workflows stay safe, resumable, and duplicate-free.
 
 ### **Homepage headline**
 

@@ -4,7 +4,7 @@ export function renderNotFoundPage(): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt Not Found | Agent Receipts</title>
+  <title>Receipt Not Found | ProofSlip</title>
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@latest/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face {
@@ -101,12 +101,12 @@ export function renderNotFoundPage(): string {
 <body>
   <div class="receipt">
     <div class="receipt-header">
-      <h1>Agent Receipts</h1>
+      <h1>ProofSlip</h1>
       <div class="expired-badge">Expired / Not Found</div>
     </div>
     <div class="message">This receipt does not exist, has expired, or has been deleted.<br>Receipts expire 24 hours after creation.</div>
     <div class="receipt-footer">
-      <a href="/">agentreceipts.com</a>
+      <a href="/">proofslip.ai</a>
       <div class="tagline">ephemeral verification for agent workflows</div>
     </div>
   </div>

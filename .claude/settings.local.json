@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:departuremono.com)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(timeout 8 npx tsx src/dev.ts)",
+      "Bash(npx vitest:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

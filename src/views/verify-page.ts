@@ -16,7 +16,7 @@ export function renderVerifyPage(receipt: {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt ${escapeHtml(receipt.id)} | Agent Receipts</title>
+  <title>Receipt ${escapeHtml(receipt.id)} | ProofSlip</title>
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@latest/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face {
@@ -155,7 +155,7 @@ export function renderVerifyPage(receipt: {
 <body>
   <div class="receipt">
     <div class="receipt-header">
-      <h1>Agent Receipts</h1>
+      <h1>ProofSlip</h1>
       <div class="verified-badge">Verified</div>
     </div>
     <div class="receipt-id">${escapeHtml(receipt.id)}</div>
@@ -167,7 +167,7 @@ export function renderVerifyPage(receipt: {
     <div class="row"><span class="label">Expires</span><span class="value">${new Date(receipt.expiresAt).toUTCString()}</span></div>
     ${payloadHtml}
     <div class="receipt-footer">
-      <a href="/">agentreceipts.com</a>
+      <a href="/">proofslip.ai</a>
       <div class="tagline">ephemeral verification for agent workflows</div>
     </div>
   </div>

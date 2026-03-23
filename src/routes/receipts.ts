@@ -42,7 +42,7 @@ receiptsRouter.post('/', async (c) => {
         return errorResponse(c, 409, 'idempotency_conflict', 'A receipt with this idempotency_key already exists with different content.')
       }
 
-      const baseUrl = process.env.BASE_URL || 'https://agentreceipts.com'
+      const baseUrl = process.env.BASE_URL || 'https://proofslip.ai'
       return c.json({
         receipt_id: receipt.id,
         type: receipt.type,
@@ -78,7 +78,7 @@ receiptsRouter.post('/', async (c) => {
     .where(eq(apiKeys.id, apiKeyRecord.id))
     .catch(() => {})
 
-  const baseUrl = process.env.BASE_URL || 'https://agentreceipts.com'
+  const baseUrl = process.env.BASE_URL || 'https://proofslip.ai'
 
   return c.json({
     receipt_id: receiptId,

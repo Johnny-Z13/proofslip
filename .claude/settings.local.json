@@ -10,7 +10,22 @@
       "Bash(npx drizzle-kit:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx tsx:*)",
+      "Bash(find /d/Projects/proof-slip/src -type f -name *.ts)",
+      "Bash(curl:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "Bash(bash \"C:/Users/johnn/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh\" --project-dir \"D:/Projects/proof-slip\" 2>&1)",
+      "Bash(npm cache:*)",
+      "WebFetch(domain:api.github.com)",
+      "Read(//d/tmp/**)",
+      "Bash(unzip -l departure.zip)",
+      "Bash(unzip -o departure.zip \"DepartureMono-1.500/DepartureMono-Regular.woff2\")",
+      "Bash(mkdir -p \"D:/Projects/proof-slip/src/public/fonts\")",
+      "Bash(cp \"DepartureMono-1.500/DepartureMono-Regular.woff2\" \"D:/Projects/proof-slip/src/public/fonts/\")",
+      "Bash(npm search:*)",
+      "Bash(base64 -w0 \"D:/Projects/proof-slip/src/public/fonts/DepartureMono-Regular.woff2\")"
     ]
   }
 }

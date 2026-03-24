@@ -4,8 +4,11 @@ import { receipts } from '../db/schema.js'
 import { eq } from 'drizzle-orm'
 import { renderVerifyPage } from '../views/verify-page.js'
 import { renderNotFoundPage } from '../views/not-found-page.js'
+import { rateLimitByIp } from '../middleware/rate-limit.js'
 
 const verifyRouter = new Hono()
+
+verifyRouter.use('*', rateLimitByIp(120))
 
 verifyRouter.get('/:receiptId', async (c) => {
   const receiptId = c.req.param('receiptId')

@@ -4,7 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { Hono } from 'hono'
 import { receiptsRouter } from './routes/receipts.js'
 import { verifyRouter } from './routes/verify.js'
+import { authRouter } from './routes/auth.js'
+import { cronRouter } from './routes/cron.js'
 import { renderLandingPage } from './views/landing-page.js'
+import { rateLimitByIp } from './middleware/rate-limit.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const fontPath = resolve(__dirname, 'public/fonts/DepartureMono-Regular.woff2')
@@ -22,5 +25,7 @@ app.get('/health', (c) => c.json({ status: 'ok' }))
 app.route('/v1/receipts', receiptsRouter)
 app.route('/v1/verify', verifyRouter)
 app.route('/verify', verifyRouter)
+app.route('/v1/auth', authRouter)
+app.route('/cron', cronRouter)
 
 export default app

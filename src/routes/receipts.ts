@@ -6,10 +6,12 @@ import { generateReceiptId } from '../lib/ids.js'
 import { validateCreateReceipt, isValidationError } from '../lib/validate.js'
 import { errorResponse } from '../lib/errors.js'
 import { apiKeyAuth } from '../middleware/api-key-auth.js'
+import { rateLimitByApiKey } from '../middleware/rate-limit.js'
 
 const receiptsRouter = new Hono()
 
 receiptsRouter.use('*', apiKeyAuth)
+receiptsRouter.use('*', rateLimitByApiKey)
 
 receiptsRouter.post('/', async (c) => {
   const body = await c.req.json().catch(() => null)

@@ -5,11 +5,11 @@ export function renderLandingPage(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProofSlip — 24-hour receipts for agent workflows</title>
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@latest/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face {
       font-family: 'Departure Mono';
-      src: url('https://cdn.jsdelivr.net/gh/rektdeckard/departure-mono@latest/fonts/DepartureMono-Regular.woff2') format('woff2');
+      src: url('/fonts/DepartureMono-Regular.woff2') format('woff2');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
@@ -33,13 +33,15 @@ export function renderLandingPage(): string {
 
     /* Hero */
     .hero {
+      text-align: center;
       margin-bottom: 4rem;
     }
     .hero-brand {
-      font-size: 1.5rem;
+      font-size: 5.5rem;
       font-weight: normal;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
     }
     .hero-tagline {
       font-size: 0.95rem;
@@ -63,10 +65,10 @@ export function renderLandingPage(): string {
       margin-bottom: 4rem;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
     }
     .section-label {
-      font-size: 0.85rem;
+      font-size: 1.4rem;
       color: #555;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -202,7 +204,7 @@ export function renderLandingPage(): string {
       margin-bottom: 0.5rem;
     }
     .step-title {
-      font-size: 0.95rem;
+      font-size: 1.4rem;
       color: #e0e0e0;
       margin-bottom: 0.75rem;
       font-weight: normal;
@@ -244,8 +246,8 @@ export function renderLandingPage(): string {
       padding: 1rem;
     }
     .use-case-type {
-      font-size: 0.7rem;
-      color: #555;
+      font-size: 1.4rem;
+      color: #e0e0e0;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       margin-bottom: 0.4rem;

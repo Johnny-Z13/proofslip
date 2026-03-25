@@ -7,6 +7,7 @@ import { validateCreateReceipt, isValidationError } from '../lib/validate.js'
 import { errorResponse } from '../lib/errors.js'
 import { apiKeyAuth } from '../middleware/api-key-auth.js'
 import { rateLimitByApiKey } from '../middleware/rate-limit.js'
+import { isTerminal, getNextPollAfterSeconds } from '../lib/polling.js'
 
 const receiptsRouter = new Hono()
 
@@ -54,6 +55,8 @@ receiptsRouter.post('/', async (c) => {
         created_at: receipt.createdAt.toISOString(),
         expires_at: receipt.expiresAt.toISOString(),
         idempotency_key: receipt.idempotencyKey,
+        is_terminal: isTerminal(receipt.type, receipt.status),
+        next_poll_after_seconds: getNextPollAfterSeconds(receipt.type, receipt.status),
       }, 200)
     }
   }
@@ -91,6 +94,8 @@ receiptsRouter.post('/', async (c) => {
     created_at: new Date().toISOString(),
     expires_at: expiresAt.toISOString(),
     idempotency_key: validated.idempotency_key || null,
+    is_terminal: isTerminal(validated.type, validated.status),
+    next_poll_after_seconds: getNextPollAfterSeconds(validated.type, validated.status),
   }, 201)
 })
 

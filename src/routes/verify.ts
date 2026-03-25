@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import { renderVerifyPage } from '../views/verify-page.js'
 import { renderNotFoundPage } from '../views/not-found-page.js'
 import { rateLimitByIp } from '../middleware/rate-limit.js'
+import { isTerminal, getNextPollAfterSeconds } from '../lib/polling.js'
 
 const verifyRouter = new Hono()
 
@@ -35,6 +36,9 @@ verifyRouter.get('/:receiptId', async (c) => {
     return c.html(renderNotFoundPage(), 404)
   }
 
+  const terminal = isTerminal(receipt.type, receipt.status)
+  const nextPoll = getNextPollAfterSeconds(receipt.type, receipt.status)
+
   const wantsJson =
     c.req.header('Accept')?.includes('application/json') ||
     c.req.query('format') === 'json'
@@ -51,6 +55,8 @@ verifyRouter.get('/:receiptId', async (c) => {
       created_at: receipt.createdAt.toISOString(),
       expires_at: receipt.expiresAt.toISOString(),
       expired: false,
+      is_terminal: terminal,
+      next_poll_after_seconds: nextPoll,
     })
   }
 

@@ -1,11 +1,16 @@
 {
+  "functions": {
+    "api/**": {
+      "includeFiles": "src/public/**"
+    }
+  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/api" }
   ],
   "crons": [
     {
       "path": "/cron/cleanup",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }

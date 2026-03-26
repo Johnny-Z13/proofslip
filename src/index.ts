@@ -12,8 +12,16 @@ import { cors, requestId, bodyLimit, securityHeaders } from './middleware/securi
 import { requestLogger } from './middleware/logger.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const fontPath = resolve(__dirname, 'public/fonts/DepartureMono-Regular.woff2')
-const fontBuffer = readFileSync(fontPath)
+const fontBuffer = (() => {
+  const candidates = [
+    resolve(__dirname, 'public/fonts/DepartureMono-Regular.woff2'),
+    resolve(process.cwd(), 'src/public/fonts/DepartureMono-Regular.woff2'),
+  ]
+  for (const p of candidates) {
+    try { return readFileSync(p) } catch {}
+  }
+  return null
+})()
 
 const app = new Hono()
 
@@ -44,6 +52,7 @@ app.onError((err, c) => {
 
 // ─── Routes ──────────────────────────────────────────────────────
 app.get('/fonts/DepartureMono-Regular.woff2', (c) => {
+  if (!fontBuffer) return c.text('Font not found', 404)
   c.header('Content-Type', 'font/woff2')
   c.header('Cache-Control', 'public, max-age=31536000, immutable')
   return c.body(fontBuffer)

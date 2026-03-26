@@ -194,6 +194,88 @@ npm run dev
 | `npm run db:migrate` | Run database migrations |
 | `npm run db:seed -- <email>` | Create an API key for the given email |
 
+## Deployment Architecture
+
+```mermaid
+graph TB
+    subgraph "Your Machine"
+        GIT["Git Repo<br/>(source of truth)"]
+    end
+
+    subgraph "GitHub"
+        REPO["github.com/your-org/proof-slip"]
+    end
+
+    subgraph "Vercel"
+        AUTO["Auto-Build on Push"]
+        API["Serverless Functions<br/>(Hono API)"]
+        LP["Landing Page<br/>(served from API)"]
+        CRON["Hourly Cron<br/>POST /cron/cleanup"]
+    end
+
+    subgraph "Neon"
+        DB[("PostgreSQL<br/>receipts + api_keys")]
+    end
+
+    GIT -- "git push" --> REPO
+    REPO -- "webhook triggers" --> AUTO
+    AUTO --> API
+    AUTO --> LP
+    API -- "DATABASE_URL" --> DB
+    CRON -- "deletes expired" --> DB
+
+    style GIT fill:#1a1a2e,color:#fff
+    style REPO fill:#161b22,color:#fff
+    style AUTO fill:#000,color:#fff
+    style API fill:#000,color:#fff
+    style LP fill:#000,color:#fff
+    style CRON fill:#000,color:#fff
+    style DB fill:#0a2e1a,color:#fff
+```
+
+**Environment variables on Vercel:**
+| Variable | Where to set |
+|----------|-------------|
+| `DATABASE_URL` | Vercel → Settings → Environment Variables (copy from Neon dashboard) |
+| `BASE_URL` | `https://proofslip.ai` (or your custom domain) |
+| `CRON_SECRET` | Generate a random token, set in Vercel env vars |
+
+## API Request/Response Flows
+
+```mermaid
+sequenceDiagram
+    participant Agent as Agent / Client
+    participant API as Vercel API
+    participant DB as Neon Postgres
+
+    note over Agent,DB: 1. Signup
+    Agent->>API: POST /v1/auth/signup<br/>{"email": "..."}
+    API->>DB: INSERT api_keys
+    API-->>Agent: {"api_key": "ak_..."}
+
+    note over Agent,DB: 2. Create Receipt
+    Agent->>API: POST /v1/receipts<br/>Bearer ak_...<br/>{"type","status","summary",...}
+    API->>API: validate, rate-limit, auth
+    API->>DB: INSERT receipts
+    API-->>Agent: {"receipt_id": "rct_..."<br/>"verify_url", "is_terminal",<br/>"next_poll_after_seconds"}
+
+    note over Agent,DB: 3a. Verify (full data)
+    Agent->>API: GET /v1/verify/rct_...?format=json
+    API->>DB: SELECT receipt
+    API-->>Agent: {full receipt data}
+
+    note over Agent,DB: 3b. Poll (lightweight)
+    loop until is_terminal = true
+        Agent->>API: GET /v1/receipts/rct_.../status
+        API->>DB: SELECT status fields only
+        API-->>Agent: {"status","is_terminal",<br/>"next_poll_after_seconds"}
+        Note right of Agent: wait next_poll_after_seconds
+    end
+
+    note over API,DB: 4. Cleanup (hourly cron)
+    API->>DB: DELETE WHERE expires_at < now()
+```
+
 ## Architecture
 
 ```

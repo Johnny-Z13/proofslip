@@ -1,11 +1,6 @@
 {
-  "functions": {
-    "api/**": {
-      "includeFiles": "src/public/**"
-    }
-  },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api" }
+    { "source": "/(.*)", "destination": "/api/index" }
   ],
   "crons": [
     {

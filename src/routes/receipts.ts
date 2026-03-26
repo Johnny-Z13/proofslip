@@ -41,7 +41,7 @@ receiptsRouter.post('/', async (c) => {
       const receipt = existing[0]
 
       // Detect conflict: same key but different content
-      if (receipt.type !== validated.type || receipt.status !== validated.status || receipt.summary !== validated.summary) {
+      if (receipt.type !== validated.type || receipt.status !== validated.status || receipt.summary !== validated.summary || receipt.audience !== (validated.audience || null)) {
         return errorResponse(c, 409, 'idempotency_conflict', 'A receipt with this idempotency_key already exists with different content.')
       }
 
@@ -55,6 +55,7 @@ receiptsRouter.post('/', async (c) => {
         created_at: receipt.createdAt.toISOString(),
         expires_at: receipt.expiresAt.toISOString(),
         idempotency_key: receipt.idempotencyKey,
+        ...(receipt.audience ? { audience: receipt.audience } : {}),
         is_terminal: isTerminal(receipt.type, receipt.status),
         next_poll_after_seconds: getNextPollAfterSeconds(receipt.type, receipt.status),
       }, 200)
@@ -74,6 +75,7 @@ receiptsRouter.post('/', async (c) => {
     payload: validated.payload || null,
     ref: validated.ref || null,
     idempotencyKey: validated.idempotency_key || null,
+    audience: validated.audience || null,
     expiresAt,
   })
 
@@ -94,6 +96,7 @@ receiptsRouter.post('/', async (c) => {
     created_at: new Date().toISOString(),
     expires_at: expiresAt.toISOString(),
     idempotency_key: validated.idempotency_key || null,
+    ...(validated.audience ? { audience: validated.audience } : {}),
     is_terminal: isTerminal(validated.type, validated.status),
     next_poll_after_seconds: getNextPollAfterSeconds(validated.type, validated.status),
   }, 201)

@@ -7,6 +7,7 @@ export function renderVerifyPage(receipt: {
   summary: string
   payload: unknown
   ref: unknown
+  audience?: string | null
   createdAt: string
   expiresAt: string
 }): string {
@@ -27,15 +28,28 @@ export function renderVerifyPage(receipt: {
     expired: false,
   }
 
-  const verifyUrl = `https://proofslip.ai/verify/${receipt.id}`
+  const baseUrl = process.env.BASE_URL || 'https://proofslip.ai'
+  const verifyUrl = `${baseUrl}/verify/${receipt.id}`
   const tweetText = encodeURIComponent(`Verified receipt: ${receipt.summary}\n\n${verifyUrl}\n\nvia @proofslip`)
+
+  const ogTags = receipt.audience === 'human' ? `
+  <meta property="og:title" content="${escapeHtml(receipt.summary)}">
+  <meta property="og:description" content="${escapeHtml(receipt.type)} receipt — ${escapeHtml(receipt.status)}">
+  <meta property="og:image" content="${baseUrl}/og-image.png">
+  <meta property="og:url" content="${verifyUrl}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@proofslip">
+  <meta name="twitter:title" content="${escapeHtml(receipt.summary)}">
+  <meta name="twitter:description" content="${escapeHtml(receipt.type)} receipt — ${escapeHtml(receipt.status)}">
+  <meta name="twitter:image" content="${baseUrl}/og-image.png">` : ''
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Receipt ${escapeHtml(receipt.id)} | ProofSlip</title>
+  <title>Receipt ${escapeHtml(receipt.id)} | ProofSlip</title>${ogTags}
   <style>
     ${FONT_FACE_CSS}
     * { margin: 0; padding: 0; box-sizing: border-box; }

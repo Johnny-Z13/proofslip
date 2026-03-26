@@ -132,6 +132,7 @@ curl https://proofslip.ai/v1/receipts/rct_abc123/status
 | `ref` | No | Workflow references: `run_id`, `agent_id`, `action_id`, `workflow_id`, `session_id` |
 | `expires_in` | No | TTL in seconds (60–86400). Default: 86400 (24h) |
 | `idempotency_key` | No | Prevents duplicate receipts on retry |
+| `audience` | No | Set to `"human"` to enrich the verify page with OG/Twitter social card meta tags |
 
 ### Rate Limits
 

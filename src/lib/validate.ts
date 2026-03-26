@@ -16,6 +16,7 @@ export interface CreateReceiptInput {
   }
   expires_in?: number
   idempotency_key?: string
+  audience?: 'human'
 }
 
 export interface ValidationError {
@@ -67,6 +68,12 @@ export function validateCreateReceipt(body: unknown): CreateReceiptInput | Valid
     }
   }
 
+  if (b.audience !== undefined) {
+    if (b.audience !== 'human') {
+      return { error: 'validation_error', message: 'audience must be "human" if provided.' }
+    }
+  }
+
   return {
     type: b.type as ReceiptType,
     status: b.status as string,
@@ -75,6 +82,7 @@ export function validateCreateReceipt(body: unknown): CreateReceiptInput | Valid
     ref: b.ref as CreateReceiptInput['ref'],
     expires_in: b.expires_in as number | undefined,
     idempotency_key: b.idempotency_key as string | undefined,
+    audience: b.audience as 'human' | undefined,
   }
 }
 

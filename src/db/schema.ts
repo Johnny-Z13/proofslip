@@ -9,6 +9,7 @@ export const receipts = pgTable('receipts', {
   payload: jsonb('payload'),
   ref: jsonb('ref'),
   idempotencyKey: text('idempotency_key'),
+  audience: text('audience'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
 }, (table) => [

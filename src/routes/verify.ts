@@ -67,6 +67,7 @@ verifyRouter.get('/:receiptId', async (c) => {
     summary: receipt.summary,
     payload: receipt.payload,
     ref: receipt.ref,
+    audience: receipt.audience,
     createdAt: receipt.createdAt.toISOString(),
     expiresAt: receipt.expiresAt.toISOString(),
   }))

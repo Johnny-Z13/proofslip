@@ -240,6 +240,7 @@ graph TB
 | `DATABASE_URL` | Vercel → Settings → Environment Variables (copy from Neon dashboard) |
 | `BASE_URL` | `https://proofslip.ai` (or your custom domain) |
 | `CRON_SECRET` | Generate a random token, set in Vercel env vars |
+| `NODEJS_HELPERS` | Set to `0` (required for Hono zero-config deployment) |
 
 ## API Request/Response Flows
 
@@ -306,12 +307,14 @@ src/
 │   ├── rate-limit.ts     # In-memory sliding window tracker
 │   └── errors.ts         # Error response builder
 └── views/
+    ├── font.ts           # Departure Mono as inline base64
+    ├── og-image.ts       # Branded SVG for social cards
     ├── landing-page.ts   # HTML homepage
-    ├── verify-page.ts    # Receipt display (shareable)
+    ├── verify-page.ts    # Receipt display (shareable, OG tags when audience=human)
     └── not-found-page.ts # 404 receipt page
 ```
 
-**Stack**: Hono + Drizzle ORM + Neon Postgres + Vercel Serverless
+**Stack**: Hono + Drizzle ORM + Neon Postgres + Vercel Serverless (zero-config)
 
 ## Design Principles
 

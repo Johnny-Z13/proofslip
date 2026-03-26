@@ -7,6 +7,37 @@ export function renderLandingPage(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProofSlip — 24-hour receipts for agent workflows</title>
+  <meta name="description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next. Create, verify, expire. That's it.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://proofslip.ai">
+  <meta property="og:title" content="ProofSlip — 24-hour receipts for agent workflows">
+  <meta property="og:description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next.">
+  <meta property="og:image" content="https://proofslip.ai/og-image.png">
+  <meta property="og:url" content="https://proofslip.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ProofSlip">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@proofslip">
+  <meta name="twitter:title" content="ProofSlip — 24-hour receipts for agent workflows">
+  <meta name="twitter:description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next.">
+  <meta name="twitter:image" content="https://proofslip.ai/og-image.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230a0a0a'/><text x='50' y='68' text-anchor='middle' font-size='52' font-family='monospace' fill='%23e0e0e0'>P</text></svg>">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ProofSlip",
+    "description": "24-hour ephemeral receipts for AI agent workflows. Create, verify, expire.",
+    "url": "https://proofslip.ai",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
   <style>
     ${FONT_FACE_CSS}
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -286,10 +317,35 @@ export function renderLandingPage(): string {
       border-top: 1px solid #1a1a1a;
       width: 100%;
     }
+
+    /* Mobile responsive */
+    @media (max-width: 640px) {
+      body { padding: 2rem 0.75rem; }
+      .hero { margin-bottom: 2.5rem; }
+      .hero-brand { font-size: 2.5rem; letter-spacing: 0.15em; }
+      .hero-tagline { font-size: 0.8rem; }
+      .hero-headline { font-size: 1.1rem; }
+      .hero-subcopy { font-size: 0.8rem; }
+      .section-label { font-size: 1.1rem; }
+      .receipt { padding: 1.5rem 1rem; max-width: 100%; }
+      .row .value { max-width: 60%; font-size: 0.7rem; }
+      .step { padding: 1rem; }
+      .step-title { font-size: 1.1rem; }
+      .code-block { font-size: 0.65rem; padding: 0.75rem; }
+      .use-case-type { font-size: 1.1rem; }
+      .how-it-works, .use-cases, .showcase { margin-bottom: 2.5rem; }
+      .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-brand { font-size: 2rem; }
+      .row { flex-direction: column; gap: 0.2rem; }
+      .row .value { text-align: left; max-width: 100%; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
 
     <!-- Hero -->
     <section class="hero">
@@ -417,7 +473,7 @@ export function renderLandingPage(): string {
       proofslip.ai — receipts expire, trust compounds.
     </footer>
 
-  </div>
+  </main>
 </body>
 </html>`
 }

@@ -59,9 +59,10 @@ app.onError((err, c) => {
 // ─── Routes ──────────────────────────────────────────────────────
 app.get('/fonts/DepartureMono-Regular.woff2', (c) => {
   if (!fontBuffer) return c.text('Font not found', 404)
+  const buf = fontBuffer
   c.header('Content-Type', 'font/woff2')
   c.header('Cache-Control', 'public, max-age=31536000, immutable')
-  return c.body(fontBuffer)
+  return c.body(buf)
 })
 app.get('/', (c) => c.html(renderLandingPage()))
 app.get('/health', (c) => c.json({ status: 'ok' }))

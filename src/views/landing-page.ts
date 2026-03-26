@@ -1,3 +1,5 @@
+import { FONT_FACE_CSS } from './font.js'
+
 export function renderLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -5,15 +7,8 @@ export function renderLandingPage(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProofSlip — 24-hour receipts for agent workflows</title>
-  <link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <style>
-    @font-face {
-      font-family: 'Departure Mono';
-      src: url('/fonts/DepartureMono-Regular.woff2') format('woff2');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
+    ${FONT_FACE_CSS}
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Departure Mono', monospace;

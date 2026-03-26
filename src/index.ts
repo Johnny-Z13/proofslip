@@ -1,6 +1,3 @@
-import { readFileSync, existsSync } from 'node:fs'
-import { resolve, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { Hono } from 'hono'
 import { receiptsRouter } from './routes/receipts.js'
 import { verifyRouter } from './routes/verify.js'
@@ -10,24 +7,6 @@ import { statusRouter } from './routes/status.js'
 import { renderLandingPage } from './views/landing-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
-
-let fontBuffer: Buffer | null = null
-try {
-  const __dirname = dirname(fileURLToPath(import.meta.url))
-  const candidates = [
-    resolve(__dirname, 'public', 'fonts', 'DepartureMono-Regular.woff2'),
-    resolve(process.cwd(), 'src', 'public', 'fonts', 'DepartureMono-Regular.woff2'),
-    resolve(process.cwd(), 'public', 'fonts', 'DepartureMono-Regular.woff2'),
-  ]
-  for (const p of candidates) {
-    if (existsSync(p)) {
-      fontBuffer = readFileSync(p)
-      break
-    }
-  }
-} catch {
-  // Font loading failed — app still works, just without the font route
-}
 
 const app = new Hono()
 
@@ -57,12 +36,6 @@ app.onError((err, c) => {
 })
 
 // ─── Routes ──────────────────────────────────────────────────────
-app.get('/fonts/DepartureMono-Regular.woff2', (c) => {
-  if (!fontBuffer) return c.text('Font not found', 404)
-  c.header('Content-Type', 'font/woff2')
-  c.header('Cache-Control', 'public, max-age=31536000, immutable')
-  return c.body(fontBuffer as unknown as ArrayBuffer)
-})
 app.get('/', (c) => c.html(renderLandingPage()))
 app.get('/health', (c) => c.json({ status: 'ok' }))
 app.route('/v1/receipts', statusRouter)

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Hono } from 'hono'
@@ -11,17 +11,23 @@ import { renderLandingPage } from './views/landing-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const fontBuffer = (() => {
+let fontBuffer: Buffer | null = null
+try {
+  const __dirname = dirname(fileURLToPath(import.meta.url))
   const candidates = [
-    resolve(__dirname, 'public/fonts/DepartureMono-Regular.woff2'),
-    resolve(process.cwd(), 'src/public/fonts/DepartureMono-Regular.woff2'),
+    resolve(__dirname, 'public', 'fonts', 'DepartureMono-Regular.woff2'),
+    resolve(process.cwd(), 'src', 'public', 'fonts', 'DepartureMono-Regular.woff2'),
+    resolve(process.cwd(), 'public', 'fonts', 'DepartureMono-Regular.woff2'),
   ]
   for (const p of candidates) {
-    try { return readFileSync(p) } catch {}
+    if (existsSync(p)) {
+      fontBuffer = readFileSync(p)
+      break
+    }
   }
-  return null
-})()
+} catch {
+  // Font loading failed — app still works, just without the font route
+}
 
 const app = new Hono()
 

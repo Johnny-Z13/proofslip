@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import { generateApiKey, generateApiKeyId, getKeyPrefix } from '../lib/ids.js'
 import { sha256 } from '../lib/hash.js'
 import { errorResponse } from '../lib/errors.js'
+import { sendEmail, renderWelcomeEmail } from '../lib/email.js'
 import { rateLimitByIp } from '../middleware/rate-limit.js'
 
 const authRouter = new Hono()
@@ -19,6 +20,7 @@ authRouter.post('/signup', async (c) => {
   }
 
   const email = body.email.trim().toLowerCase()
+  const source = typeof body.source === 'string' ? body.source : 'api'
 
   // Basic email format check
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -49,6 +51,21 @@ authRouter.post('/signup', async (c) => {
     usageResetAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   })
 
+  if (source === 'web') {
+    // Human path: email the key, don't expose in response
+    await sendEmail({
+      to: email,
+      subject: 'Your ProofSlip API Key',
+      html: renderWelcomeEmail(key),
+    })
+
+    return c.json({
+      tier: 'free',
+      message: 'API key sent to your email.',
+    }, 201)
+  }
+
+  // Agent/dev path: return key in response
   return c.json({
     api_key: key,
     tier: 'free',

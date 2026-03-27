@@ -395,42 +395,6 @@ export function renderLandingPage(): string {
       letter-spacing: 0.1em;
       margin-bottom: 0.5rem;
     }
-    .key-value {
-      font-size: 0.75rem;
-      color: #16a34a;
-      word-break: break-all;
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
-    }
-    .key-copy {
-      background: none;
-      border: 1px solid #222;
-      color: #666;
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.7rem;
-      padding: 0.3rem 0.75rem;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    .key-copy:hover { border-color: #16a34a; color: #16a34a; }
-    .key-warning {
-      font-size: 0.8rem;
-      color: #a85454;
-      margin-bottom: 1.5rem;
-      font-style: italic;
-    }
-    .key-quickstart {
-      text-align: left;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .key-quickstart .code-block {
-      font-size: 0.65rem;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
     .signup-error-msg {
       font-size: 0.85rem;
       color: #a85454;
@@ -468,7 +432,6 @@ export function renderLandingPage(): string {
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
       .signup-row { flex-direction: column; }
       .signup-input { border-right: 1px solid #222; }
-      .key-value { font-size: 0.65rem; }
     }
 
     @media (max-width: 380px) {
@@ -642,15 +605,10 @@ export function renderLandingPage(): string {
       </div>
       <div id="signup-result" style="display:none">
         <div class="key-display">
-          <div class="key-label">Your API key</div>
-          <div class="key-value" id="key-value"></div>
-          <button class="key-copy" onclick="copyKey()">Copy</button>
+          <div class="key-label" style="color:#16a34a;font-size:0.85rem;margin-bottom:0.75rem">Check your email</div>
+          <div style="font-size:0.8rem;color:#888;line-height:1.6;">Your API key has been sent to <strong id="sent-email" style="color:#e0e0e0"></strong>.<br>It looks like a receipt — you'll recognize it.</div>
         </div>
-        <div class="key-warning">Save this now. It cannot be retrieved later.</div>
-        <div class="key-quickstart">
-          <div class="key-label">Quick test</div>
-          <div class="code-block" id="quickstart-curl"></div>
-        </div>
+        <div class="cta-subtext" style="margin-top:0.75rem">Didn't get it? Check spam, or sign up via curl for instant access.</div>
       </div>
       <div id="signup-error" style="display:none">
         <div class="signup-error-msg" id="signup-error-msg"></div>
@@ -666,7 +624,6 @@ export function renderLandingPage(): string {
   </main>
   <script>
     var SIGNUP_URL = "/v1/auth/signup";
-    var RECEIPTS_URL = "https://proofslip.ai/v1/receipts";
     async function doSignup() {
       var email = document.getElementById("signup-email").value.trim();
       if (!email) return;
@@ -677,7 +634,7 @@ export function renderLandingPage(): string {
         var res = await fetch(SIGNUP_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email })
+          body: JSON.stringify({ email: email, source: "web" })
         });
         var data = await res.json();
         if (!res.ok) {
@@ -687,12 +644,7 @@ export function renderLandingPage(): string {
           return;
         }
         document.getElementById("signup-form").style.display = "none";
-        document.getElementById("key-value").textContent = data.api_key;
-        document.getElementById("quickstart-curl").textContent =
-          "curl -X POST " + RECEIPTS_URL + " \\\\" + "\\n" +
-          "  -H \\"Authorization: Bearer " + data.api_key + "\\" \\\\" + "\\n" +
-          "  -H \\"Content-Type: application/json\\" \\\\" + "\\n" +
-          '  -d \'{"type":"action","status":"success","summary":"My first receipt"}' + "'";
+        document.getElementById("sent-email").textContent = email;
         document.getElementById("signup-result").style.display = "block";
       } catch (err) {
         document.getElementById("signup-form").style.display = "none";
@@ -702,14 +654,6 @@ export function renderLandingPage(): string {
         btn.disabled = false;
         btn.textContent = "Get key";
       }
-    }
-    function copyKey() {
-      var key = document.getElementById("key-value").textContent;
-      navigator.clipboard.writeText(key).then(function() {
-        var btn = document.querySelector(".key-copy");
-        btn.textContent = "Copied";
-        setTimeout(function() { btn.textContent = "Copy"; }, 2000);
-      });
     }
     function resetSignup() {
       document.getElementById("signup-error").style.display = "none";

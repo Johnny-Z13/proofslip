@@ -351,9 +351,9 @@ export function renderLandingPage(): string {
     }
     .signup-input::placeholder { color: #444; }
     .cta-button {
-      background: #fafaf5;
-      color: #0a0a0a;
-      border: 1px solid #fafaf5;
+      background: #16a34a;
+      color: #fff;
+      border: 1px solid #16a34a;
       padding: 0.85rem 1.5rem;
       font-family: 'Departure Mono', monospace;
       font-size: 0.85rem;
@@ -362,8 +362,8 @@ export function renderLandingPage(): string {
       white-space: nowrap;
     }
     .cta-button:hover {
-      background: #e8e8e0;
-      border-color: #e8e8e0;
+      background: #15803d;
+      border-color: #15803d;
     }
     .cta-button:disabled {
       opacity: 0.5;
@@ -631,7 +631,7 @@ export function renderLandingPage(): string {
 
     <!-- CTA / Signup -->
     <section class="cta" id="signup">
-      <div class="section-label">Get your API key</div>
+      <div class="section-label" style="color: #16a34a">Get your API key</div>
       <div id="signup-form">
         <div class="signup-row">
           <input type="email" id="signup-email" placeholder="you@example.com" class="signup-input" autocomplete="email">
@@ -665,56 +665,58 @@ export function renderLandingPage(): string {
 
   </main>
   <script>
+    var SIGNUP_URL = "/v1/auth/signup";
+    var RECEIPTS_URL = "https://proofslip.ai/v1/receipts";
     async function doSignup() {
-      const email = document.getElementById('signup-email').value.trim();
+      var email = document.getElementById("signup-email").value.trim();
       if (!email) return;
-      const btn = document.getElementById('signup-btn');
+      var btn = document.getElementById("signup-btn");
       btn.disabled = true;
-      btn.textContent = '...';
+      btn.textContent = "...";
       try {
-        const res = await fetch('/v1/auth/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        var res = await fetch(SIGNUP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: email })
         });
-        const data = await res.json();
+        var data = await res.json();
         if (!res.ok) {
-          document.getElementById('signup-form').style.display = 'none';
-          document.getElementById('signup-error-msg').textContent = data.message || 'Something went wrong.';
-          document.getElementById('signup-error').style.display = 'block';
+          document.getElementById("signup-form").style.display = "none";
+          document.getElementById("signup-error-msg").textContent = data.message || "Something went wrong.";
+          document.getElementById("signup-error").style.display = "block";
           return;
         }
-        document.getElementById('signup-form').style.display = 'none';
-        document.getElementById('key-value').textContent = data.api_key;
-        document.getElementById('quickstart-curl').textContent =
-          'curl -X POST https://proofslip.ai/v1/receipts \\\\\\n' +
-          '  -H "Authorization: Bearer ' + data.api_key + '" \\\\\\n' +
-          '  -H "Content-Type: application/json" \\\\\\n' +
-          '  -d \'{"type":"action","status":"success","summary":"My first receipt"}\'';
-        document.getElementById('signup-result').style.display = 'block';
+        document.getElementById("signup-form").style.display = "none";
+        document.getElementById("key-value").textContent = data.api_key;
+        document.getElementById("quickstart-curl").textContent =
+          "curl -X POST " + RECEIPTS_URL + " \\\\" + "\\n" +
+          "  -H \\"Authorization: Bearer " + data.api_key + "\\" \\\\" + "\\n" +
+          "  -H \\"Content-Type: application/json\\" \\\\" + "\\n" +
+          '  -d \'{"type":"action","status":"success","summary":"My first receipt"}' + "'";
+        document.getElementById("signup-result").style.display = "block";
       } catch (err) {
-        document.getElementById('signup-form').style.display = 'none';
-        document.getElementById('signup-error-msg').textContent = 'Network error. Try again.';
-        document.getElementById('signup-error').style.display = 'block';
+        document.getElementById("signup-form").style.display = "none";
+        document.getElementById("signup-error-msg").textContent = "Network error. Try again.";
+        document.getElementById("signup-error").style.display = "block";
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Get key';
+        btn.textContent = "Get key";
       }
     }
     function copyKey() {
-      const key = document.getElementById('key-value').textContent;
-      navigator.clipboard.writeText(key).then(() => {
-        const btn = document.querySelector('.key-copy');
-        btn.textContent = 'Copied';
-        setTimeout(() => btn.textContent = 'Copy', 2000);
+      var key = document.getElementById("key-value").textContent;
+      navigator.clipboard.writeText(key).then(function() {
+        var btn = document.querySelector(".key-copy");
+        btn.textContent = "Copied";
+        setTimeout(function() { btn.textContent = "Copy"; }, 2000);
       });
     }
     function resetSignup() {
-      document.getElementById('signup-error').style.display = 'none';
-      document.getElementById('signup-form').style.display = 'block';
+      document.getElementById("signup-error").style.display = "none";
+      document.getElementById("signup-form").style.display = "block";
     }
-    document.getElementById('signup-email').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') doSignup();
+    document.getElementById("signup-email").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") doSignup();
     });
   </script>
 </body>

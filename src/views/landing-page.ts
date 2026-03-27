@@ -80,6 +80,12 @@ export function renderLandingPage(): string {
       line-height: 1.5;
       margin-bottom: 1rem;
     }
+    .hero-plain {
+      font-size: 0.95rem;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
     .hero-pain {
       font-size: 0.9rem;
       color: #a85454;
@@ -215,6 +221,38 @@ export function renderLandingPage(): string {
       text-transform: uppercase;
     }
     .receipt-footer a:hover { color: #1a1a1a; }
+
+    /* Comparison */
+    .comparison {
+      margin-bottom: 4rem;
+    }
+    .comparison-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .comparison-item {
+      border: 1px solid #1a1a1a;
+      padding: 1rem;
+    }
+    .comparison-what {
+      font-size: 0.9rem;
+      color: #e0e0e0;
+      margin-bottom: 0.4rem;
+    }
+    .comparison-problem {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.6;
+    }
+    .comparison-punchline {
+      font-size: 0.85rem;
+      color: #888;
+      line-height: 1.6;
+      padding: 1rem;
+      border-left: 2px solid #16a34a;
+    }
 
     /* How it works */
     .how-it-works {
@@ -425,7 +463,8 @@ export function renderLandingPage(): string {
       .step-title { font-size: 1.1rem; }
       .code-block { font-size: 0.65rem; padding: 0.75rem; }
       .use-case-type { font-size: 1.1rem; }
-      .how-it-works, .use-cases, .showcase, .trust-section { margin-bottom: 2.5rem; }
+      .how-it-works, .use-cases, .showcase, .trust-section, .comparison { margin-bottom: 2.5rem; }
+      .hero-plain { font-size: 0.85rem; }
       .hero-pain { font-size: 0.8rem; }
       .trust-q { font-size: 0.8rem; }
       .trust-a { font-size: 0.75rem; }
@@ -449,6 +488,7 @@ export function renderLandingPage(): string {
       <div class="hero-brand">ProofSlip</div>
       <div class="hero-tagline">ephemeral verification for agent workflows</div>
       <h1 class="hero-headline">24-hour receipts your agents can check before they act.</h1>
+      <p class="hero-plain">A short-lived proof token that one agent creates and another verifies — before it does anything irreversible.</p>
       <p class="hero-pain">Your agent executed twice. The approval expired but nobody checked. A workflow resumed from stale state and charged the customer again.</p>
       <p class="hero-subcopy">ProofSlip issues verifiable receipts with a built-in expiry window. Your agents check the receipt before acting. No valid receipt, no action. No stale state, no replay attacks, no "I thought it was approved."</p>
     </section>
@@ -482,6 +522,26 @@ export function renderLandingPage(): string {
           <a href="/">proofslip.ai</a>
         </div>
       </div>
+    </section>
+
+    <!-- Why not just... -->
+    <section class="comparison">
+      <div class="section-label">Why not just use...</div>
+      <div class="comparison-grid">
+        <div class="comparison-item">
+          <div class="comparison-what">A database flag?</div>
+          <div class="comparison-problem">Flags don't expire, don't travel between services, and don't tell the next agent <em>when</em> the state changed. You end up building TTL logic, polling, and cleanup yourself.</div>
+        </div>
+        <div class="comparison-item">
+          <div class="comparison-what">A webhook?</div>
+          <div class="comparison-problem">Webhooks push events but don't prove they happened. If the receiver was down, the event is lost. There's no artifact the next agent can check independently.</div>
+        </div>
+        <div class="comparison-item">
+          <div class="comparison-what">A log?</div>
+          <div class="comparison-problem">Logs record history. They don't answer "is this still valid right now?" An agent can't query a log line with a URL and get back a yes/no with an expiry window.</div>
+        </div>
+      </div>
+      <div class="comparison-punchline">Logs tell you what happened. Flags tell you current state. ProofSlip gives the next agent portable, expiring proof it can verify before acting.</div>
     </section>
 
     <!-- How It Works -->

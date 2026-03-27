@@ -327,23 +327,113 @@ export function renderLandingPage(): string {
       margin-bottom: 4rem;
       text-align: center;
     }
+    .signup-row {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0.75rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .signup-input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #222;
+      border-right: none;
+      color: #e0e0e0;
+      font-family: 'Departure Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.85rem 1rem;
+    }
+    .signup-input:focus {
+      outline: none;
+      border-color: #444;
+    }
+    .signup-input::placeholder { color: #444; }
     .cta-button {
-      display: inline-block;
       background: #fafaf5;
       color: #0a0a0a;
-      padding: 0.85rem 2rem;
-      text-decoration: none;
+      border: 1px solid #fafaf5;
+      padding: 0.85rem 1.5rem;
       font-family: 'Departure Mono', monospace;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       letter-spacing: 0.05em;
-      margin-bottom: 1rem;
+      cursor: pointer;
+      white-space: nowrap;
     }
     .cta-button:hover {
       background: #e8e8e0;
+      border-color: #e8e8e0;
+    }
+    .cta-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     .cta-subtext {
       font-size: 0.8rem;
       color: #444;
+    }
+    .cta-legal {
+      font-size: 0.65rem;
+      color: #333;
+      margin-top: 0.4rem;
+    }
+    .key-display {
+      background: #111;
+      border: 1px solid #16a34a;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      text-align: left;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .key-label {
+      font-size: 0.7rem;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .key-value {
+      font-size: 0.75rem;
+      color: #16a34a;
+      word-break: break-all;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .key-copy {
+      background: none;
+      border: 1px solid #222;
+      color: #666;
+      font-family: 'Departure Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .key-copy:hover { border-color: #16a34a; color: #16a34a; }
+    .key-warning {
+      font-size: 0.8rem;
+      color: #a85454;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+    .key-quickstart {
+      text-align: left;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .key-quickstart .code-block {
+      font-size: 0.65rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .signup-error-msg {
+      font-size: 0.85rem;
+      color: #a85454;
     }
 
     /* Footer */
@@ -376,6 +466,9 @@ export function renderLandingPage(): string {
       .trust-q { font-size: 0.8rem; }
       .trust-a { font-size: 0.75rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
+      .signup-row { flex-direction: column; }
+      .signup-input { border-right: 1px solid #222; }
+      .key-value { font-size: 0.65rem; }
     }
 
     @media (max-width: 380px) {
@@ -536,10 +629,33 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta">
-      <a href="mailto:api@proofslip.ai" class="cta-button">Get your API key</a>
-      <div class="cta-subtext">Free tier — 500 receipts/month. No credit card.</div>
+    <!-- CTA / Signup -->
+    <section class="cta" id="signup">
+      <div class="section-label">Get your API key</div>
+      <div id="signup-form">
+        <div class="signup-row">
+          <input type="email" id="signup-email" placeholder="you@example.com" class="signup-input" autocomplete="email">
+          <button id="signup-btn" class="cta-button" onclick="doSignup()">Get key</button>
+        </div>
+        <div class="cta-subtext">Free tier — 500 receipts/month. No credit card.</div>
+        <div class="cta-legal">We'll email you product updates. No spam.</div>
+      </div>
+      <div id="signup-result" style="display:none">
+        <div class="key-display">
+          <div class="key-label">Your API key</div>
+          <div class="key-value" id="key-value"></div>
+          <button class="key-copy" onclick="copyKey()">Copy</button>
+        </div>
+        <div class="key-warning">Save this now. It cannot be retrieved later.</div>
+        <div class="key-quickstart">
+          <div class="key-label">Quick test</div>
+          <div class="code-block" id="quickstart-curl"></div>
+        </div>
+      </div>
+      <div id="signup-error" style="display:none">
+        <div class="signup-error-msg" id="signup-error-msg"></div>
+        <button class="cta-button" onclick="resetSignup()" style="margin-top:0.75rem">Try again</button>
+      </div>
     </section>
 
     <!-- Footer -->
@@ -548,6 +664,59 @@ export function renderLandingPage(): string {
     </footer>
 
   </main>
+  <script>
+    async function doSignup() {
+      const email = document.getElementById('signup-email').value.trim();
+      if (!email) return;
+      const btn = document.getElementById('signup-btn');
+      btn.disabled = true;
+      btn.textContent = '...';
+      try {
+        const res = await fetch('/v1/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          document.getElementById('signup-form').style.display = 'none';
+          document.getElementById('signup-error-msg').textContent = data.message || 'Something went wrong.';
+          document.getElementById('signup-error').style.display = 'block';
+          return;
+        }
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('key-value').textContent = data.api_key;
+        document.getElementById('quickstart-curl').textContent =
+          'curl -X POST https://proofslip.ai/v1/receipts \\\\\\n' +
+          '  -H "Authorization: Bearer ' + data.api_key + '" \\\\\\n' +
+          '  -H "Content-Type: application/json" \\\\\\n' +
+          '  -d \'{"type":"action","status":"success","summary":"My first receipt"}\'';
+        document.getElementById('signup-result').style.display = 'block';
+      } catch (err) {
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('signup-error-msg').textContent = 'Network error. Try again.';
+        document.getElementById('signup-error').style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Get key';
+      }
+    }
+    function copyKey() {
+      const key = document.getElementById('key-value').textContent;
+      navigator.clipboard.writeText(key).then(() => {
+        const btn = document.querySelector('.key-copy');
+        btn.textContent = 'Copied';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+    function resetSignup() {
+      document.getElementById('signup-error').style.display = 'none';
+      document.getElementById('signup-form').style.display = 'block';
+    }
+    document.getElementById('signup-email').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doSignup();
+    });
+  </script>
 </body>
 </html>`
 }

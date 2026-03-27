@@ -80,6 +80,13 @@ export function renderLandingPage(): string {
       line-height: 1.5;
       margin-bottom: 1rem;
     }
+    .hero-pain {
+      font-size: 0.9rem;
+      color: #a85454;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
     .hero-subcopy {
       font-size: 0.9rem;
       color: #555;
@@ -258,6 +265,30 @@ export function renderLandingPage(): string {
       color: #444;
     }
 
+    /* Trust section */
+    .trust-section {
+      margin-bottom: 4rem;
+    }
+    .trust-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .trust-item {
+      border: 1px solid #1a1a1a;
+      padding: 1rem;
+    }
+    .trust-q {
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      margin-bottom: 0.4rem;
+    }
+    .trust-a {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
     /* Use cases */
     .use-cases {
       margin-bottom: 4rem;
@@ -278,10 +309,17 @@ export function renderLandingPage(): string {
       letter-spacing: 0.1em;
       margin-bottom: 0.4rem;
     }
-    .use-case-description {
+    .use-case-scenario {
       font-size: 0.85rem;
       color: #888;
       line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+    .use-case-pain {
+      font-size: 0.8rem;
+      color: #a85454;
+      line-height: 1.5;
+      font-style: italic;
     }
 
     /* CTA */
@@ -333,7 +371,10 @@ export function renderLandingPage(): string {
       .step-title { font-size: 1.1rem; }
       .code-block { font-size: 0.65rem; padding: 0.75rem; }
       .use-case-type { font-size: 1.1rem; }
-      .how-it-works, .use-cases, .showcase { margin-bottom: 2.5rem; }
+      .how-it-works, .use-cases, .showcase, .trust-section { margin-bottom: 2.5rem; }
+      .hero-pain { font-size: 0.8rem; }
+      .trust-q { font-size: 0.8rem; }
+      .trust-a { font-size: 0.75rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
     }
 
@@ -352,7 +393,8 @@ export function renderLandingPage(): string {
       <div class="hero-brand">ProofSlip</div>
       <div class="hero-tagline">ephemeral verification for agent workflows</div>
       <h1 class="hero-headline">24-hour receipts your agents can check before they act.</h1>
-      <p class="hero-subcopy">Issue a signed receipt when something happens. Your agents verify it before taking action. No receipt, no action. Receipts expire automatically — no stale state, no replay attacks.</p>
+      <p class="hero-pain">Your agent executed twice. The approval expired but nobody checked. A workflow resumed from stale state and charged the customer again.</p>
+      <p class="hero-subcopy">ProofSlip issues verifiable receipts with a built-in expiry window. Your agents check the receipt before acting. No valid receipt, no action. No stale state, no replay attacks, no "I thought it was approved."</p>
     </section>
 
     <!-- Receipt Showcase -->
@@ -429,6 +471,33 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
+    <!-- How Trust Works -->
+    <section class="trust-section">
+      <div class="section-label">How Trust Works</div>
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-q">What gets stored?</div>
+          <div class="trust-a">Type, status, a 280-char summary, optional JSON payload (4KB max), and expiry time. Nothing more. You control what goes in.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-q">Can receipts be forged?</div>
+          <div class="trust-a">Receipt IDs are cryptographically random. Only the API key holder can create receipts, and only the verify endpoint confirms them. No ID, no proof.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-q">What does verify actually check?</div>
+          <div class="trust-a">That the receipt exists, was created by a valid key, and hasn't expired. If any of those fail, the response says invalid. Your agent stops.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-q">What happens at expiry?</div>
+          <div class="trust-a">The receipt returns not found. Expired receipts are deleted permanently — no archive, no ghost state. The authorization window is closed.</div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-q">What about replays?</div>
+          <div class="trust-a">Receipts are read-only after creation. Combined with expiry, the window for replay is bounded. Idempotency keys prevent duplicate creation.</div>
+        </div>
+      </div>
+    </section>
+
     <!-- Use Cases -->
     <section class="use-cases">
       <div class="section-label">Receipt Types</div>
@@ -436,27 +505,32 @@ export function renderLandingPage(): string {
 
         <div class="use-case">
           <div class="use-case-type">action</div>
-          <div class="use-case-description">Confirm a side-effectful operation completed — a payment, a write, a deletion. Downstream agents verify before proceeding.</div>
+          <div class="use-case-scenario">Agent refunds a customer $42. Issuing agent creates a receipt. Notification agent verifies the receipt exists before emailing the customer.</div>
+          <div class="use-case-pain">Without it: notification fires on stale data, customer gets a refund email for a failed transaction.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">approval</div>
-          <div class="use-case-description">A human or system approved a request. The receipt proves the approval exists and hasn't expired before the agent acts on it.</div>
+          <div class="use-case-scenario">Human approves a $5k vendor payment in Telegram. Agent creates an approval receipt. Payment agent checks the receipt before executing the transfer.</div>
+          <div class="use-case-pain">Without it: approval expires, agent pays anyway because it cached "approved" from an hour ago.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">handshake</div>
-          <div class="use-case-description">Two agents or services acknowledged each other. Useful for multi-step orchestration where each step must confirm the previous.</div>
+          <div class="use-case-scenario">Two agents need to coordinate a data migration. Each confirms readiness. The receipt proves both sides acknowledged before either starts writing.</div>
+          <div class="use-case-pain">Without it: one agent starts writing while the other is still reading. Partial state, corrupted data.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">resume</div>
-          <div class="use-case-description">A paused workflow is cleared to continue. The receipt gates re-entry, preventing double-execution after interruption.</div>
+          <div class="use-case-scenario">A deploy pipeline pauses after canary. Oncall clears it to continue. The resume receipt gates re-entry into the deploy sequence.</div>
+          <div class="use-case-pain">Without it: pipeline resumes from a stale checkpoint and re-deploys an already-rolled-back version.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">failure</div>
-          <div class="use-case-description">Record that something failed in a verifiable way. Downstream agents can check whether a known failure is still within its reporting window.</div>
+          <div class="use-case-scenario">Payment processor returns an error. Agent creates a failure receipt. Retry agent checks — if the failure receipt is still valid, it knows the error is recent and retries. If expired, it escalates.</div>
+          <div class="use-case-pain">Without it: retry agent loops on a failure from 6 hours ago, burning API calls and hitting rate limits.</div>
         </div>
 
       </div>

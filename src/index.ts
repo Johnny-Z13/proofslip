@@ -6,6 +6,7 @@ import { cronRouter } from './routes/cron.js'
 import { statusRouter } from './routes/status.js'
 import { renderLandingPage } from './views/landing-page.js'
 import { renderOgImage } from './views/og-image.js'
+import { renderDevConsole } from './views/dev-console.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
 
@@ -43,6 +44,13 @@ app.get('/og-image.png', (c) => {
   c.header('Content-Type', 'image/svg+xml')
   c.header('Cache-Control', 'public, max-age=86400')
   return c.body(renderOgImage())
+})
+app.get('/dev/console', (c) => {
+  const secret = c.req.query('key')
+  if (!secret || secret !== process.env.DEV_SECRET) {
+    return c.json({ error: 'not_found', message: 'Route not found.' }, 404)
+  }
+  return c.html(renderDevConsole())
 })
 app.route('/v1/receipts', statusRouter)
 app.route('/v1/receipts', receiptsRouter)

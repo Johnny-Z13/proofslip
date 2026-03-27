@@ -184,6 +184,9 @@ npm run dev
 | `DATABASE_URL` | Yes | Postgres connection string |
 | `BASE_URL` | Yes | Public URL (used in `verify_url` generation) |
 | `CRON_SECRET` | Production | Bearer token for the cleanup cron endpoint |
+| `RESEND_API_KEY` | Production | Resend API key for emailing API keys to web signups |
+| `DEV_SECRET` | Optional | Secret key to access `/dev/console` test page |
+| `NODEJS_HELPERS` | Production | Set to `0` (required for Hono zero-config on Vercel) |
 
 ### Scripts
 

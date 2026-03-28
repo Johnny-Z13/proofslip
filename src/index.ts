@@ -5,7 +5,7 @@ import { authRouter } from './routes/auth.js'
 import { cronRouter } from './routes/cron.js'
 import { statusRouter } from './routes/status.js'
 import { renderLandingPage } from './views/landing-page.js'
-import { renderOgImage } from './views/og-image.js'
+import { OG_IMAGE_PNG } from './views/og-image.js'
 import { renderDevConsole } from './views/dev-console.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
@@ -41,9 +41,9 @@ app.onError((err, c) => {
 app.get('/', (c) => c.html(renderLandingPage()))
 app.get('/health', (c) => c.json({ status: 'ok' }))
 app.get('/og-image.png', (c) => {
-  c.header('Content-Type', 'image/svg+xml')
+  c.header('Content-Type', 'image/png')
   c.header('Cache-Control', 'public, max-age=86400')
-  return c.body(renderOgImage())
+  return c.body(OG_IMAGE_PNG as unknown as ArrayBuffer)
 })
 app.get('/dev/console', (c) => {
   const secret = c.req.query('key')

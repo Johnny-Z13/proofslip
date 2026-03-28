@@ -37,12 +37,9 @@ describe('Landing page', () => {
     expect(html).toContain('Can receipts be forged')
   })
 
-  it('serves OG image at /og-image.png', async () => {
+  it('serves OG image at /og-image.png as PNG', async () => {
     const res = await app.request('/og-image.png')
     expect(res.status).toBe(200)
-    expect(res.headers.get('content-type')).toContain('svg')
-    const body = await res.text()
-    expect(body).toContain('PROOFSLIP')
-    expect(body).toContain('VERIFIED RECEIPT')
+    expect(res.headers.get('content-type')).toContain('image/png')
   })
 })

@@ -40,6 +40,16 @@ app.onError((err, c) => {
 // ─── Routes ──────────────────────────────────────────────────────
 app.get('/', (c) => c.html(renderLandingPage()))
 app.get('/health', (c) => c.json({ status: 'ok' }))
+app.get('/sitemap.xml', (c) => {
+  c.header('Content-Type', 'application/xml')
+  return c.body(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://proofslip.ai</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+</urlset>`)
+})
+app.get('/robots.txt', (c) => {
+  return c.text('User-agent: *\nAllow: /\nSitemap: https://proofslip.ai/sitemap.xml')
+})
 app.get('/og-image.png', (c) => {
   c.header('Content-Type', 'image/png')
   c.header('Cache-Control', 'public, max-age=86400')

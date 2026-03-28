@@ -28,7 +28,18 @@
       "Bash(base64 -w0 \"D:/Projects/proof-slip/src/public/fonts/DepartureMono-Regular.woff2\")",
       "Bash(node -e \":*)",
       "Bash(npm run:*)",
-      "Bash(python -m json.tool)"
+      "Bash(python -m json.tool)",
+      "Bash(API_KEY=\"ak_bb17e094829ca93a89428d49393b561bed75f7b12d8f9bf24de9534111ea8df4\")",
+      "Bash(curl -s --max-time 15 -X POST \"https://proof-slip.vercel.app/v1/receipts\" -H \"Authorization: Bearer $API_KEY\" -H \"Content-Type: application/json\" -d '{\"\"\"\"type\"\"\"\": \"\"\"\"action\"\"\"\", \"\"\"\"status\"\"\"\": \"\"\"\"success\"\"\"\", \"\"\"\"summary\"\"\"\": \"\"\"\"Integration test receipt — API is live on Vercel\"\"\"\", \"\"\"\"ref\"\"\"\": {\"\"\"\"workflow_id\"\"\"\": \"\"\"\"deploy-test\"\"\"\", \"\"\"\"agent_id\"\"\"\": \"\"\"\"claude\"\"\"\"}}')",
+      "Bash(npm test:*)",
+      "Bash(curl -s --max-time 15 -X POST \"https://proof-slip.vercel.app/v1/receipts\" -H \"Authorization: Bearer ak_bb17e094829ca93a89428d49393b561bed75f7b12d8f9bf24de9534111ea8df4\" -H \"Content-Type: application/json\" -d '{\"\"\"\"type\"\"\"\": \"\"\"\"approval\"\"\"\", \"\"\"\"status\"\"\"\": \"\"\"\"pending\"\"\"\", \"\"\"\"summary\"\"\"\": \"\"\"\"Transfer $500 to vendor account #4421 — awaiting human approval\"\"\"\", \"\"\"\"audience\"\"\"\": \"\"\"\"human\"\"\"\", \"\"\"\"ref\"\"\"\": {\"\"\"\"workflow_id\"\"\"\": \"\"\"\"payment-flow\"\"\"\", \"\"\"\"agent_id\"\"\"\": \"\"\"\"finance-bot\"\"\"\"}}')",
+      "Bash(nslookup -type=TXT resend._domainkey.proofslip.ai 8.8.8.8)",
+      "Bash(nslookup -type=TXT send.proofslip.ai 8.8.8.8)",
+      "Bash(nslookup -type=MX send.proofslip.ai 8.8.8.8)",
+      "Bash(npm ls:*)",
+      "Bash(npx -y @resvg/resvg-js-win32-x64-msvc@2)",
+      "Bash(npx -y resvg-js)",
+      "Bash(node --loader tsx -e \"console.log\\(''hello''\\)\")"
     ]
   }
 }

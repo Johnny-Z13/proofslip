@@ -6,20 +6,24 @@ export function renderLandingPage(): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProofSlip — 24-hour receipts for agent workflows</title>
-  <meta name="description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next. Create, verify, expire. That's it.">
+  <title>ProofSlip — AI Agent Verification API | Ephemeral Receipts for Agent Workflows</title>
+  <meta name="description" content="Free API for AI agent verification. Create short-lived proof tokens that agents check before acting. Prevent duplicate actions, stale approvals, and unsafe retries in multi-agent workflows. Create, verify, expire.">
+  <meta name="keywords" content="AI agent verification, agent workflow receipts, ephemeral receipts API, agent to agent verification, prevent duplicate agent actions, AI proof token, multi-agent orchestration, LLM agent tools, agent workflow safety, idempotency for agents">
   <meta name="robots" content="index, follow">
+  <meta name="author" content="ProofSlip">
   <link rel="canonical" href="https://proofslip.ai">
-  <meta property="og:title" content="ProofSlip — 24-hour receipts for agent workflows">
-  <meta property="og:description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next.">
+  <meta property="og:title" content="ProofSlip — Ephemeral Receipts for AI Agent Workflows">
+  <meta property="og:description" content="Free verification API for AI agents. Short-lived proof tokens that prevent duplicate actions, stale approvals, and unsafe retries. Create, verify, expire.">
   <meta property="og:image" content="https://proofslip.ai/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://proofslip.ai">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ProofSlip">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@proofslip">
-  <meta name="twitter:title" content="ProofSlip — 24-hour receipts for agent workflows">
-  <meta name="twitter:description" content="Ephemeral, machine-readable receipts that let AI agents verify what happened before deciding what happens next.">
+  <meta name="twitter:title" content="ProofSlip — Ephemeral Receipts for AI Agent Workflows">
+  <meta name="twitter:description" content="Free verification API for AI agents. Short-lived proof tokens that prevent duplicate actions, stale approvals, and unsafe retries.">
   <meta name="twitter:image" content="https://proofslip.ai/og-image.png">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230a0a0a'/><text x='50' y='68' text-anchor='middle' font-size='52' font-family='monospace' fill='%23e0e0e0'>P</text></svg>">
   <script type="application/ld+json">
@@ -27,14 +31,21 @@ export function renderLandingPage(): string {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "ProofSlip",
-    "description": "24-hour ephemeral receipts for AI agent workflows. Create, verify, expire.",
+    "description": "Free AI agent verification API. Create ephemeral receipts that agents verify before acting. Prevents duplicate actions, stale approvals, and unsafe retries in multi-agent workflows.",
     "url": "https://proofslip.ai",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
+    "keywords": "AI agent verification, ephemeral receipts, agent workflow, multi-agent orchestration, proof token",
+    "creator": {
+      "@type": "Organization",
+      "name": "ProofSlip",
+      "url": "https://proofslip.ai"
+    },
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "description": "Free tier — 500 receipts per month"
     }
   }
   </script>

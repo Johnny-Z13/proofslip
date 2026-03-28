@@ -3,3 +3,4 @@ dist/
 .env
 .vercel/
 .superpowers/
+.claude/settings.local.json

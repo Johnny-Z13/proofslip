@@ -79,6 +79,7 @@ export function renderLandingPage(): string {
       letter-spacing: 0.2em;
       text-transform: uppercase;
       margin-bottom: 0.75rem;
+      white-space: nowrap;
     }
     .hero-tagline {
       font-size: 0.95rem;

@@ -489,6 +489,12 @@ export function renderLandingPage(): string {
       .row { flex-direction: column; gap: 0.2rem; }
       .row .value { text-align: left; max-width: 100%; }
     }
+
+    /* Glyph flicker — subtle O ↔ 0 swap */
+    .glyph-flicker {
+      display: inline-block;
+      transition: opacity 0.12s ease;
+    }
   </style>
 </head>
 <body>
@@ -496,7 +502,7 @@ export function renderLandingPage(): string {
 
     <!-- Hero -->
     <section class="hero">
-      <div class="hero-brand">ProofSlip</div>
+      <div class="hero-brand" aria-label="ProofSlip"><span>P</span><span>R</span><span class="glyph-flicker" data-alt="0">O</span><span class="glyph-flicker" data-alt="0">O</span><span>F</span><span>S</span><span>L</span><span>I</span><span>P</span></div>
       <div class="hero-tagline">ephemeral verification for agent workflows</div>
       <h1 class="hero-headline">24-hour receipts your agents can check before they act.</h1>
       <p class="hero-plain">A short-lived proof token that one agent creates and another verifies — before it does anything irreversible.</p>
@@ -733,6 +739,26 @@ export function renderLandingPage(): string {
     document.getElementById("signup-email").addEventListener("keydown", function(e) {
       if (e.key === "Enter") doSignup();
     });
+
+    // Glyph flicker: O ↔ 0
+    (function() {
+      var glyphs = document.querySelectorAll('.glyph-flicker');
+      glyphs.forEach(function(el, i) {
+        var original = el.textContent;
+        var alt = el.getAttribute('data-alt');
+        var showing = true;
+        var delay = i * 2400;
+        setTimeout(function tick() {
+          el.style.opacity = '0';
+          setTimeout(function() {
+            showing = !showing;
+            el.textContent = showing ? original : alt;
+            el.style.opacity = '1';
+          }, 120);
+          setTimeout(tick, 4000 + Math.random() * 2000);
+        }, 3000 + delay);
+      });
+    })();
   </script>
 </body>
 </html>`

@@ -6,6 +6,8 @@
 
 > Agents should not continue based on assumptions when they can continue based on receipts.
 
+[Live Site](https://proofslip.ai) | [API Docs](https://proofslip.ai/docs) | [MCP Server](https://www.npmjs.com/package/@proofslip/mcp-server) | [llms.txt](https://proofslip.ai/llms.txt)
+
 ## The Problem
 
 Agentic workflows break in predictable ways: duplicate side effects, unclear approval states, unsafe retries, ambiguous resumability. Teams currently solve this with raw logs, brittle flags, ad hoc DB rows, and hand-rolled retry logic.
@@ -149,6 +151,54 @@ Rate limit headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-R
 
 Include an `idempotency_key` to safely retry receipt creation. If a receipt with the same key already exists and the content matches, the original receipt is returned. If the content differs, you'll get a `409 idempotency_conflict` error.
 
+## MCP Server
+
+Use ProofSlip as a tool in Claude Desktop, Cursor, Windsurf, or any MCP-compatible client:
+
+```bash
+npx -y @proofslip/mcp-server
+```
+
+**Tools available:**
+
+| Tool | Description |
+|------|-------------|
+| `create_receipt` | Create a verifiable receipt |
+| `verify_receipt` | Verify a receipt by ID |
+| `check_status` | Lightweight status poll |
+
+**Configuration (Claude Desktop `claude_desktop_config.json`):**
+
+```json
+{
+  "mcpServers": {
+    "proofslip": {
+      "command": "npx",
+      "args": ["-y", "@proofslip/mcp-server"],
+      "env": {
+        "PROOFSLIP_API_KEY": "ak_your_key_here"
+      }
+    }
+  }
+}
+```
+
+**Cursor / Windsurf:** Add the same config to your MCP settings file.
+
+## Agent Discovery
+
+ProofSlip exposes machine-readable discovery endpoints so agents and tools can self-onboard:
+
+| Endpoint | Format | Purpose |
+|----------|--------|---------|
+| [`/llms.txt`](https://proofslip.ai/llms.txt) | Plain text | LLM context summary |
+| [`/llms-full.txt`](https://proofslip.ai/llms-full.txt) | Plain text | Complete API reference for LLMs |
+| [`/docs`](https://proofslip.ai/docs) | HTML | Human-readable API docs |
+| [`/.well-known/openapi.json`](https://proofslip.ai/.well-known/openapi.json) | JSON | OpenAPI 3.1 spec |
+| [`/.well-known/ai-plugin.json`](https://proofslip.ai/.well-known/ai-plugin.json) | JSON | ChatGPT plugin manifest |
+| [`/.well-known/mcp.json`](https://proofslip.ai/.well-known/mcp.json) | JSON | MCP server discovery |
+| [`/.well-known/agent.json`](https://proofslip.ai/.well-known/agent.json) | JSON | Agent protocol discovery |
+
 ## Self-Hosting
 
 ### Prerequisites
@@ -159,7 +209,7 @@ Include an `idempotency_key` to safely retry receipt creation. If a receipt with
 ### Setup
 
 ```bash
-git clone https://github.com/your-org/proof-slip.git
+git clone https://github.com/Johnny-Z13/proof-slip.git
 cd proof-slip
 npm install
 
@@ -313,8 +363,13 @@ src/
     ├── font.ts           # Departure Mono as inline base64
     ├── og-image.ts       # Branded SVG for social cards
     ├── landing-page.ts   # HTML homepage
+    ├── docs-page.ts      # Single-page API docs
     ├── verify-page.ts    # Receipt display (shareable, OG tags when audience=human)
-    └── not-found-page.ts # 404 receipt page
+    ├── not-found-page.ts # 404 receipt page
+    ├── llms-txt.ts       # /llms.txt content
+    ├── llms-full-txt.ts  # /llms-full.txt complete reference
+    ├── openapi.ts        # OpenAPI 3.1 spec
+    └── mcp-json.ts       # MCP discovery manifest
 ```
 
 **Stack**: Hono + Drizzle ORM + Neon Postgres + Vercel Serverless (zero-config)

@@ -209,8 +209,8 @@ ProofSlip exposes machine-readable discovery endpoints so agents and tools can s
 ### Setup
 
 ```bash
-git clone https://github.com/Johnny-Z13/proof-slip.git
-cd proof-slip
+git clone https://github.com/Johnny-Z13/proofslip.git
+cd proofslip
 npm install
 
 # Configure environment
@@ -257,7 +257,7 @@ graph TB
     end
 
     subgraph "GitHub"
-        REPO["github.com/your-org/proof-slip"]
+        REPO["github.com/Johnny-Z13/proofslip"]
     end
 
     subgraph "Vercel"

@@ -849,7 +849,7 @@ export function renderLandingPage(): string {
       <a href="/docs">API docs</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm</a>
-      <a href="https://github.com/Johnny-Z13/proof-slip" target="_blank">GitHub</a>
+      <a href="https://github.com/Johnny-Z13/proofslip" target="_blank">GitHub</a>
     </nav>
 
     <!-- Footer -->

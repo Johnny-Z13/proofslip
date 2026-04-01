@@ -95,7 +95,7 @@ export function renderLandingPage(): string {
 
     /* CTA — right after hero */
     .cta {
-      margin-bottom: 5rem;
+      margin-bottom: 3rem;
       text-align: center;
     }
     .signup-row {
@@ -169,14 +169,6 @@ export function renderLandingPage(): string {
     .signup-error-msg {
       font-size: 0.85rem;
       color: #a85454;
-    }
-
-    /* Divider */
-    .section-divider {
-      border: none;
-      border-top: 1px solid #1a1a1a;
-      margin: 0 auto 5rem;
-      width: 60px;
     }
 
     /* Receipt showcase */
@@ -387,25 +379,69 @@ export function renderLandingPage(): string {
       border-left: 2px solid #16a34a;
     }
 
+    /* Two interfaces */
+    .two-ways {
+      margin-bottom: 5rem;
+    }
+    .two-ways-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: #1a1a1a;
+      border: 1px solid #1a1a1a;
+    }
+    .two-ways-item {
+      background: #0a0a0a;
+      padding: 1.25rem;
+    }
+    .two-ways-label {
+      font-size: 0.65rem;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+    .two-ways-title {
+      font-size: 0.9rem;
+      color: #e0e0e0;
+      margin-bottom: 0.4rem;
+    }
+    .two-ways-desc {
+      font-size: 0.75rem;
+      color: #555;
+      line-height: 1.5;
+    }
+    .two-ways-footnote {
+      font-size: 0.75rem;
+      color: #333;
+      margin-top: 1rem;
+      text-align: center;
+    }
+
     /* Use cases */
     .use-cases {
       margin-bottom: 5rem;
     }
     .use-case-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
     .use-case {
-      border: 1px solid #1a1a1a;
-      padding: 1rem;
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #111;
+      align-items: baseline;
     }
+    .use-case:last-child { border-bottom: none; }
     .use-case-type {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #e0e0e0;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
+      flex-shrink: 0;
+      min-width: 90px;
     }
     .use-case-scenario {
       font-size: 0.75rem;
@@ -436,11 +472,11 @@ export function renderLandingPage(): string {
       .step { padding: 1rem; }
       .step-title { font-size: 1rem; }
       .code-block { font-size: 0.65rem; padding: 0.75rem; }
-      .use-case-list { grid-template-columns: 1fr; }
-      .use-case-type { font-size: 0.75rem; }
-      .how-it-works, .use-cases, .showcase, .comparison { margin-bottom: 3rem; }
-      .section-divider { margin-bottom: 3rem; }
-      .cta { margin-bottom: 3rem; }
+      .two-ways-grid { grid-template-columns: 1fr; }
+      .use-case { flex-direction: column; gap: 0.25rem; }
+      .use-case-type { min-width: auto; }
+      .how-it-works, .use-cases, .showcase, .comparison, .two-ways { margin-bottom: 3rem; }
+      .cta { margin-bottom: 2rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
       .signup-row { flex-direction: column; }
       .signup-input { border-right: 1px solid #222; }
@@ -492,11 +528,8 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
-    <hr class="section-divider">
-
     <!-- Receipt Showcase -->
     <section class="showcase">
-      <div class="section-label">Sample Receipt</div>
       <div class="receipt">
         <div class="receipt-header">
           <h2>ProofSlip</h2>
@@ -564,6 +597,24 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
+    <!-- Two ways to verify -->
+    <section class="two-ways">
+      <div class="section-label">One receipt, two interfaces</div>
+      <div class="two-ways-grid">
+        <div class="two-ways-item">
+          <div class="two-ways-label">For humans</div>
+          <div class="two-ways-title">Shareable URL</div>
+          <div class="two-ways-desc">Every receipt has a unique verification page. Send the link — anyone can confirm the receipt is real and current.</div>
+        </div>
+        <div class="two-ways-item">
+          <div class="two-ways-label">For agents</div>
+          <div class="two-ways-title">JSON API</div>
+          <div class="two-ways-desc">Same receipt, machine-readable. Your agent GETs the endpoint and gets a yes/no with an expiry window.</div>
+        </div>
+      </div>
+      <div class="two-ways-footnote">Every receipt ID is cryptographically random and verifiable.</div>
+    </section>
+
     <!-- Why not just... -->
     <section class="comparison">
       <div class="section-label">Why not just use...</div>
@@ -588,22 +639,18 @@ export function renderLandingPage(): string {
     <section class="use-cases">
       <div class="section-label">Receipt Types</div>
       <div class="use-case-list">
-
         <div class="use-case">
           <div class="use-case-type">action</div>
           <div class="use-case-scenario">Verify a refund happened before emailing the customer.</div>
         </div>
-
         <div class="use-case">
           <div class="use-case-type">approval</div>
           <div class="use-case-scenario">Gate a payment on a fresh human approval — not a cached one.</div>
         </div>
-
         <div class="use-case">
           <div class="use-case-type">handshake</div>
           <div class="use-case-scenario">Prove both agents acknowledged before either starts writing.</div>
         </div>
-
       </div>
     </section>
 

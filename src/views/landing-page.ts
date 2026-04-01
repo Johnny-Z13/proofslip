@@ -478,13 +478,31 @@ export function renderLandingPage(): string {
       color: #888;
     }
 
+    /* Footer nav */
+    .footer-nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #111;
+      width: 100%;
+    }
+    .footer-nav a {
+      font-size: 0.75rem;
+      color: #444;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .footer-nav a:hover {
+      color: #888;
+    }
+
     /* Footer */
     .site-footer {
       font-size: 0.75rem;
       color: #333;
       text-align: center;
-      padding-top: 2rem;
-      border-top: 1px solid #111;
       width: 100%;
     }
 
@@ -689,6 +707,14 @@ export function renderLandingPage(): string {
       <div class="mcp-install-cmd">npx -y @proofslip/mcp-server</div>
       <div class="mcp-install-note">Works with Claude Desktop, Cursor, Windsurf, and any MCP client. <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm ↗</a></div>
     </section>
+
+    <!-- Footer nav -->
+    <nav class="footer-nav">
+      <a href="/docs">API docs</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm</a>
+      <a href="https://github.com/Johnny-Z13/proof-slip" target="_blank">GitHub</a>
+    </nav>
 
     <!-- Footer -->
     <footer class="site-footer">

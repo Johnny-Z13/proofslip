@@ -384,4 +384,4 @@ src/
 
 ## License
 
-ISC
+[MIT](LICENSE)

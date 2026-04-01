@@ -61,74 +61,143 @@ export function renderLandingPage(): string {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 4rem 1rem;
+      padding: 6rem 1.5rem;
     }
     .container {
-      max-width: 640px;
+      max-width: 600px;
       width: 100%;
     }
 
     /* Hero */
     .hero {
       text-align: center;
-      margin-bottom: 4rem;
+      margin-bottom: 2.5rem;
     }
     .hero-brand {
       font-size: 5.5rem;
       font-weight: normal;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       white-space: nowrap;
     }
     .hero-tagline {
-      font-size: 0.95rem;
-      color: #666;
-      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 2rem;
     }
     .hero-headline {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: normal;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-    .hero-plain {
-      font-size: 0.95rem;
-      color: #888;
       line-height: 1.6;
-      margin-bottom: 1rem;
+      margin-bottom: 0;
     }
-    .hero-pain {
-      font-size: 0.9rem;
+
+    /* CTA — right after hero */
+    .cta {
+      margin-bottom: 5rem;
+      text-align: center;
+    }
+    .signup-row {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0.75rem;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .signup-input {
+      flex: 1;
+      background: #111;
+      border: 1px solid #222;
+      border-right: none;
+      color: #e0e0e0;
+      font-family: 'Departure Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.85rem 1rem;
+    }
+    .signup-input:focus {
+      outline: none;
+      border-color: #444;
+    }
+    .signup-input::placeholder { color: #444; }
+    .cta-button {
+      background: #16a34a;
+      color: #fff;
+      border: 1px solid #16a34a;
+      padding: 0.85rem 1.5rem;
+      font-family: 'Departure Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cta-button:hover {
+      background: #15803d;
+      border-color: #15803d;
+    }
+    .cta-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .cta-subtext {
+      font-size: 0.75rem;
+      color: #444;
+    }
+    .cta-legal {
+      font-size: 0.65rem;
+      color: #333;
+      margin-top: 0.4rem;
+    }
+    .key-display {
+      background: #111;
+      border: 1px solid #16a34a;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      text-align: left;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .key-label {
+      font-size: 0.7rem;
+      color: #444;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .signup-error-msg {
+      font-size: 0.85rem;
       color: #a85454;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-      font-style: italic;
     }
-    .hero-subcopy {
-      font-size: 0.9rem;
-      color: #555;
-      line-height: 1.6;
+
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      margin: 0 auto 5rem;
+      width: 60px;
     }
 
     /* Receipt showcase */
     .showcase {
-      margin-bottom: 4rem;
+      margin-bottom: 5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .section-label {
-      font-size: 1.4rem;
-      color: #555;
+      font-size: 0.7rem;
+      color: #444;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 1.5rem;
+      letter-spacing: 0.2em;
+      margin-bottom: 2rem;
+      text-align: center;
     }
     .receipt {
       background: #fafaf5;
       color: #1a1a1a;
-      max-width: 420px;
+      max-width: 400px;
       width: 100%;
       padding: 2rem 1.5rem;
       position: relative;
@@ -234,41 +303,9 @@ export function renderLandingPage(): string {
     }
     .receipt-footer a:hover { color: #1a1a1a; }
 
-    /* Comparison */
-    .comparison {
-      margin-bottom: 4rem;
-    }
-    .comparison-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    .comparison-item {
-      border: 1px solid #1a1a1a;
-      padding: 1rem;
-    }
-    .comparison-what {
-      font-size: 0.9rem;
-      color: #e0e0e0;
-      margin-bottom: 0.4rem;
-    }
-    .comparison-problem {
-      font-size: 0.8rem;
-      color: #666;
-      line-height: 1.6;
-    }
-    .comparison-punchline {
-      font-size: 0.85rem;
-      color: #888;
-      line-height: 1.6;
-      padding: 1rem;
-      border-left: 2px solid #16a34a;
-    }
-
     /* How it works */
     .how-it-works {
-      margin-bottom: 4rem;
+      margin-bottom: 5rem;
     }
     .steps {
       display: flex;
@@ -277,24 +314,24 @@ export function renderLandingPage(): string {
     }
     .step {
       background: #111;
-      border: 1px solid #222;
+      border: 1px solid #1a1a1a;
       padding: 1.5rem;
     }
     .step-number {
-      font-size: 0.75rem;
-      color: #444;
+      font-size: 0.7rem;
+      color: #333;
       letter-spacing: 0.1em;
       margin-bottom: 0.5rem;
     }
     .step-title {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: #e0e0e0;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
       font-weight: normal;
     }
     .step-description {
-      font-size: 0.85rem;
-      color: #666;
+      font-size: 0.8rem;
+      color: #555;
       line-height: 1.6;
       margin-bottom: 1rem;
     }
@@ -315,37 +352,48 @@ export function renderLandingPage(): string {
       color: #444;
     }
 
-    /* Trust section */
-    .trust-section {
-      margin-bottom: 4rem;
+    /* Comparison */
+    .comparison {
+      margin-bottom: 5rem;
     }
-    .trust-grid {
+    .comparison-grid {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
     }
-    .trust-item {
-      border: 1px solid #1a1a1a;
-      padding: 1rem;
+    .comparison-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #111;
     }
-    .trust-q {
-      font-size: 0.85rem;
-      color: #e0e0e0;
-      margin-bottom: 0.4rem;
-    }
-    .trust-a {
+    .comparison-what {
       font-size: 0.8rem;
-      color: #666;
+      color: #555;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .comparison-problem {
+      font-size: 0.8rem;
+      color: #333;
+      line-height: 1.5;
+    }
+    .comparison-punchline {
+      font-size: 0.8rem;
+      color: #888;
       line-height: 1.6;
+      padding-left: 1rem;
+      border-left: 2px solid #16a34a;
     }
 
     /* Use cases */
     .use-cases {
-      margin-bottom: 4rem;
+      margin-bottom: 5rem;
     }
     .use-case-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 0.75rem;
     }
     .use-case {
@@ -353,136 +401,50 @@ export function renderLandingPage(): string {
       padding: 1rem;
     }
     .use-case-type {
-      font-size: 1.4rem;
+      font-size: 0.8rem;
       color: #e0e0e0;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
     .use-case-scenario {
-      font-size: 0.85rem;
-      color: #888;
+      font-size: 0.75rem;
+      color: #555;
       line-height: 1.5;
-      margin-bottom: 0.5rem;
-    }
-    .use-case-pain {
-      font-size: 0.8rem;
-      color: #a85454;
-      line-height: 1.5;
-      font-style: italic;
-    }
-
-    /* CTA */
-    .cta {
-      margin-bottom: 4rem;
-      text-align: center;
-    }
-    .signup-row {
-      display: flex;
-      gap: 0;
-      margin-bottom: 0.75rem;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .signup-input {
-      flex: 1;
-      background: #111;
-      border: 1px solid #222;
-      border-right: none;
-      color: #e0e0e0;
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.85rem;
-      padding: 0.85rem 1rem;
-    }
-    .signup-input:focus {
-      outline: none;
-      border-color: #444;
-    }
-    .signup-input::placeholder { color: #444; }
-    .cta-button {
-      background: #16a34a;
-      color: #fff;
-      border: 1px solid #16a34a;
-      padding: 0.85rem 1.5rem;
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.85rem;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .cta-button:hover {
-      background: #15803d;
-      border-color: #15803d;
-    }
-    .cta-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .cta-subtext {
-      font-size: 0.8rem;
-      color: #444;
-    }
-    .cta-legal {
-      font-size: 0.65rem;
-      color: #333;
-      margin-top: 0.4rem;
-    }
-    .key-display {
-      background: #111;
-      border: 1px solid #16a34a;
-      padding: 1.25rem;
-      margin-bottom: 0.75rem;
-      text-align: left;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .key-label {
-      font-size: 0.7rem;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-    .signup-error-msg {
-      font-size: 0.85rem;
-      color: #a85454;
     }
 
     /* Footer */
     .site-footer {
-      font-size: 0.8rem;
-      color: #444;
+      font-size: 0.75rem;
+      color: #333;
       text-align: center;
       padding-top: 2rem;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid #111;
       width: 100%;
     }
 
     /* Mobile responsive */
     @media (max-width: 640px) {
-      body { padding: 2rem 0.75rem; }
-      .hero { margin-bottom: 2.5rem; }
+      body { padding: 3rem 1rem; }
+      .hero { margin-bottom: 2rem; }
       .hero-brand { font-size: 2.5rem; letter-spacing: 0.15em; }
-      .hero-tagline { font-size: 0.8rem; }
-      .hero-headline { font-size: 1.1rem; }
-      .hero-subcopy { font-size: 0.8rem; }
-      .section-label { font-size: 1.1rem; }
+      .hero-tagline { font-size: 0.75rem; }
+      .hero-headline { font-size: 1rem; }
+      .section-label { font-size: 0.65rem; }
       .receipt { padding: 1.5rem 1rem; max-width: 100%; }
       .row .value { max-width: 60%; font-size: 0.7rem; }
       .step { padding: 1rem; }
-      .step-title { font-size: 1.1rem; }
+      .step-title { font-size: 1rem; }
       .code-block { font-size: 0.65rem; padding: 0.75rem; }
-      .use-case-type { font-size: 1.1rem; }
-      .how-it-works, .use-cases, .showcase, .trust-section, .comparison { margin-bottom: 2.5rem; }
-      .hero-plain { font-size: 0.85rem; }
-      .hero-pain { font-size: 0.8rem; }
-      .trust-q { font-size: 0.8rem; }
-      .trust-a { font-size: 0.75rem; }
+      .use-case-list { grid-template-columns: 1fr; }
+      .use-case-type { font-size: 0.75rem; }
+      .how-it-works, .use-cases, .showcase, .comparison { margin-bottom: 3rem; }
+      .section-divider { margin-bottom: 3rem; }
+      .cta { margin-bottom: 3rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
       .signup-row { flex-direction: column; }
       .signup-input { border-right: 1px solid #222; }
+      .comparison-item { flex-direction: column; gap: 0.25rem; }
     }
 
     @media (max-width: 380px) {
@@ -505,11 +467,32 @@ export function renderLandingPage(): string {
     <section class="hero">
       <div class="hero-brand" aria-label="ProofSlip"><span>P</span><span>R</span><span class="glyph-flicker" data-alt="0">O</span><span class="glyph-flicker" data-alt="0">O</span><span>F</span><span>S</span><span>L</span><span>I</span><span>P</span></div>
       <div class="hero-tagline">ephemeral verification for agent workflows</div>
-      <h1 class="hero-headline">24-hour receipts your agents can check before they act.</h1>
-      <p class="hero-plain">A short-lived proof token that one agent creates and another verifies — before it does anything irreversible.</p>
-      <p class="hero-pain">Your agent executed twice. The approval expired but nobody checked. A workflow resumed from stale state and charged the customer again.</p>
-      <p class="hero-subcopy">ProofSlip issues verifiable receipts with a built-in expiry window. Your agents check the receipt before acting. No valid receipt, no action. No stale state, no replay attacks, no "I thought it was approved."</p>
+      <h1 class="hero-headline">24-hour receipts your agents check before they act.</h1>
     </section>
+
+    <!-- CTA — immediately visible -->
+    <section class="cta" id="signup">
+      <div id="signup-form">
+        <div class="signup-row">
+          <input type="email" id="signup-email" placeholder="you@example.com" class="signup-input" autocomplete="email">
+          <button id="signup-btn" class="cta-button" onclick="doSignup()">Get API key</button>
+        </div>
+        <div class="cta-subtext">Free — 500 receipts/month. No credit card.</div>
+      </div>
+      <div id="signup-result" style="display:none">
+        <div class="key-display">
+          <div class="key-label" style="color:#16a34a;font-size:0.85rem;margin-bottom:0.75rem">Check your email</div>
+          <div style="font-size:0.8rem;color:#888;line-height:1.6;">Your API key has been sent to <strong id="sent-email" style="color:#e0e0e0"></strong>.<br>It looks like a receipt — you'll recognize it.</div>
+        </div>
+        <div class="cta-subtext" style="margin-top:0.75rem">Didn't get it? Check spam, or sign up via curl for instant access.</div>
+      </div>
+      <div id="signup-error" style="display:none">
+        <div class="signup-error-msg" id="signup-error-msg"></div>
+        <button class="cta-button" onclick="resetSignup()" style="margin-top:0.75rem">Try again</button>
+      </div>
+    </section>
+
+    <hr class="section-divider">
 
     <!-- Receipt Showcase -->
     <section class="showcase">
@@ -542,26 +525,6 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
-    <!-- Why not just... -->
-    <section class="comparison">
-      <div class="section-label">Why not just use...</div>
-      <div class="comparison-grid">
-        <div class="comparison-item">
-          <div class="comparison-what">A database flag?</div>
-          <div class="comparison-problem">Flags don't expire, don't travel between services, and don't tell the next agent <em>when</em> the state changed. You end up building TTL logic, polling, and cleanup yourself.</div>
-        </div>
-        <div class="comparison-item">
-          <div class="comparison-what">A webhook?</div>
-          <div class="comparison-problem">Webhooks push events but don't prove they happened. If the receiver was down, the event is lost. There's no artifact the next agent can check independently.</div>
-        </div>
-        <div class="comparison-item">
-          <div class="comparison-what">A log?</div>
-          <div class="comparison-problem">Logs record history. They don't answer "is this still valid right now?" An agent can't query a log line with a URL and get back a yes/no with an expiry window.</div>
-        </div>
-      </div>
-      <div class="comparison-punchline">Logs tell you what happened. Flags tell you current state. ProofSlip gives the next agent portable, expiring proof it can verify before acting.</div>
-    </section>
-
     <!-- How It Works -->
     <section class="how-it-works">
       <div class="section-label">How It Works</div>
@@ -570,7 +533,7 @@ export function renderLandingPage(): string {
         <div class="step">
           <div class="step-number">01</div>
           <div class="step-title">Create</div>
-          <p class="step-description">Your system issues a receipt when a significant event occurs — a payment processed, an approval granted, a handshake completed.</p>
+          <p class="step-description">Issue a receipt when something happens — a payment, an approval, a handshake.</p>
           <div class="code-block"><span class="comment"># POST /v1/receipts</span>
 {
   "type": "action",
@@ -583,53 +546,42 @@ export function renderLandingPage(): string {
         <div class="step">
           <div class="step-number">02</div>
           <div class="step-title">Verify</div>
-          <p class="step-description">Before taking action, your agent checks the receipt. A valid receipt confirms the prerequisite event actually happened.</p>
+          <p class="step-description">Before acting, your agent checks the receipt. Valid receipt = go. No receipt = stop.</p>
           <div class="code-block"><span class="comment"># GET /verify/rct_7f3k9x2m</span>
 {
   "id": "rct_7f3k9x2m",
-  "type": "action",
-  "status": "success",
   "valid": true,
   "expires_at": "2026-03-24T12:00:00Z"
-}
-
-<span class="comment"># or view the styled receipt in the browser ↗</span></div>
+}</div>
         </div>
 
         <div class="step">
           <div class="step-number">03</div>
           <div class="step-title">Expire</div>
-          <p class="step-description">Receipts automatically expire after 24 hours. Expired receipts return invalid — your agents know the authorization window has closed. No manual cleanup required.</p>
+          <p class="step-description">Receipts auto-expire after 24 hours. No cleanup. No stale state.</p>
         </div>
 
       </div>
     </section>
 
-    <!-- How Trust Works -->
-    <section class="trust-section">
-      <div class="section-label">How Trust Works</div>
-      <div class="trust-grid">
-        <div class="trust-item">
-          <div class="trust-q">What gets stored?</div>
-          <div class="trust-a">Type, status, a 280-char summary, optional JSON payload (4KB max), and expiry time. Nothing more. You control what goes in.</div>
+    <!-- Why not just... -->
+    <section class="comparison">
+      <div class="section-label">Why not just use...</div>
+      <div class="comparison-grid">
+        <div class="comparison-item">
+          <div class="comparison-what">A database flag?</div>
+          <div class="comparison-problem">No expiry, no portability between services.</div>
         </div>
-        <div class="trust-item">
-          <div class="trust-q">Can receipts be forged?</div>
-          <div class="trust-a">Receipt IDs are cryptographically random. Only the API key holder can create receipts, and only the verify endpoint confirms them. No ID, no proof.</div>
+        <div class="comparison-item">
+          <div class="comparison-what">A webhook?</div>
+          <div class="comparison-problem">Pushes events but doesn't prove they happened.</div>
         </div>
-        <div class="trust-item">
-          <div class="trust-q">What does verify actually check?</div>
-          <div class="trust-a">That the receipt exists, was created by a valid key, and hasn't expired. If any of those fail, the response says invalid. Your agent stops.</div>
-        </div>
-        <div class="trust-item">
-          <div class="trust-q">What happens at expiry?</div>
-          <div class="trust-a">The receipt returns not found. Expired receipts are deleted permanently — no archive, no ghost state. The authorization window is closed.</div>
-        </div>
-        <div class="trust-item">
-          <div class="trust-q">What about replays?</div>
-          <div class="trust-a">Receipts are read-only after creation. Combined with expiry, the window for replay is bounded. Idempotency keys prevent duplicate creation.</div>
+        <div class="comparison-item">
+          <div class="comparison-what">A log?</div>
+          <div class="comparison-problem">Records history. Doesn't answer "is this still valid?"</div>
         </div>
       </div>
+      <div class="comparison-punchline">ProofSlip gives the next agent portable, expiring proof it can verify before acting.</div>
     </section>
 
     <!-- Use Cases -->
@@ -639,58 +591,19 @@ export function renderLandingPage(): string {
 
         <div class="use-case">
           <div class="use-case-type">action</div>
-          <div class="use-case-scenario">Agent refunds a customer $42. Issuing agent creates a receipt. Notification agent verifies the receipt exists before emailing the customer.</div>
-          <div class="use-case-pain">Without it: notification fires on stale data, customer gets a refund email for a failed transaction.</div>
+          <div class="use-case-scenario">Verify a refund happened before emailing the customer.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">approval</div>
-          <div class="use-case-scenario">Human approves a $5k vendor payment in Telegram. Agent creates an approval receipt. Payment agent checks the receipt before executing the transfer.</div>
-          <div class="use-case-pain">Without it: approval expires, agent pays anyway because it cached "approved" from an hour ago.</div>
+          <div class="use-case-scenario">Gate a payment on a fresh human approval — not a cached one.</div>
         </div>
 
         <div class="use-case">
           <div class="use-case-type">handshake</div>
-          <div class="use-case-scenario">Two agents need to coordinate a data migration. Each confirms readiness. The receipt proves both sides acknowledged before either starts writing.</div>
-          <div class="use-case-pain">Without it: one agent starts writing while the other is still reading. Partial state, corrupted data.</div>
+          <div class="use-case-scenario">Prove both agents acknowledged before either starts writing.</div>
         </div>
 
-        <div class="use-case">
-          <div class="use-case-type">resume</div>
-          <div class="use-case-scenario">A deploy pipeline pauses after canary. Oncall clears it to continue. The resume receipt gates re-entry into the deploy sequence.</div>
-          <div class="use-case-pain">Without it: pipeline resumes from a stale checkpoint and re-deploys an already-rolled-back version.</div>
-        </div>
-
-        <div class="use-case">
-          <div class="use-case-type">failure</div>
-          <div class="use-case-scenario">Payment processor returns an error. Agent creates a failure receipt. Retry agent checks — if the failure receipt is still valid, it knows the error is recent and retries. If expired, it escalates.</div>
-          <div class="use-case-pain">Without it: retry agent loops on a failure from 6 hours ago, burning API calls and hitting rate limits.</div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- CTA / Signup -->
-    <section class="cta" id="signup">
-      <div class="section-label" style="color: #16a34a">Get your API key</div>
-      <div id="signup-form">
-        <div class="signup-row">
-          <input type="email" id="signup-email" placeholder="you@example.com" class="signup-input" autocomplete="email">
-          <button id="signup-btn" class="cta-button" onclick="doSignup()">Get key</button>
-        </div>
-        <div class="cta-subtext">Free tier — 500 receipts/month. No credit card.</div>
-        <div class="cta-legal">We'll email you product updates. No spam.</div>
-      </div>
-      <div id="signup-result" style="display:none">
-        <div class="key-display">
-          <div class="key-label" style="color:#16a34a;font-size:0.85rem;margin-bottom:0.75rem">Check your email</div>
-          <div style="font-size:0.8rem;color:#888;line-height:1.6;">Your API key has been sent to <strong id="sent-email" style="color:#e0e0e0"></strong>.<br>It looks like a receipt — you'll recognize it.</div>
-        </div>
-        <div class="cta-subtext" style="margin-top:0.75rem">Didn't get it? Check spam, or sign up via curl for instant access.</div>
-      </div>
-      <div id="signup-error" style="display:none">
-        <div class="signup-error-msg" id="signup-error-msg"></div>
-        <button class="cta-button" onclick="resetSignup()" style="margin-top:0.75rem">Try again</button>
       </div>
     </section>
 
@@ -730,7 +643,7 @@ export function renderLandingPage(): string {
         document.getElementById("signup-error").style.display = "block";
       } finally {
         btn.disabled = false;
-        btn.textContent = "Get key";
+        btn.textContent = "Get API key";
       }
     }
     function resetSignup() {

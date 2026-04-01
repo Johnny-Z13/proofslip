@@ -74,6 +74,13 @@ curl -X POST https://proofslip.ai/v1/auth/signup \
   -d '{"email": "you@example.com", "source": "api"}'
 ```
 
+## Links
+
+- [Live Site](https://proofslip.ai)
+- [API Docs](https://proofslip.ai/docs)
+- [Example Receipt](https://proofslip.ai/example)
+- [GitHub](https://github.com/Johnny-Z13/proofslip)
+
 ## License
 
-ISC
+[MIT](https://github.com/Johnny-Z13/proofslip/blob/master/LICENSE)

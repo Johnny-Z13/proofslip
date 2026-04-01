@@ -1,6 +1,6 @@
 {
   "name": "@proofslip/mcp-server",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "MCP server for ProofSlip — receipt-based verification for AI agent workflows",
   "type": "module",
   "bin": {
@@ -43,5 +43,14 @@
     "model-context-protocol",
     "verification"
   ],
-  "license": "ISC"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Johnny-Z13/proofslip.git",
+    "directory": "packages/mcp-server"
+  },
+  "homepage": "https://proofslip.ai",
+  "bugs": {
+    "url": "https://github.com/Johnny-Z13/proofslip/issues"
+  }
 }

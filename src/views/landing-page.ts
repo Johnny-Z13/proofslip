@@ -418,6 +418,68 @@ export function renderLandingPage(): string {
       text-align: center;
     }
 
+    /* Failure cases */
+    .failures {
+      margin-bottom: 5rem;
+    }
+    .failure-card {
+      border: 1px solid #1a1a1a;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .failure-scenario {
+      padding: 1.25rem;
+      background: #0d0d0d;
+    }
+    .failure-label {
+      font-size: 0.65rem;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .failure-title {
+      font-size: 0.9rem;
+      color: #e0e0e0;
+      margin-bottom: 0.5rem;
+    }
+    .failure-halves {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: #1a1a1a;
+    }
+    .failure-half {
+      padding: 1rem 1.25rem;
+      background: #0a0a0a;
+    }
+    .failure-half-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .failure-half-label.without { color: #a85454; }
+    .failure-half-label.with { color: #16a34a; }
+    .failure-half p {
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .failure-half.bad p { color: #776060; }
+    .failure-half.good p { color: #8a8a8a; }
+    .failure-half code {
+      font-family: 'Departure Mono', monospace;
+      font-size: 0.7rem;
+      background: #111;
+      padding: 0.1rem 0.35rem;
+    }
+
+    @media (max-width: 640px) {
+      .failure-halves { grid-template-columns: 1fr; }
+    }
+
     /* Use cases */
     .use-cases {
       margin-bottom: 5rem;
@@ -680,6 +742,80 @@ export function renderLandingPage(): string {
         </div>
       </div>
       <div class="comparison-punchline">ProofSlip gives the next agent portable, expiring proof it can verify before acting.</div>
+    </section>
+
+    <!-- Why agents need receipts -->
+    <section class="failures">
+      <div class="section-label">Why agents need receipts</div>
+
+      <div class="failure-card">
+        <div class="failure-scenario">
+          <div class="failure-label">Duplicate refund</div>
+          <div class="failure-title">Two agents process the same refund because neither can prove it already happened.</div>
+        </div>
+        <div class="failure-halves">
+          <div class="failure-half bad">
+            <div class="failure-half-label without">Without ProofSlip</div>
+            <p>Agent A refunds $42. Agent B sees the same ticket, refunds $42 again. Customer gets $84. Your DB flag was stale.</p>
+          </div>
+          <div class="failure-half good">
+            <div class="failure-half-label with">With ProofSlip</div>
+            <p>Agent A creates a receipt with <code>idempotency_key: "refund-8812"</code>. Agent B tries the same key &mdash; gets the existing receipt back. One refund, one proof.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="failure-card">
+        <div class="failure-scenario">
+          <div class="failure-label">Stale approval</div>
+          <div class="failure-title">An agent acts on a human approval that was given 3 days ago for a different context.</div>
+        </div>
+        <div class="failure-halves">
+          <div class="failure-half bad">
+            <div class="failure-half-label without">Without ProofSlip</div>
+            <p>Manager approved a $500 payment on Monday. Friday, a different agent finds that approval flag and pushes $5,000. The flag never expired.</p>
+          </div>
+          <div class="failure-half good">
+            <div class="failure-half-label with">With ProofSlip</div>
+            <p>Approval receipt expires in 1 hour. Agent checks <code>valid: true</code> and <code>expired: false</code> before every action. Stale approval = automatic stop.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="failure-card">
+        <div class="failure-scenario">
+          <div class="failure-label">Broken handshake</div>
+          <div class="failure-title">Agent B starts writing to a shared resource before Agent A is done reading it.</div>
+        </div>
+        <div class="failure-halves">
+          <div class="failure-half bad">
+            <div class="failure-half-label without">Without ProofSlip</div>
+            <p>Agent A is mid-read. Agent B assumes it&rsquo;s done and starts writing. Data corruption. No coordination, just hope.</p>
+          </div>
+          <div class="failure-half good">
+            <div class="failure-half-label with">With ProofSlip</div>
+            <p>Agent A creates a <code>handshake</code> receipt when ready. Agent B verifies it exists before writing. No receipt = wait.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="failure-card">
+        <div class="failure-scenario">
+          <div class="failure-label">Unsafe retry</div>
+          <div class="failure-title">A pipeline crashes and restarts from the beginning instead of where it left off.</div>
+        </div>
+        <div class="failure-halves">
+          <div class="failure-half bad">
+            <div class="failure-half-label without">Without ProofSlip</div>
+            <p>Pipeline fails at step 7 of 10. Restarts at step 1. Re-sends emails, re-processes payments, re-deploys artifacts. Chaos.</p>
+          </div>
+          <div class="failure-half good">
+            <div class="failure-half-label with">With ProofSlip</div>
+            <p>Each step creates a <code>resume</code> receipt. On restart, the pipeline checks which receipts are still valid and skips to step 8.</p>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- Use Cases -->

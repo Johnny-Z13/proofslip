@@ -12,6 +12,7 @@ import { renderLlmsFullTxt } from './views/llms-full-txt.js'
 import { getOpenApiSpec } from './views/openapi.js'
 import { getMcpDiscovery } from './views/mcp-json.js'
 import { renderDocsPage } from './views/docs-page.js'
+import { renderVerifyPage } from './views/verify-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
 
@@ -83,6 +84,30 @@ app.get('/llms-full.txt', (c) => {
   return c.body(renderLlmsFullTxt())
 })
 app.get('/docs', (c) => c.html(renderDocsPage()))
+app.get('/example', (c) => {
+  c.header('Cache-Control', 'public, max-age=86400')
+  return c.html(renderVerifyPage({
+    id: 'rct_example_7f3k9x2m',
+    type: 'action',
+    status: 'success',
+    summary: 'Refund of $42.00 issued to customer #8812',
+    payload: {
+      customer_id: 8812,
+      refund_amount: 42.00,
+      currency: 'USD',
+      reason: 'duplicate_charge',
+      initiated_by: 'agent/billing-v2',
+    },
+    ref: {
+      workflow_id: 'billing-run-2026-03-23',
+      agent_id: 'billing-agent',
+      action_id: 'refund-8812',
+    },
+    audience: 'human',
+    createdAt: '2026-03-23T12:00:00.000Z',
+    expiresAt: '2099-12-31T23:59:59.000Z',
+  }))
+})
 app.get('/.well-known/openapi.json', (c) => {
   c.header('Cache-Control', 'public, max-age=86400')
   return c.json(getOpenApiSpec())

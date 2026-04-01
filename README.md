@@ -6,7 +6,7 @@
 
 > Agents should not continue based on assumptions when they can continue based on receipts.
 
-[Live Site](https://proofslip.ai) | [API Docs](https://proofslip.ai/docs) | [MCP Server](https://www.npmjs.com/package/@proofslip/mcp-server) | [llms.txt](https://proofslip.ai/llms.txt)
+[Live Site](https://proofslip.ai) | [API Docs](https://proofslip.ai/docs) | [Example Receipt](https://proofslip.ai/example) | [MCP Server](https://www.npmjs.com/package/@proofslip/mcp-server) | [llms.txt](https://proofslip.ai/llms.txt)
 
 ## The Problem
 

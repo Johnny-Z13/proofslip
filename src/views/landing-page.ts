@@ -644,7 +644,7 @@ export function renderLandingPage(): string {
           <h2>ProofSlip</h2>
           <div class="verified-badge">Verified</div>
         </div>
-        <div class="receipt-id">rct_7f3k9x2m</div>
+        <a href="/example" class="receipt-id" style="text-decoration:none;color:#999;">rct_7f3k9x2m</a>
         <div class="row"><span class="label">Type</span><span class="value">action</span></div>
         <div class="row"><span class="label">Status</span><span class="value">success</span></div>
         <div class="summary-block">Refund of $42.00 issued to customer #8812</div>
@@ -662,7 +662,7 @@ export function renderLandingPage(): string {
 }</pre>
         </details>
         <div class="receipt-footer">
-          <a href="/">proofslip.ai</a>
+          <a href="/example">view live receipt &rarr;</a>
         </div>
       </div>
     </section>

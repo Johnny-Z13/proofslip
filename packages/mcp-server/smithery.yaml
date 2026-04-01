@@ -1,0 +1,18 @@
+name: proofslip
+description: >-
+  Receipt-based verification for AI agent workflows.
+  Create, verify, and poll ephemeral receipts that let agents
+  prove what happened before deciding what happens next.
+icon: receipt
+author: proofslip
+sourceUrl: https://github.com/proofslip/proofslip/tree/main/packages/mcp-server
+license: ISC
+runtime: node
+startCommand:
+  command: node
+  args:
+    - dist/bin/cli.js
+  env:
+    PROOFSLIP_API_KEY:
+      description: Your ProofSlip API key (get one at proofslip.ai or use the signup tool)
+      required: false

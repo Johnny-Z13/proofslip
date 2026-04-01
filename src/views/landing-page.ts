@@ -449,6 +449,35 @@ export function renderLandingPage(): string {
       line-height: 1.5;
     }
 
+    /* MCP install */
+    .mcp-install {
+      margin-bottom: 5rem;
+      text-align: center;
+    }
+    .mcp-install-cmd {
+      display: inline-block;
+      background: #111;
+      border: 1px solid #1a1a1a;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.75rem;
+      color: #7c9a5e;
+      font-family: 'Departure Mono', monospace;
+      margin-top: 1rem;
+      letter-spacing: 0.02em;
+    }
+    .mcp-install-note {
+      font-size: 0.65rem;
+      color: #333;
+      margin-top: 0.6rem;
+    }
+    .mcp-install-note a {
+      color: #444;
+      text-decoration: none;
+    }
+    .mcp-install-note a:hover {
+      color: #888;
+    }
+
     /* Footer */
     .site-footer {
       font-size: 0.75rem;
@@ -475,7 +504,7 @@ export function renderLandingPage(): string {
       .two-ways-grid { grid-template-columns: 1fr; }
       .use-case { flex-direction: column; gap: 0.25rem; }
       .use-case-type { min-width: auto; }
-      .how-it-works, .use-cases, .showcase, .comparison, .two-ways { margin-bottom: 3rem; }
+      .how-it-works, .use-cases, .showcase, .comparison, .two-ways, .mcp-install { margin-bottom: 3rem; }
       .cta { margin-bottom: 2rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
       .signup-row { flex-direction: column; }
@@ -652,6 +681,13 @@ export function renderLandingPage(): string {
           <div class="use-case-scenario">Prove both agents acknowledged before either starts writing.</div>
         </div>
       </div>
+    </section>
+
+    <!-- MCP -->
+    <section class="mcp-install">
+      <div class="section-label">MCP Server</div>
+      <div class="mcp-install-cmd">npx -y @proofslip/mcp-server</div>
+      <div class="mcp-install-note">Works with Claude Desktop, Cursor, Windsurf, and any MCP client. <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm ↗</a></div>
     </section>
 
     <!-- Footer -->

@@ -41,9 +41,10 @@ for pat in "${PATTERNS[@]}"; do
   while IFS= read -r file; do
     [ -z "$file" ] && continue
     [ ! -f "$file" ] && continue
-    # Skip binary files and .env (which should be gitignored anyway)
+    # Skip binary files, .env, and this script itself
     case "$file" in
       *.png|*.jpg|*.woff2|*.ico|*.lock) continue ;;
+      .claude/secret-scan.sh) continue ;;
     esac
     MATCH=$(grep -nEo "$pat" "$file" 2>/dev/null | head -3)
     if [ -n "$MATCH" ]; then

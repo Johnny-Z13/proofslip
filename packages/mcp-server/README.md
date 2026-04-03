@@ -79,6 +79,7 @@ curl -X POST https://proofslip.ai/v1/auth/signup \
 - [Live Site](https://proofslip.ai)
 - [API Docs](https://proofslip.ai/docs)
 - [Example Receipt](https://proofslip.ai/example)
+- [Context Capsule](https://www.contextcapsule.ai) (sister product — execution context for handoffs)
 - [GitHub](https://github.com/Johnny-Z13/proofslip)
 
 ## License

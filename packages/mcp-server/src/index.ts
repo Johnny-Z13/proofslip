@@ -13,7 +13,7 @@ export function createServer(options?: { apiKey?: string; baseUrl?: string }) {
 
   const server = new McpServer({
     name: 'proofslip',
-    version: '0.1.0',
+    version: '0.2.1',
   });
 
   registerCreateReceiptTool(server, client);

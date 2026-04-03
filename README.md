@@ -374,6 +374,55 @@ src/
 
 **Stack**: Hono + Drizzle ORM + Neon Postgres + Vercel Serverless (zero-config)
 
+## Better With Context Capsule
+
+ProofSlip proves what happened. [**Context Capsule**](https://contextcapsule.ai) tells agents what to do next. Together they're two primitives for reliable agent workflows:
+
+| | ProofSlip | Context Capsule |
+|---|---|---|
+| **Role** | Evidential | Navigational |
+| **Answers** | "What actually happened, and can you verify it?" | "What's the situation and what should happen next?" |
+| **Primitive** | Verifiable receipt | Execution context packet |
+| **Get started** | [proofslip.ai](https://proofslip.ai) | [contextcapsule.ai](https://contextcapsule.ai) |
+
+### Example: Verified Handoff
+
+```bash
+# 1. Agent A completes work and creates a receipt as proof
+curl -X POST https://proofslip.ai/v1/receipts \
+  -H "Authorization: Bearer ak_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "action",
+    "status": "success",
+    "summary": "Migrated user table schema"
+  }'
+# Returns: { "receipt_id": "rct_abc123", ... }
+
+# 2. Agent A creates a Context Capsule referencing that receipt
+curl -X POST https://contextcapsule.ai/v1/capsules \
+  -H "Authorization: Bearer ck_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "summary": "Schema migration complete, ready for integration tests",
+    "decisions": ["Used addColumn to preserve backward compat"],
+    "next_steps": ["Run integration tests", "Update API serializers"],
+    "refs": {
+      "receipt_ids": ["rct_abc123"],
+      "workflow_id": "migration-456"
+    }
+  }'
+
+# 3. Agent B picks up the capsule, verifies the receipt, then continues
+curl https://contextcapsule.ai/v1/capsules/cap_xyz789?format=json
+curl https://proofslip.ai/v1/verify/rct_abc123?format=json
+# Receipt checks out → proceed with integration tests
+```
+
+The receipt carries the proof. The capsule carries the navigation. Neither agent has to trust the other's claims — they verify.
+
+> **Don't have Context Capsule yet?** [Get a free API key](https://contextcapsule.ai/v1/auth/signup) — same stack, same patterns, takes 30 seconds.
+
 ## Design Principles
 
 - **Ephemeral by default.** 24-hour TTL. Not a long-term archive.

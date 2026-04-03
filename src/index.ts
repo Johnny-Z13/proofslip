@@ -51,12 +51,13 @@ app.get('/sitemap.xml', (c) => {
   return c.body(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://proofslip.ai</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://proofslip.ai/llms.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://proofslip.ai/.well-known/openapi.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://proofslip.ai/.well-known/agent.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://proofslip.ai/.well-known/mcp.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://proofslip.ai/llms-full.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://proofslip.ai/docs</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://proofslip.ai/llms.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://proofslip.ai/llms-full.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://proofslip.ai/.well-known/openapi.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://proofslip.ai/.well-known/mcp.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://proofslip.ai/.well-known/agent.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://proofslip.ai/.well-known/ai-plugin.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>`)
 })
 app.get('/robots.txt', (c) => {

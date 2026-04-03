@@ -540,6 +540,54 @@ export function renderLandingPage(): string {
       color: #888;
     }
 
+    /* Ecosystem */
+    .ecosystem {
+      margin-bottom: 5rem;
+      text-align: center;
+    }
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .ecosystem-item {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      padding: 1.25rem 1rem;
+    }
+    .ecosystem-name {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+    .ecosystem-role {
+      font-size: 0.65rem;
+      color: #16a34a;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .ecosystem-desc {
+      font-size: 0.7rem;
+      color: #555;
+      line-height: 1.5;
+    }
+    .ecosystem-footnote {
+      font-size: 0.65rem;
+      color: #333;
+      margin-top: 1rem;
+    }
+    .ecosystem-footnote a {
+      color: #444;
+      text-decoration: none;
+    }
+    .ecosystem-footnote a:hover { color: #888; }
+
     /* Footer nav */
     .footer-nav {
       display: flex;
@@ -584,7 +632,8 @@ export function renderLandingPage(): string {
       .two-ways-grid { grid-template-columns: 1fr; }
       .use-case { flex-direction: column; gap: 0.25rem; }
       .use-case-type { min-width: auto; }
-      .how-it-works, .use-cases, .showcase, .comparison, .two-ways, .mcp-install { margin-bottom: 3rem; }
+      .how-it-works, .use-cases, .showcase, .comparison, .two-ways, .mcp-install, .ecosystem { margin-bottom: 3rem; }
+      .ecosystem-grid { grid-template-columns: 1fr; }
       .cta { margin-bottom: 2rem; }
       .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
       .signup-row { flex-direction: column; }
@@ -844,10 +893,29 @@ export function renderLandingPage(): string {
       <div class="mcp-install-note">Works with Claude Desktop, Cursor, Windsurf, and any MCP client. <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm ↗</a></div>
     </section>
 
+    <!-- Context Capsule + ProofSlip ecosystem -->
+    <section class="ecosystem">
+      <div class="section-label">Two primitives, one coordination layer</div>
+      <div class="ecosystem-grid">
+        <div class="ecosystem-item">
+          <div class="ecosystem-name">ProofSlip</div>
+          <div class="ecosystem-role">Verification</div>
+          <div class="ecosystem-desc">Did it happen? Ephemeral receipts your agents verify before they act. Proof of past actions.</div>
+        </div>
+        <div class="ecosystem-item">
+          <div class="ecosystem-name">Context Capsule</div>
+          <div class="ecosystem-role">Knowledge</div>
+          <div class="ecosystem-desc">What do I need to know? Structured handoff packets that carry decisions, findings, and next steps forward.</div>
+        </div>
+      </div>
+      <div class="ecosystem-footnote">Receipts prove what capsules describe. Capsules reference receipts. <a href="https://www.contextcapsule.ai" target="_blank">contextcapsule.ai &rarr;</a></div>
+    </section>
+
     <!-- Footer nav -->
     <nav class="footer-nav">
       <a href="/docs">API docs</a>
       <a href="/llms.txt">llms.txt</a>
+      <a href="https://www.contextcapsule.ai" target="_blank">Context Capsule</a>
       <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm</a>
       <a href="https://github.com/Johnny-Z13/proofslip" target="_blank">GitHub</a>
     </nav>

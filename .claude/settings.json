@@ -1,4 +1,7 @@
 {
+  "permissions": {
+    "additionalDirectories": ["D:/Projects/context-capsule"]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -9,6 +12,17 @@
             "command": "bash .claude/secret-scan.sh",
             "timeout": 15,
             "statusMessage": "Scanning for secrets..."
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);const f=j.tool_input?.file_path||j.tool_input?.filePath||'';const base=f.split('/').pop();if(['LICENSE','README.md'].includes(base)){console.log(JSON.stringify({decision:'block',reason:'Blocked: '+base+' is a protected file. Confirm with user before modifying.'}));}})\"",
+            "timeout": 5,
+            "statusMessage": "Checking protected files..."
           }
         ]
       }

@@ -69,6 +69,26 @@ These endpoints are live at `proofslip.ai`:
 - `/docs` — Human-readable API docs
 - `/sitemap.xml` — SEO crawl map
 
+---
+
+## ContextCapsule — Mirror Progress
+
+CC follows the same playbook. ProofSlip leads, CC inherits. Managed from this project via `additionalDirectories`.
+
+### Phase 1: Registry Blitz
+
+| Action | Status | Notes |
+|--------|--------|-------|
+| Publish MCP server to npm | DONE | `@contextcapsule/mcp-server` |
+| Submit to Smithery (mcp.so) | NOT CHECKED | Verify if already listed |
+| List on Glama.ai | NOT CHECKED | Verify if already listed |
+| Submit to official MCP registry | NOT STARTED | Needs `mcpName`, `server.json`, DNS TXT on contextcapsule.ai |
+| List on PulseMCP | NOT STARTED | Auto-ingests from official registry |
+| Register GPT Action | NOT STARTED | Needs ai-plugin.json + OpenAPI on contextcapsule.ai |
+| Submit to Composio | NOT STARTED | Follow ProofSlip pattern |
+
+---
+
 ## Prioritization Principle
 
 **Registry listings first** (Phase 1) because they're high leverage and low effort — you submit once and they compound forever. Framework integrations (Phase 2) require code but unlock the biggest audiences. Content (Phase 3) is last because one great piece beats ten mediocre ones.

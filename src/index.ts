@@ -12,6 +12,7 @@ import { renderLlmsFullTxt } from './views/llms-full-txt.js'
 import { getOpenApiSpec } from './views/openapi.js'
 import { getMcpDiscovery } from './views/mcp-json.js'
 import { renderDocsPage } from './views/docs-page.js'
+import { renderPrivacyPage } from './views/privacy-page.js'
 import { renderVerifyPage } from './views/verify-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
@@ -85,6 +86,7 @@ app.get('/llms-full.txt', (c) => {
   return c.body(renderLlmsFullTxt())
 })
 app.get('/docs', (c) => c.html(renderDocsPage()))
+app.get('/privacy', (c) => c.html(renderPrivacyPage()))
 app.get('/example', (c) => {
   c.header('Cache-Control', 'public, max-age=86400')
   return c.html(renderVerifyPage({

@@ -10,6 +10,9 @@ Running record of what's been shipped, listed, and submitted.
 - Published to official MCP registry as `ai.proofslip/mcp-server` (DNS auth via ed25519 keypair on proofslip.ai)
 - PulseMCP will auto-ingest within ~1 week
 - DNS TXT record added to proofslip.ai root for MCP registry auth
+- Added /privacy page for GPT Store requirement
+- Created GPT Store setup guide at docs/growth/gpt-store-setup.md
+- Composio skipped — no self-service listing, request board only
 
 ## 2026-04-04
 

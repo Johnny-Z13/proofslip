@@ -1,7 +1,10 @@
 import { execSync } from 'child_process'
+import { writeFileSync, mkdirSync } from 'fs'
+import { join } from 'path'
 
 const DIVIDER = '═'.repeat(50)
 const results: { name: string; passed: boolean; detail: string }[] = []
+const RESULTS_DIR = join(process.cwd(), 'tests', 'results')
 
 function run(name: string, command: string): boolean {
   console.log(`\n▶ ${name}\n`)
@@ -48,5 +51,18 @@ if (allPassed) {
   console.log('  SOME TESTS FAILED ✗')
 }
 console.log(`${DIVIDER}\n`)
+
+// Save results to tests/results/
+mkdirSync(RESULTS_DIR, { recursive: true })
+const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+const report = [
+  `ProofSlip Test Report — ${new Date().toISOString()}`,
+  '',
+  ...results.map((r) => `${r.passed ? 'PASS' : 'FAIL'} ${r.name}`),
+  '',
+  allPassed ? 'ALL PASSED' : 'SOME TESTS FAILED',
+].join('\n')
+writeFileSync(join(RESULTS_DIR, `${timestamp}.txt`), report)
+console.log(`  Report saved to tests/results/${timestamp}.txt`)
 
 process.exit(allPassed ? 0 : 1)

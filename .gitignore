@@ -8,3 +8,6 @@ mcp-publisher.exe
 *.egg-info/
 build/
 packages/langchain/dist/
+tests/results/
+__pycache__/
+.pytest_cache/

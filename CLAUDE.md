@@ -39,11 +39,28 @@ ProofSlip creates verifiable receipts that prove actions happened. Agents check 
 
 ```bash
 npm run dev          # Local dev server
-npm test             # Run tests
+npm test             # Run tests (watch mode)
+npm run test:all     # Full stack test — 4 layers, ~184 tests, summary report
+npm run test:unit    # Unit + integration only
+npm run test:smoke   # Smoke tests against production (needs PROOFSLIP_API_KEY in .env)
+npm run test:packages # MCP server package tests
 npm run db:generate  # Generate migrations
 npm run db:migrate   # Apply migrations
-npm run db:seed      # Seed API key
+npm run db:seed      # Seed API key (npm run db:seed -- user@email.com)
 ```
+
+## Testing
+
+Full stack test suite via `npm run test:all`. Four layers:
+
+1. **Unit & Integration** (tests/lib/, tests/routes/) — validators, routes, middleware via Hono in-memory requests
+2. **Smoke** (tests/smoke/) — real HTTP calls to proofslip.ai: API lifecycle, 9 discovery endpoints, link checker
+3. **MCP Package** (tests/packages/mcp-server/) — mocked fetch, tests client + tool logic
+4. **LangChain Package** (packages/langchain/tests/) — pytest, mocked requests, tests tools + toolkit
+
+Smoke tests use `https://www.proofslip.ai` (not `proofslip.ai`) because Vercel redirects bare domain to www, dropping auth headers.
+
+Pre-push hook reminds to run `test:all` before pushing. Test results saved to `tests/results/`.
 
 ## Architecture Principles
 
@@ -92,8 +109,17 @@ When modifying ProofSlip APIs or response shapes, check that chaining patterns s
 packages/
 ├── mcp-server/     # @proofslip/mcp-server (npm + official MCP registry)
 └── langchain/      # langchain-proofslip (PyPI)
+tests/
+├── lib/            # Unit tests (validators, utils)
+├── routes/         # Integration tests (API endpoints via Hono)
+├── smoke/          # Production smoke tests (real HTTP to proofslip.ai)
+├── packages/       # MCP server package tests (mocked)
+└── results/        # Test run logs (gitignored)
+scripts/
+└── test-all.ts     # Orchestrator — runs all layers, prints summary
 docs/
 ├── growth/         # Strategy, playbook, log, cheat sheets (active)
+├── specs/          # Design specs and implementation plans
 ├── archive/        # Old PRDs and brainstorming artifacts
 └── ProofSlip API PRD.md
 ```

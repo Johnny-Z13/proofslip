@@ -10,7 +10,7 @@ Get ProofSlip listed on every tool registry and marketplace.
 
 | Action | Status | Notes |
 |--------|--------|-------|
-| Publish MCP server to npm | DONE | `@proofslip/mcp-server@0.2.2` |
+| Publish MCP server to npm | DONE | `@proofslip/mcp-server@0.2.3` |
 | smithery.yaml in package | DONE | Included in published package |
 | Submit to Smithery (mcp.so) | DONE | Listed on mcp.so |
 | ~~Submit to mcp.run~~ | SKIPPED | Rebranded to turbomcp.ai — now enterprise gateway, not a public directory |

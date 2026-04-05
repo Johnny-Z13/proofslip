@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-const BASE = process.env.PROOFSLIP_BASE_URL || 'https://proofslip.ai'
+const BASE = process.env.PROOFSLIP_BASE_URL || 'https://www.proofslip.ai'
 
 describe('Smoke: Discovery Endpoints', () => {
   it('GET /llms.txt returns valid content', async () => {

@@ -42,5 +42,11 @@ Documentation = "https://proofslip.ai/docs"
 Repository = "https://github.com/Johnny-Z13/proofslip"
 Issues = "https://github.com/Johnny-Z13/proofslip/issues"
 
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "langchain-core>=0.2.0",
+]
+
 [tool.setuptools.packages.find]
 include = ["langchain_proofslip*"]

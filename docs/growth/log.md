@@ -13,6 +13,7 @@ Running record of what's been shipped, listed, and submitted.
 - Added /privacy page for GPT Store requirement
 - Created GPT Store setup guide at docs/growth/gpt-store-setup.md
 - Composio skipped — no self-service listing, request board only
+- Built `langchain-proofslip` Python package (3 tools + toolkit, ready for PyPI publish)
 
 ## 2026-04-04
 

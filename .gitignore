@@ -5,3 +5,6 @@ dist/
 .superpowers/
 .claude/settings.local.json
 mcp-publisher.exe
+*.egg-info/
+build/
+packages/langchain/dist/

@@ -15,7 +15,7 @@ Get ProofSlip listed on every tool registry and marketplace.
 | Submit to Smithery (mcp.so) | DONE | Listed on mcp.so |
 | ~~Submit to mcp.run~~ | SKIPPED | Rebranded to turbomcp.ai — now enterprise gateway, not a public directory |
 | ~~Submit to Composio~~ | SKIPPED | No self-service listing — request board only, not worth it at zero users |
-| Submit to LangChain community tools | NOT STARTED | Needs LangChain tool wrapper |
+| Submit to LangChain community tools | IN PROGRESS | `langchain-proofslip` package built, needs PyPI publish + docs PR |
 | Submit to CrewAI tools directory | NOT STARTED | Needs CrewAI tool wrapper |
 | Register GPT Action (OpenAI GPT Store) | READY | Privacy page + setup guide done. Follow `docs/growth/gpt-store-setup.md` |
 | List on Glama.ai MCP directory | DONE | MCP listing site |
@@ -28,7 +28,7 @@ Build thin wrappers so ProofSlip appears native in popular agent frameworks.
 
 | Action | Status | Notes |
 |--------|--------|-------|
-| `@proofslip/sdk` — JS/TS client library | NOT STARTED | Thin fetch wrapper, typed responses, 3-line integration |
+| `@proofslip/sdk` — JS/TS client library | NOT STARTED | Thin fetch wrapper, typed responses, 3-line integration. Also serves as LangChain JS tool. |
 | LangChain tool wrapper | NOT STARTED | Uses SDK, registers as LangChain Tool |
 | CrewAI tool wrapper | NOT STARTED | Python wrapper using REST API |
 | AutoGen tool definition | NOT STARTED | Uses OpenAPI spec |

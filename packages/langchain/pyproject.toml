@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langchain-proofslip"
+version = "0.1.0"
+description = "LangChain tools for ProofSlip — ephemeral receipt-based verification for AI agent workflows"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "Johnny Z", email = "johnny@z13labs.com" }
+]
+keywords = [
+    "langchain",
+    "proofslip",
+    "receipts",
+    "ai-agents",
+    "verification",
+    "idempotency",
+    "agent-workflows"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "langchain-core>=0.2.0",
+    "requests>=2.28.0",
+]
+
+[project.urls]
+Homepage = "https://proofslip.ai"
+Documentation = "https://proofslip.ai/docs"
+Repository = "https://github.com/Johnny-Z13/proofslip"
+Issues = "https://github.com/Johnny-Z13/proofslip/issues"
+
+[tool.setuptools.packages.find]
+include = ["langchain_proofslip*"]

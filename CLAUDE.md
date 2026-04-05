@@ -18,6 +18,12 @@ ProofSlip and ContextCapsule are two primitives for reliable agent workflows:
 
 ProofSlip creates verifiable receipts that prove actions happened. Agents check receipts before deciding what to do next. Receipts are ephemeral (24h default), typed, and include polling guidance for non-terminal states.
 
+## Published Packages
+
+- **MCP Server:** `@proofslip/mcp-server` on npm — also registered on official MCP registry as `ai.proofslip/mcp-server`
+- **LangChain Tools:** `langchain-proofslip` on PyPI — 3 tools + toolkit for Python agent frameworks
+- **Listings:** Smithery (mcp.so), Glama.ai, official MCP registry, PulseMCP (auto-ingests)
+
 ## Tech Stack
 
 - **Runtime:** Node.js 18+
@@ -27,6 +33,7 @@ ProofSlip creates verifiable receipts that prove actions happened. Agents check 
 - **Deployment:** Vercel serverless
 - **Testing:** Vitest
 - **MCP:** @modelcontextprotocol/sdk for MCP server package
+- **Python packages:** Built with setuptools, published via twine
 
 ## Development
 
@@ -79,9 +86,26 @@ See `D:\Projects\context-capsule\docs\plans\chaining-patterns.md` for full patte
 
 When modifying ProofSlip APIs or response shapes, check that chaining patterns still work — capsules depend on `receipt_id` and `status` fields from verify responses.
 
+## Project Structure
+
+```
+packages/
+├── mcp-server/     # @proofslip/mcp-server (npm + official MCP registry)
+└── langchain/      # langchain-proofslip (PyPI)
+docs/
+├── growth/         # Strategy, playbook, log, cheat sheets (active)
+├── archive/        # Old PRDs and brainstorming artifacts
+└── ProofSlip API PRD.md
+```
+
+## Growth Strategy
+
+Ecosystem saturation — be everywhere agents and devs look for tools. See `docs/growth/thesis.md` for the bet, `docs/growth/playbook.md` for the action tracker, `docs/growth/log.md` for what's been shipped.
+
+Core thesis: agents are getting smarter at discovering tools. If ProofSlip is plumbed into enough discovery surfaces (MCP registries, LangChain, OpenAPI, llms.txt), agents will find it themselves. Receipts have built-in virality — every verify_url is a breadcrumb back to ProofSlip.
+
 ## Project Status
 
-Live in production. Core API (create, verify, poll, auth, cleanup) implemented. Zero users currently — pre-adoption phase.
+Live in production. Core API (create, verify, poll, auth, cleanup) implemented. Zero users currently — pre-adoption phase. Active registry blitz underway.
 
-**Future plans (not yet started):**
-- Umbrella brand site connecting ProofSlip + ContextCapsule (only after both have users)
+ContextCapsule follows the same playbook — managed from this project via `additionalDirectories`.

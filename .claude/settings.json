@@ -16,6 +16,18 @@
         ]
       },
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const j=JSON.parse(d);const cmd=j.tool_input?.command||'';if(cmd.match(/git\\s+push/)){console.log(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',additionalContext:'IMPORTANT: Before pushing, run npm run test:all to verify all 4 test layers pass. If tests have not been run this session, run them now before pushing.'}}));}})\"",
+            "timeout": 5,
+            "statusMessage": "Checking pre-push..."
+          }
+        ],
+        "if": "Bash(git push:*)"
+      },
+      {
         "matcher": "Write|Edit",
         "hooks": [
           {

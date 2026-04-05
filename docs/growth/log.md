@@ -14,6 +14,7 @@ Running record of what's been shipped, listed, and submitted.
 - Created GPT Store setup guide at docs/growth/gpt-store-setup.md
 - Composio skipped — no self-service listing, request board only
 - Built `langchain-proofslip` Python package (3 tools + toolkit, ready for PyPI publish)
+- Published `langchain-proofslip` v0.1.0 to PyPI — https://pypi.org/project/langchain-proofslip/0.1.0/
 
 ## 2026-04-04
 

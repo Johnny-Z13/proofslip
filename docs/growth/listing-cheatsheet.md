@@ -23,6 +23,9 @@ Copy-paste details for submitting ProofSlip and ContextCapsule to directories an
 - `check_receipt_status` — Lightweight status polling
 - `signup` — Get a free API key
 
+**PyPI (LangChain):** https://pypi.org/project/langchain-proofslip/
+**Install (Python):** `pip install langchain-proofslip`
+
 **Keywords:** receipts, verification, idempotency, agent workflows, proof, ephemeral, multi-agent, MCP
 
 ---

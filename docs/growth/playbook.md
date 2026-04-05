@@ -15,7 +15,7 @@ Get ProofSlip listed on every tool registry and marketplace.
 | Submit to Smithery (mcp.so) | DONE | Listed on mcp.so |
 | ~~Submit to mcp.run~~ | SKIPPED | Rebranded to turbomcp.ai — now enterprise gateway, not a public directory |
 | ~~Submit to Composio~~ | SKIPPED | No self-service listing — request board only, not worth it at zero users |
-| Submit to LangChain community tools | IN PROGRESS | `langchain-proofslip` package built, needs PyPI publish + docs PR |
+| Submit to LangChain community tools | DONE | `langchain-proofslip` v0.1.0 on PyPI. Docs PR to langchain-ai/langchain next. |
 | Submit to CrewAI tools directory | NOT STARTED | Needs CrewAI tool wrapper |
 | Register GPT Action (OpenAI GPT Store) | READY | Privacy page + setup guide done. Follow `docs/growth/gpt-store-setup.md` |
 | List on Glama.ai MCP directory | DONE | MCP listing site |

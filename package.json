@@ -9,6 +9,10 @@
   "scripts": {
     "dev": "tsx watch src/dev.ts",
     "test": "vitest",
+    "test:unit": "vitest run tests/lib/ tests/routes/",
+    "test:smoke": "vitest run tests/smoke/",
+    "test:packages": "vitest run tests/packages/",
+    "test:all": "tsx scripts/test-all.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts"

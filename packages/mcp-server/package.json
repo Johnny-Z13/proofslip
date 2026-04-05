@@ -1,6 +1,7 @@
 {
   "name": "@proofslip/mcp-server",
-  "version": "0.2.2",
+  "version": "0.2.3",
+  "mcpName": "ai.proofslip/mcp-server",
   "description": "MCP server for ProofSlip — receipt-based verification for AI agent workflows",
   "type": "module",
   "bin": {
@@ -17,7 +18,8 @@
   "files": [
     "dist",
     "README.md",
-    "smithery.yaml"
+    "smithery.yaml",
+    "server.json"
   ],
   "scripts": {
     "build": "tsc",

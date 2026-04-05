@@ -13,13 +13,14 @@ Get ProofSlip listed on every tool registry and marketplace.
 | Publish MCP server to npm | DONE | `@proofslip/mcp-server@0.2.2` |
 | smithery.yaml in package | DONE | Included in published package |
 | Submit to Smithery (mcp.so) | DONE | Listed on mcp.so |
-| Submit to mcp.run | NOT STARTED | MCP registry |
+| ~~Submit to mcp.run~~ | SKIPPED | Rebranded to turbomcp.ai — now enterprise gateway, not a public directory |
 | Submit to Composio tool registry | NOT STARTED | Agent tool marketplace |
 | Submit to LangChain community tools | NOT STARTED | Needs LangChain tool wrapper |
 | Submit to CrewAI tools directory | NOT STARTED | Needs CrewAI tool wrapper |
 | Register GPT Action (OpenAI GPT Store) | NOT STARTED | ai-plugin.json + OpenAPI already live |
 | List on Glama.ai MCP directory | DONE | MCP listing site |
-| List on PulseMCP directory | NOT STARTED | MCP listing site |
+| List on PulseMCP directory | PENDING | Auto-ingests from official registry weekly — no action needed |
+| Submit to official MCP registry | DONE | `ai.proofslip/mcp-server` v0.2.3. PulseMCP auto-ingests weekly. |
 
 ## Phase 2: Framework Integrations (Next)
 

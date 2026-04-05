@@ -4,6 +4,13 @@ Running record of what's been shipped, listed, and submitted.
 
 ---
 
+## 2026-04-05
+
+- Published `@proofslip/mcp-server` v0.2.3 to npm (added `mcpName`, `server.json`)
+- Published to official MCP registry as `ai.proofslip/mcp-server` (DNS auth via ed25519 keypair on proofslip.ai)
+- PulseMCP will auto-ingest within ~1 week
+- DNS TXT record added to proofslip.ai root for MCP registry auth
+
 ## 2026-04-04
 
 - Created growth strategy docs (thesis, playbook, this log)

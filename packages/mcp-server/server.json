@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.proofslip/mcp-server",
+  "title": "ProofSlip",
+  "description": "Receipt-based verification for AI agent workflows — create, verify, and poll ephemeral proof objects",
+  "version": "0.2.3",
+  "websiteUrl": "https://proofslip.ai",
+  "repository": {
+    "url": "https://github.com/Johnny-Z13/proofslip",
+    "source": "github",
+    "subfolder": "packages/mcp-server"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@proofslip/mcp-server",
+      "version": "0.2.3",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "PROOFSLIP_API_KEY",
+          "description": "Your ProofSlip API key (get one free at proofslip.ai)",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "PROOFSLIP_BASE_URL",
+          "description": "API base URL (defaults to https://proofslip.ai)",
+          "isRequired": false,
+          "default": "https://proofslip.ai"
+        }
+      ]
+    }
+  ]
+}

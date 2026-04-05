@@ -4,3 +4,4 @@ dist/
 .vercel/
 .superpowers/
 .claude/settings.local.json
+mcp-publisher.exe

@@ -29,7 +29,7 @@ Build thin wrappers so ProofSlip appears native in popular agent frameworks.
 | Action | Status | Notes |
 |--------|--------|-------|
 | `@proofslip/sdk` — JS/TS client library | DONE | v0.1.0 — shared client, used by MCP server. 4 methods + waitForTerminal polling helper. |
-| LangChain tool wrapper | NOT STARTED | Uses SDK, registers as LangChain Tool |
+| LangChain tool wrapper | DONE | `langchain-proofslip` v0.1.0 on PyPI — 3 tools + toolkit |
 | CrewAI tool wrapper | NOT STARTED | Python wrapper using REST API |
 | AutoGen tool definition | NOT STARTED | Uses OpenAPI spec |
 | n8n community node | NOT STARTED | Lower priority — niche audience |

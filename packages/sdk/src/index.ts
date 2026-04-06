@@ -6,3 +6,5 @@ export type {
   StatusResult,
   SignupResult,
 } from './types.js'
+
+export { ProofSlipError } from './errors.js'

@@ -37,6 +37,40 @@ export class ProofSlipClient {
     return this.post<SignupResult>('/v1/auth/signup', { email, source: 'api' }, false)
   }
 
+  async waitForTerminal(
+    receiptId: string,
+    opts?: {
+      maxAttempts?: number
+      onPoll?: (status: StatusResult) => void
+    },
+  ): Promise<StatusResult> {
+    const maxAttempts = opts?.maxAttempts ?? 20
+    let attempts = 0
+
+    while (attempts < maxAttempts) {
+      const status = await this.checkStatus(receiptId)
+      attempts++
+      opts?.onPoll?.(status)
+
+      if (status.is_terminal) {
+        return status
+      }
+
+      if (attempts >= maxAttempts) {
+        break
+      }
+
+      const delay = (status.next_poll_after_seconds ?? 15) * 1000
+      await new Promise((resolve) => setTimeout(resolve, delay))
+    }
+
+    throw new ProofSlipError(
+      `Receipt ${receiptId} did not reach terminal state after ${maxAttempts} attempts`,
+      'poll_timeout',
+      0,
+    )
+  }
+
   private async get<T>(path: string): Promise<T> {
     try {
       const res = await fetch(`${this.baseUrl}${path}`, {

@@ -8,3 +8,5 @@ export type {
 } from './types.js'
 
 export { ProofSlipError } from './errors.js'
+
+export { isTerminal, getNextPollAfterSeconds } from './polling.js'

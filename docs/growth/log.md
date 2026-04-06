@@ -4,7 +4,14 @@ Running record of what's been shipped, listed, and submitted.
 
 ---
 
+## 2026-04-06
+
+- Built `@proofslip/sdk` v0.1.0 — JS/TS client (4 methods + waitForTerminal polling helper), 42 tests
+- Refactored `@proofslip/mcp-server` to use SDK as shared dependency (deleted internal client)
+
 ## 2026-04-05
+
+- Created "Proofslip Assistant" GPT for OpenAI GPT Store — product-expert voice, schema-bound instructions, tested against edge cases
 
 - Published `@proofslip/mcp-server` v0.2.3 to npm (added `mcpName`, `server.json`)
 - Published to official MCP registry as `ai.proofslip/mcp-server` (DNS auth via ed25519 keypair on proofslip.ai)

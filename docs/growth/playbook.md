@@ -17,7 +17,7 @@ Get ProofSlip listed on every tool registry and marketplace.
 | ~~Submit to Composio~~ | SKIPPED | No self-service listing — request board only, not worth it at zero users |
 | Submit to LangChain community tools | DONE | `langchain-proofslip` v0.1.0 on PyPI. Docs PR to langchain-ai/langchain next. |
 | Submit to CrewAI tools directory | NOT STARTED | Needs CrewAI tool wrapper |
-| Register GPT Action (OpenAI GPT Store) | READY | Privacy page + setup guide done. Follow `docs/growth/gpt-store-setup.md` |
+| Register GPT Action (OpenAI GPT Store) | DONE | "Proofslip Assistant" — setup guide at `docs/growth/gpt-store-setup.md` |
 | List on Glama.ai MCP directory | DONE | MCP listing site |
 | List on PulseMCP directory | PENDING | Auto-ingests from official registry weekly — no action needed |
 | Submit to official MCP registry | DONE | `ai.proofslip/mcp-server` v0.2.3. PulseMCP auto-ingests weekly. |
@@ -28,7 +28,7 @@ Build thin wrappers so ProofSlip appears native in popular agent frameworks.
 
 | Action | Status | Notes |
 |--------|--------|-------|
-| `@proofslip/sdk` — JS/TS client library | NOT STARTED | Thin fetch wrapper, typed responses, 3-line integration. Also serves as LangChain JS tool. |
+| `@proofslip/sdk` — JS/TS client library | DONE | v0.1.0 — shared client, used by MCP server. 4 methods + waitForTerminal polling helper. |
 | LangChain tool wrapper | NOT STARTED | Uses SDK, registers as LangChain Tool |
 | CrewAI tool wrapper | NOT STARTED | Python wrapper using REST API |
 | AutoGen tool definition | NOT STARTED | Uses OpenAPI spec |

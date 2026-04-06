@@ -28,8 +28,8 @@ run('[1/4] Unit & Integration Tests', 'npx vitest run tests/lib/ tests/routes/')
 // Layer 2: Smoke tests against production
 run('[2/4] Smoke Tests (proofslip.ai)', 'npx vitest run tests/smoke/')
 
-// Layer 3: MCP Server package tests
-run('[3/4] MCP Server Package', 'npx vitest run tests/packages/')
+// Layer 3: Package tests (SDK + MCP Server)
+run('[3/4] Packages (SDK + MCP Server)', 'npx vitest run tests/packages/')
 
 // Layer 4: LangChain package tests
 run('[4/4] LangChain Package', 'cd packages/langchain && python -m pytest tests/ -v')

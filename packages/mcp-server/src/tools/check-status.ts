@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import type { ProofSlipClient } from '../client.js';
+import type { ProofSlipClient } from '@proofslip/sdk';
+import { ProofSlipError } from '@proofslip/sdk';
 
 export function registerCheckStatusTool(
   server: McpServer,
@@ -19,16 +20,20 @@ export function registerCheckStatusTool(
         .describe('The receipt ID to check (starts with rct_)'),
     },
     async ({ receipt_id }) => {
-      const result = await client.checkStatus(receipt_id);
-      if (!result.ok) {
+      try {
+        const data = await client.checkStatus(receipt_id);
+        return {
+          content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }],
+        };
+      } catch (err) {
+        const message = err instanceof ProofSlipError
+          ? `Error (${err.status}): ${err.message}`
+          : `Error: ${err instanceof Error ? err.message : 'Unknown error'}`;
         return {
           isError: true,
-          content: [{ type: 'text' as const, text: `Error (${result.status}): ${result.message}` }],
+          content: [{ type: 'text' as const, text: message }],
         };
       }
-      return {
-        content: [{ type: 'text' as const, text: JSON.stringify(result.data, null, 2) }],
-      };
     },
   );
 }

@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { ProofSlipClient } from './client.js';
+import { ProofSlipClient } from '@proofslip/sdk';
 import { resolveConfig } from './config.js';
 import { registerCreateReceiptTool } from './tools/create-receipt.js';
 import { registerVerifyReceiptTool } from './tools/verify-receipt.js';
@@ -9,7 +9,7 @@ import { registerSignupTool } from './tools/signup.js';
 
 export function createServer(options?: { apiKey?: string; baseUrl?: string }) {
   const config = resolveConfig(options);
-  const client = new ProofSlipClient(config.baseUrl, config.apiKey);
+  const client = new ProofSlipClient({ baseUrl: config.baseUrl, apiKey: config.apiKey });
 
   const server = new McpServer({
     name: 'proofslip',

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ProofSlipClient } from '../../../packages/mcp-server/src/client.js'
+import { ProofSlipClient } from '@proofslip/sdk'
 
 const BASE_URL = 'https://proofslip.ai'
 const API_KEY = 'ak_test5678'
@@ -12,8 +12,17 @@ function makeFetch(status: number, body: unknown) {
   })
 }
 
+const originalEnv = { ...process.env }
+
 beforeEach(() => {
   vi.restoreAllMocks()
+  delete process.env.PROOFSLIP_API_KEY
+  delete process.env.PROOFSLIP_BASE_URL
+})
+
+import { afterEach } from 'vitest'
+afterEach(() => {
+  process.env = { ...originalEnv }
 })
 
 describe('createReceipt — request body', () => {
@@ -21,7 +30,7 @@ describe('createReceipt — request body', () => {
     const mockFetch = makeFetch(200, { receipt_id: 'rct_123' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL, API_KEY)
+    const client = new ProofSlipClient({ apiKey: API_KEY, baseUrl: BASE_URL })
     await client.createReceipt({
       type: 'file_upload',
       status: 'success',
@@ -46,7 +55,7 @@ describe('createReceipt — request body', () => {
     const mockFetch = makeFetch(200, { receipt_id: 'rct_456' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL, API_KEY)
+    const client = new ProofSlipClient({ apiKey: API_KEY, baseUrl: BASE_URL })
     await client.createReceipt({
       type: 'action',
       status: 'pending',
@@ -68,7 +77,7 @@ describe('createReceipt — request body', () => {
     const mockFetch = makeFetch(200, { receipt_id: 'rct_789' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL, API_KEY)
+    const client = new ProofSlipClient({ apiKey: API_KEY, baseUrl: BASE_URL })
     await client.createReceipt({ type: 'action', status: 'success', summary: 'done' })
 
     const [url, init] = mockFetch.mock.calls[0]
@@ -92,20 +101,17 @@ describe('verifyReceipt — response data', () => {
     const mockFetch = makeFetch(200, receipt)
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL)
+    const client = new ProofSlipClient({ baseUrl: BASE_URL })
     const result = await client.verifyReceipt('rct_abc')
 
-    expect(result.ok).toBe(true)
-    if (result.ok) {
-      expect(result.data).toEqual(receipt)
-    }
+    expect(result).toEqual(receipt)
   })
 
   it('GETs /v1/verify/:id?format=json', async () => {
     const mockFetch = makeFetch(200, { receipt_id: 'rct_abc' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL)
+    const client = new ProofSlipClient({ baseUrl: BASE_URL })
     await client.verifyReceipt('rct_abc')
 
     const [url] = mockFetch.mock.calls[0]
@@ -123,20 +129,17 @@ describe('checkStatus — response data', () => {
     const mockFetch = makeFetch(200, statusData)
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL)
+    const client = new ProofSlipClient({ baseUrl: BASE_URL })
     const result = await client.checkStatus('rct_abc')
 
-    expect(result.ok).toBe(true)
-    if (result.ok) {
-      expect(result.data).toEqual(statusData)
-    }
+    expect(result).toEqual(statusData)
   })
 
   it('GETs /v1/receipts/:id/status', async () => {
     const mockFetch = makeFetch(200, { status: 'success' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL)
+    const client = new ProofSlipClient({ baseUrl: BASE_URL })
     await client.checkStatus('rct_abc')
 
     const [url] = mockFetch.mock.calls[0]
@@ -149,7 +152,7 @@ describe('signup — request body and auth', () => {
     const mockFetch = makeFetch(200, { api_key: 'ak_newkey' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL, API_KEY)
+    const client = new ProofSlipClient({ apiKey: API_KEY, baseUrl: BASE_URL })
     await client.signup('test@example.com')
 
     const [, init] = mockFetch.mock.calls[0]
@@ -163,7 +166,7 @@ describe('signup — request body and auth', () => {
     const mockFetch = makeFetch(200, { api_key: 'ak_newkey' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL, API_KEY)
+    const client = new ProofSlipClient({ apiKey: API_KEY, baseUrl: BASE_URL })
     await client.signup('test@example.com')
 
     const [, init] = mockFetch.mock.calls[0]
@@ -174,7 +177,7 @@ describe('signup — request body and auth', () => {
     const mockFetch = makeFetch(200, { api_key: 'ak_newkey' })
     vi.stubGlobal('fetch', mockFetch)
 
-    const client = new ProofSlipClient(BASE_URL)
+    const client = new ProofSlipClient({ baseUrl: BASE_URL })
     await client.signup('user@example.com')
 
     const [url, init] = mockFetch.mock.calls[0]

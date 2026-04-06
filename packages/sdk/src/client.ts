@@ -21,6 +21,10 @@ export class ProofSlipClient {
     this.baseUrl = opts?.baseUrl ?? process.env.PROOFSLIP_BASE_URL ?? 'https://proofslip.ai'
   }
 
+  hasApiKey(): boolean {
+    return !!this.apiKey
+  }
+
   async createReceipt(input: CreateReceiptInput): Promise<Receipt> {
     return this.post<Receipt>('/v1/receipts', input, true)
   }

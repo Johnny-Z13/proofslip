@@ -15,7 +15,7 @@ const GITHUB_JWKS_URL = `${GITHUB_OIDC_ISSUER}/.well-known/jwks`
 export class OidcVerificationError extends Error {
   constructor(
     message: string,
-    /** Stable machine reason: invalid_signature, invalid_issuer, invalid_audience, token_expired, missing_claim:<name>, malformed_token */
+    /** Stable machine reason: invalid_signature, invalid_issuer, invalid_audience, token_expired, token_not_yet_valid, missing_claim:<name>, malformed_token */
     public readonly reason: string,
   ) {
     super(message)
@@ -38,6 +38,17 @@ export interface GitHubActionsClaims {
   eventName: string
   subject: string
   jti: string
+}
+
+// Persist every normalized provider claim except the raw token ID. Replay
+// protection stores only sha256(jti), as required by the V1 trust contract.
+export type StoredGitHubActionsClaims = Omit<GitHubActionsClaims, 'jti'>
+
+export function toStoredGitHubActionsClaims({
+  jti: _discarded,
+  ...claims
+}: GitHubActionsClaims): StoredGitHubActionsClaims {
+  return claims
 }
 
 // Claims that must be present as non-empty strings, keyed by token claim name.
@@ -126,7 +137,7 @@ export async function verifyGitHubOidcToken(
       algorithms: ['RS256'],
       issuer: GITHUB_OIDC_ISSUER,
       audience: opts?.audience ?? PROOFSLIP_AUDIENCE,
-      requiredClaims: ['exp', 'iat'],
+      requiredClaims: ['exp', 'nbf', 'iat'],
       clockTolerance: 60,
     })
     payload = result.payload
@@ -146,7 +157,7 @@ export async function verifyGitHubOidcToken(
         throw new OidcVerificationError('Token audience is not the ProofSlip audience.', 'invalid_audience')
       }
       if (err.claim === 'nbf' || err.claim === 'iat') {
-        throw new OidcVerificationError('Token is not yet valid.', 'token_expired')
+        throw new OidcVerificationError('Token is not yet valid.', 'token_not_yet_valid')
       }
       throw new OidcVerificationError(`Token claim validation failed: ${err.claim}`, `missing_claim:${err.claim}`)
     }
@@ -157,6 +168,16 @@ export async function verifyGitHubOidcToken(
       throw new OidcVerificationError('Token is malformed.', 'malformed_token')
     }
     throw new OidcVerificationError('Token verification failed.', 'invalid_signature')
+  }
+
+  // `jose` requires `iat` above, but only evaluates it when maxTokenAge is
+  // configured. Reject a non-numeric or materially future issuance time here.
+  const now = Math.floor(Date.now() / 1000)
+  if (typeof payload.iat !== 'number') {
+    throw new OidcVerificationError('Token is missing required claim: iat', 'missing_claim:iat')
+  }
+  if (payload.iat > now + 60) {
+    throw new OidcVerificationError('Token is not yet valid.', 'token_not_yet_valid')
   }
 
   return normalizeClaims(payload)

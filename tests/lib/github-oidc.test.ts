@@ -78,7 +78,7 @@ describe('verifyGitHubOidcToken', () => {
     const token = await fixture.sign({}, { notBefore: '10m' })
     await expectReason(
       verifyGitHubOidcToken(token, { getKey: fixture.getKey }),
-      'token_expired',
+      'token_not_yet_valid',
     )
   })
 
@@ -159,6 +159,22 @@ describe('verifyGitHubOidcToken', () => {
     await expectReason(
       verifyGitHubOidcToken(token, { getKey: fixture.getKey }),
       'missing_claim:iat',
+    )
+  })
+
+  it('rejects a token without an nbf claim', async () => {
+    const token = await fixture.sign({}, { omitNbf: true })
+    await expectReason(
+      verifyGitHubOidcToken(token, { getKey: fixture.getKey }),
+      'missing_claim:nbf',
+    )
+  })
+
+  it('rejects a token with an iat materially in the future', async () => {
+    const token = await fixture.sign({}, { issuedAt: Math.floor(Date.now() / 1000) + 600 })
+    await expectReason(
+      verifyGitHubOidcToken(token, { getKey: fixture.getKey }),
+      'token_not_yet_valid',
     )
   })
 

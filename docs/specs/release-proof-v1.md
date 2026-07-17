@@ -112,7 +112,7 @@ Errors (envelope `{ error, message, request_id }`):
 
 ### `GET /v1/proofs/:proof_id`
 
-Public JSON. Same shape as create, plus `is_valid` (verification succeeded at issuance and record intact) and `is_expired`. Expired proofs return `410` with `is_expired: true` and the full record (unlike receipts, expiry is visible, not a 404 — an expired proof is still evidence that expired). Unknown ID: `404 proof_not_found`.
+Public JSON. Same shape as create, plus `is_valid` (the 90-day validity window is still open) and `is_expired`. Expired proofs return `410` with `is_valid: false`, `is_expired: true`, and the full record (unlike receipts, expiry is visible, not a 404 — an expired proof is still evidence that expired). Unknown ID: `404 proof_not_found`.
 
 ### `GET /proof/:proof_id`
 
@@ -132,7 +132,8 @@ Human evidence view. Sections in order: status banner, provider-verified facts (
 
 - Proof records are immutable — no UPDATE path exists in application code.
 - The OIDC token is never persisted or logged; only normalized claims and the `jti` SHA-256 digest.
-- Proofs expire 90 days after issuance (V1 default; retention tiers are a later, paid concern).
+- Proofs have a 90-day validity window (V1 default; retention tiers are a later concern).
+- Expiration is not deletion in V1. Expired records remain publicly inspectable with HTTP 410 until an explicit deletion request or future retention policy removes them.
 - `submitted_context` is stored as validated flat string map (HTML-escaped at render time, like all fields).
 
 ## Instrumentation (aggregate only)

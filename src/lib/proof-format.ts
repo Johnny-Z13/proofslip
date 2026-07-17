@@ -1,5 +1,5 @@
 import type { proofs } from '../db/schema.js'
-import type { GitHubActionsClaims } from './github-oidc.js'
+import type { StoredGitHubActionsClaims } from './github-oidc.js'
 
 export type ProofRow = typeof proofs.$inferSelect
 
@@ -42,7 +42,7 @@ export interface ProofResponse {
 
 export function buildProofResponse(row: ProofRow): ProofResponse {
   const baseUrl = process.env.BASE_URL || 'https://proofslip.ai'
-  const claims = row.issuerClaims as unknown as GitHubActionsClaims
+  const claims = row.issuerClaims as unknown as StoredGitHubActionsClaims
   const isExpired = row.expiresAt < new Date()
 
   return {

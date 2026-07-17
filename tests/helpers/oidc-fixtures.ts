@@ -27,6 +27,10 @@ interface SignOpts {
   omitExp?: boolean
   /** Omit the iat claim entirely. */
   omitIat?: boolean
+  /** Omit the nbf claim entirely. */
+  omitNbf?: boolean
+  /** Override iat with an explicit NumericDate. */
+  issuedAt?: number
   /** Sign with a symmetric HS256 key instead of RS256. */
   useHs256?: boolean
 }
@@ -81,9 +85,9 @@ export async function createOidcFixture(): Promise<OidcFixture> {
       .setProtectedHeader({ alg, kid: opts.useWrongKey ? 'wrong-key' : 'test-key' })
       .setIssuer(opts.issuer ?? GITHUB_OIDC_ISSUER)
       .setAudience(opts.audience ?? PROOFSLIP_AUDIENCE)
-    if (!opts.omitIat) jwt.setIssuedAt()
+    if (!opts.omitIat) jwt.setIssuedAt(opts.issuedAt)
     if (!opts.omitExp) jwt.setExpirationTime(opts.expiresIn ?? '5m')
-    if (opts.notBefore) jwt.setNotBefore(opts.notBefore)
+    if (!opts.omitNbf) jwt.setNotBefore(opts.notBefore ?? '0s')
 
     if (opts.useHs256) return jwt.sign(hs256Secret)
     return jwt.sign(opts.useWrongKey ? wrong.privateKey : privateKey)

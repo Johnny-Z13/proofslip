@@ -73,7 +73,7 @@ export function validateCreateProof(body: unknown): CreateProofInput | ProofVali
         return { error: 'validation_error', message: 'submitted_context keys must be ≤64 chars and values ≤256 chars.' }
       }
     }
-    if (JSON.stringify(s).length > 1024) {
+    if (Buffer.byteLength(JSON.stringify(s), 'utf8') > 1024) {
       return { error: 'validation_error', message: 'submitted_context must serialize to 1KB or less.' }
     }
     submittedContext = s as Record<string, string>

@@ -21,12 +21,16 @@ afterAll(async () => {
   await db.delete(proofEvents).where(eq(proofEvents.repositoryDigest, BASE_CLAIMS.repository))
 })
 
+let requestCounter = 0
+
 function createProof(token: string, body?: unknown) {
+  requestCounter++
   return app.request('/v1/proofs/releases/github-actions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
+      'X-Forwarded-For': `203.0.113.${requestCounter}`,
     },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
@@ -104,6 +108,9 @@ describe('POST /v1/proofs/releases/github-actions', () => {
     )
     expect(data.observations).toEqual([])
     expect(data.submitted_context).toBeNull()
+
+    const stored = await getTestDb().select().from(proofs).where(eq(proofs.id, data.proof_id))
+    expect((stored[0].issuerClaims as Record<string, unknown>).jti).toBeUndefined()
   })
 
   it('never merges submitted context into provider-verified claims', async () => {
@@ -155,6 +162,31 @@ describe('POST /v1/proofs/releases/github-actions', () => {
     expect(rerun.status).toBe(200)
     const replayed = await rerun.json()
     expect(replayed.proof_id).toBe(created.proof_id)
+  })
+
+  it('returns one proof for concurrent identical idempotent requests with fresh tokens', async () => {
+    const idempotencyKey = `idem-race-${Date.now()}`
+    const [first, second] = await Promise.all([
+      createProof(await fixture.sign(), { idempotency_key: idempotencyKey }),
+      createProof(await fixture.sign(), { idempotency_key: idempotencyKey }),
+    ])
+
+    expect([first.status, second.status].sort()).toEqual([200, 201])
+    const [firstBody, secondBody] = await Promise.all([first.json(), second.json()])
+    expect(firstBody.proof_id).toBe(secondBody.proof_id)
+  })
+
+  it('rejects the same idempotency key when provider-verified claims differ', async () => {
+    const idempotencyKey = `idem-claims-${Date.now()}`
+    const first = await createProof(await fixture.sign(), { idempotency_key: idempotencyKey })
+    expect(first.status).toBe(201)
+
+    const conflict = await createProof(
+      await fixture.sign({ sha: 'b'.repeat(40) }),
+      { idempotency_key: idempotencyKey },
+    )
+    expect(conflict.status).toBe(409)
+    expect((await conflict.json()).error).toBe('idempotency_conflict')
   })
 
   it('treats a replay with the same deployment target as identical', async () => {

@@ -7,8 +7,8 @@ import { generateProofId } from '../lib/ids.js'
 import { sha256 } from '../lib/hash.js'
 import { stableStringify } from '../lib/stable-json.js'
 import { rateLimitByIp } from '../middleware/rate-limit.js'
-import { verifyGitHubOidcToken, OidcVerificationError } from '../lib/github-oidc.js'
-import type { GitHubActionsClaims } from '../lib/github-oidc.js'
+import { verifyGitHubOidcToken, OidcVerificationError, toStoredGitHubActionsClaims } from '../lib/github-oidc.js'
+import type { GitHubActionsClaims, StoredGitHubActionsClaims } from '../lib/github-oidc.js'
 import { validateCreateProof, isProofValidationError, PROOF_SCHEMA_VERSION } from '../lib/validate-proof.js'
 import type { CreateProofInput } from '../lib/validate-proof.js'
 import { observeDeployment, buildObservationUrl } from '../lib/observe-deployment.js'
@@ -37,14 +37,19 @@ proofsRouter.use('*', rateLimitByIp(30))
  * The deployment target is part of the fingerprint — a request observing a
  * different URL is different content, never a replay.
  */
-function matchesExisting(row: ProofRow, validated: CreateProofInput): boolean {
+function matchesExisting(row: ProofRow, validated: CreateProofInput, claims: GitHubActionsClaims): boolean {
   const storedObservations = (row.observations ?? []) as Array<{ url?: string }>
   const storedObservationUrl = storedObservations[0]?.url ?? null
   const requestedObservationUrl = validated.deployment ? buildObservationUrl(validated.deployment) : null
+  const storedIssuer = row.issuerClaims as Record<string, unknown>
+  // Ignore a legacy raw jti if one exists in a pre-fix row. New rows never
+  // persist it; the digest remains the sole replay identifier.
+  const { jti: _legacyJti, ...storedIssuerWithoutJti } = storedIssuer
 
   return (
     (row.idempotencyKey ?? null) === (validated.idempotency_key ?? null) &&
     storedObservationUrl === requestedObservationUrl &&
+    stableStringify(storedIssuerWithoutJti) === stableStringify(toStoredGitHubActionsClaims(claims)) &&
     stableStringify(row.submittedContext ?? null) === stableStringify(validated.submitted_context ?? null)
   )
 }
@@ -99,7 +104,7 @@ proofsRouter.post('/releases/github-actions', async (c) => {
   // Replay protection: a reused token may only return the identical existing proof.
   const byJti = await db.select().from(proofs).where(eq(proofs.jtiDigest, jtiDigest))
   if (byJti[0]) {
-    if (!matchesExisting(byJti[0], validated)) return conflict()
+    if (!matchesExisting(byJti[0], validated, claims)) return conflict()
     return c.json(buildProofResponse(byJti[0]), 200)
   }
 
@@ -110,7 +115,7 @@ proofsRouter.post('/releases/github-actions', async (c) => {
       .from(proofs)
       .where(and(eq(proofs.repository, claims.repository), eq(proofs.idempotencyKey, validated.idempotency_key)))
     if (byKey[0]) {
-      if (!matchesExisting(byKey[0], validated)) return conflict()
+      if (!matchesExisting(byKey[0], validated, claims)) return conflict()
       return c.json(buildProofResponse(byKey[0]), 200)
     }
   }
@@ -128,7 +133,7 @@ proofsRouter.post('/releases/github-actions', async (c) => {
       proofType: 'release',
       issuerType: 'github_actions',
       repository: claims.repository,
-      issuerClaims: claims,
+      issuerClaims: toStoredGitHubActionsClaims(claims),
       observations,
       submittedContext: validated.submitted_context ?? null,
       idempotencyKey: validated.idempotency_key ?? null,
@@ -141,10 +146,18 @@ proofsRouter.post('/releases/github-actions', async (c) => {
     // Concurrent duplicate (jti or idempotency unique index) — return the winner if identical.
     const e = err as { code?: string; message?: string }
     if (e?.code === '23505' || e?.message?.includes('idx_proofs_')) {
-      const winner = await db.select().from(proofs).where(eq(proofs.jtiDigest, jtiDigest))
-      if (winner[0]) {
-        if (!matchesExisting(winner[0], validated)) return conflict()
-        return c.json(buildProofResponse(winner[0]), 200)
+      let winner = (await db.select().from(proofs).where(eq(proofs.jtiDigest, jtiDigest)))[0]
+      if (!winner && validated.idempotency_key) {
+        winner = (
+          await db
+            .select()
+            .from(proofs)
+            .where(and(eq(proofs.repository, claims.repository), eq(proofs.idempotencyKey, validated.idempotency_key)))
+        )[0]
+      }
+      if (winner) {
+        if (!matchesExisting(winner, validated, claims)) return conflict()
+        return c.json(buildProofResponse(winner), 200)
       }
       return conflict()
     }
@@ -171,7 +184,7 @@ proofsRouter.get('/:proofId', async (c) => {
   }
 
   const response = buildProofResponse(row)
-  const claims = row.issuerClaims as unknown as GitHubActionsClaims
+  const claims = row.issuerClaims as unknown as StoredGitHubActionsClaims
   await recordProofEvent({
     event: 'release_proof_fetched_json',
     repository: claims.repository,
@@ -206,7 +219,7 @@ proofPageRouter.get('/:proofId', async (c) => {
   }
 
   const response = buildProofResponse(row)
-  const claims = row.issuerClaims as unknown as GitHubActionsClaims
+  const claims = row.issuerClaims as unknown as StoredGitHubActionsClaims
   await recordProofEvent({
     event: wantsJson ? 'release_proof_fetched_json' : 'release_proof_viewed_html',
     repository: claims.repository,

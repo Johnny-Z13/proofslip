@@ -82,6 +82,12 @@ describe('validateCreateProof', () => {
     expectError({ submitted_context: ctx }, '1KB')
   })
 
+  it('measures the submitted_context limit in UTF-8 bytes', () => {
+    const ctx = Object.fromEntries(Array.from({ length: 10 }, (_, i) => [`key-${i}`, '界'.repeat(60)]))
+    expect(JSON.stringify(ctx).length).toBeLessThan(1024)
+    expectError({ submitted_context: ctx }, '1KB')
+  })
+
   it('rejects an array body', () => {
     expectError([], 'JSON object')
   })

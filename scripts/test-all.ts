@@ -32,7 +32,9 @@ run('[2/4] Smoke Tests (proofslip.ai)', 'npx vitest run tests/smoke/')
 run('[3/4] Packages (SDK + MCP Server)', 'npx vitest run tests/packages/')
 
 // Layer 4: LangChain package tests
-run('[4/4] LangChain Package', 'cd packages/langchain && python -m pytest tests/ -v')
+// Prefer the package's venv (python3 -m venv .venv && .venv/bin/pip install -e ".[test]");
+// fall back to whatever python3 is on PATH.
+run('[4/4] LangChain Package', 'cd packages/langchain && { test -x .venv/bin/python && .venv/bin/python -m pytest tests/ -v || python3 -m pytest tests/ -v; }')
 
 // Summary
 console.log(`\n${DIVIDER}`)

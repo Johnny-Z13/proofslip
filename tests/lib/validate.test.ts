@@ -41,6 +41,22 @@ describe('validateCreateReceipt', () => {
     expect(isValidationError(validateCreateReceipt({ ...validBody, expires_in: 100000 }))).toBe(true)
   })
 
+  it('rejects ref over 1KB', () => {
+    expect(isValidationError(validateCreateReceipt({ ...validBody, ref: { run_id: 'x'.repeat(1100) } }))).toBe(true)
+  })
+
+  it('rejects non-string idempotency_key', () => {
+    expect(isValidationError(validateCreateReceipt({ ...validBody, idempotency_key: { nested: true } }))).toBe(true)
+  })
+
+  it('rejects empty idempotency_key', () => {
+    expect(isValidationError(validateCreateReceipt({ ...validBody, idempotency_key: '  ' }))).toBe(true)
+  })
+
+  it('rejects idempotency_key over 255 chars', () => {
+    expect(isValidationError(validateCreateReceipt({ ...validBody, idempotency_key: 'k'.repeat(256) }))).toBe(true)
+  })
+
   it('accepts full body with all optional fields', () => {
     const result = validateCreateReceipt({
       ...validBody,

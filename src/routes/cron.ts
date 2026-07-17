@@ -6,12 +6,14 @@ import { errorResponse } from '../lib/errors.js'
 
 const cronRouter = new Hono()
 
-cronRouter.post('/cleanup', async (c) => {
-  // Protect with a shared secret so only authorized callers can trigger
+// Vercel cron invokes this path with GET; POST kept for manual triggering.
+cronRouter.on(['GET', 'POST'], '/cleanup', async (c) => {
+  // Protect with a shared secret so only authorized callers can trigger.
+  // Fail closed: if CRON_SECRET is not configured, nobody can trigger cleanup.
   const authHeader = c.req.header('Authorization')
   const cronSecret = process.env.CRON_SECRET
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return errorResponse(c, 401, 'unauthorized', 'Invalid cron secret.')
   }
 

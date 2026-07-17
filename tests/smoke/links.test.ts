@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-const BASE = process.env.PROOFSLIP_BASE_URL || 'https://www.proofslip.ai'
+const BASE = process.env.PROOFSLIP_BASE_URL || 'https://proofslip.ai'
 
 // Sites that block automated requests (403/429 on HEAD and GET)
 const SKIP_DOMAINS = ['npmjs.com', 'npm.com']

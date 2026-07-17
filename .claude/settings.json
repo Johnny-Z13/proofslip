@@ -1,6 +1,6 @@
 {
   "permissions": {
-    "additionalDirectories": ["D:/Projects/context-capsule"]
+    "additionalDirectories": ["/Users/johnnyvenables/Projects/Products/context-capsule"]
   },
   "hooks": {
     "PreToolUse": [

@@ -7,7 +7,7 @@ Portable proof objects for agent workflows.
 - **Production:** https://proofslip.ai
 - **Domain:** proofslip.ai
 - **Sister product:** [ContextCapsule](https://contextcapsule.ai) — same ecosystem, shared design language
-- **ContextCapsule repo:** D:\Projects\context-capsule (keep READMEs and CLAUDE.md cross-referenced)
+- **ContextCapsule repo:** ~/Projects/Products/context-capsule (keep READMEs and CLAUDE.md cross-referenced)
 
 ## Product Position
 
@@ -58,7 +58,7 @@ Full stack test suite via `npm run test:all`. Four layers:
 3. **MCP Package** (tests/packages/mcp-server/) — mocked fetch, tests client + tool logic
 4. **LangChain Package** (packages/langchain/tests/) — pytest, mocked requests, tests tools + toolkit
 
-Smoke tests use `https://www.proofslip.ai` (not `proofslip.ai`) because Vercel redirects bare domain to www, dropping auth headers.
+Smoke tests use `https://proofslip.ai` — the canonical domain. (Since 2026-07-17, www.proofslip.ai 308-redirects to the bare domain; authenticated calls must use the bare domain because clients drop auth headers on cross-host redirects.)
 
 Pre-push hook reminds to run `test:all` before pushing. Test results saved to `tests/results/`.
 
@@ -99,7 +99,7 @@ Key patterns:
 - **Receipt as Gate** — capsule guardrails reference receipts as preconditions
 - **Error Recovery** — failure receipts + capsule with retry intent
 
-See `D:\Projects\context-capsule\docs\plans\chaining-patterns.md` for full pattern catalog (6 patterns + anti-patterns).
+See `~/Projects/Products/context-capsule/docs/plans/chaining-patterns.md` for full pattern catalog (6 patterns + anti-patterns).
 
 When modifying ProofSlip APIs or response shapes, check that chaining patterns still work — capsules depend on `receipt_id` and `status` fields from verify responses.
 

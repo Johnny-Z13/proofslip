@@ -16,6 +16,7 @@ import { renderPrivacyPage } from './views/privacy-page.js'
 import { renderVerifyPage } from './views/verify-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
+import { errorResponse } from './lib/errors.js'
 
 const app = new Hono()
 
@@ -174,7 +175,7 @@ app.get('/og-image.png', (c) => {
 app.get('/dev/console', (c) => {
   const secret = c.req.query('key')
   if (!secret || secret !== process.env.DEV_SECRET) {
-    return c.json({ error: 'not_found', message: 'Route not found.' }, 404)
+    return errorResponse(c, 404, 'not_found', 'Route not found.')
   }
   return c.html(renderDevConsole())
 })
@@ -187,7 +188,7 @@ app.route('/cron', cronRouter)
 
 // ─── 404 fallback ────────────────────────────────────────────────
 app.notFound((c) => {
-  return c.json({ error: 'not_found', message: 'Route not found.' }, 404)
+  return errorResponse(c, 404, 'not_found', 'Route not found.')
 })
 
 export default app

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-const BASE = process.env.PROOFSLIP_BASE_URL || 'https://www.proofslip.ai'
+const BASE = process.env.PROOFSLIP_BASE_URL || 'https://proofslip.ai'
 const API_KEY = process.env.PROOFSLIP_API_KEY
 
 describe('Smoke: API Lifecycle', () => {

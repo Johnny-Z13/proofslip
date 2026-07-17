@@ -4,6 +4,7 @@ import { receipts } from '../db/schema.js'
 import { eq } from 'drizzle-orm'
 import { rateLimitByIp } from '../middleware/rate-limit.js'
 import { isTerminal, getNextPollAfterSeconds } from '../lib/polling.js'
+import { errorResponse } from '../lib/errors.js'
 
 const statusRouter = new Hono()
 
@@ -31,10 +32,7 @@ statusRouter.get('/:receiptId/status', async (c) => {
   const receipt = results[0]
 
   if (!receipt || receipt.expiresAt < new Date()) {
-    return c.json(
-      { error: 'receipt_not_found', message: 'Receipt does not exist, has expired, or has been deleted.' },
-      404
-    )
+    return errorResponse(c, 404, 'receipt_not_found', 'Receipt does not exist, has expired, or has been deleted.')
   }
 
   const terminal = isTerminal(receipt.type, receipt.status)

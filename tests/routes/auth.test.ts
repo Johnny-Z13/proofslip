@@ -67,6 +67,30 @@ describe('POST /v1/auth/signup', () => {
     expect(data.error).toBe('validation_error')
   })
 
+  it('does not strand a key when web signup email delivery fails', async () => {
+    const email = `web-fail-${Date.now()}@proofslip.ai`
+    createdEmails.push(email)
+
+    const originalResendKey = process.env.RESEND_API_KEY
+    delete process.env.RESEND_API_KEY
+
+    try {
+      const res = await post('/v1/auth/signup', { email, source: 'web' })
+      expect(res.status).toBe(502)
+      const data = await res.json()
+      expect(data.error).toBe('email_delivery_failed')
+      expect(data.request_id).toBeTruthy()
+
+      // The failed signup must not leave a stranded key — retrying must succeed
+      const retry = await post('/v1/auth/signup', { email })
+      expect(retry.status).toBe(201)
+    } finally {
+      if (originalResendKey !== undefined) {
+        process.env.RESEND_API_KEY = originalResendKey
+      }
+    }
+  })
+
   it('returns a key that works for creating receipts', async () => {
     const email = `e2e-test-${Date.now()}@proofslip.ai`
     createdEmails.push(email)

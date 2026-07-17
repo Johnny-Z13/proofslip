@@ -4,6 +4,13 @@ Running record of what's been shipped, listed, and submitted.
 
 ---
 
+## 2026-07-17
+
+- **P0 fix: flipped canonical domain.** proofslip.ai now serves production directly; www.proofslip.ai 308-redirects to it. Previously the bare domain 307-redirected to www, and Node fetch / Python requests strip Authorization headers on cross-host redirects — so every published integration (SDK, MCP server, langchain-proofslip, OpenAPI spec, docs curl examples) got 401 on authenticated calls with default settings. Agents could sign up (no auth header) but never create a receipt. Verified fixed live.
+- Fixed scheduled cleanup: Vercel cron invokes with GET but the route was POST-only — the hourly cleanup had 404'd since launch. Route now accepts GET; cron auth fails closed if CRON_SECRET is unset.
+- Hardened create-receipt: idempotency insert race no longer 500s, conflict check now includes payload/ref, idempotency_key and ref are validated.
+- Smoke tests now target https://proofslip.ai (canonical).
+
 ## 2026-04-06
 
 - Built `@proofslip/sdk` v0.1.0 — JS/TS client (4 methods + waitForTerminal polling helper), 42 tests

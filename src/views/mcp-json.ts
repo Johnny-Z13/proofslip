@@ -13,8 +13,8 @@ export function getMcpDiscovery(): object {
     env: [
       {
         name: 'PROOFSLIP_API_KEY',
-        description: 'Your ProofSlip API key (starts with ak_). Get one free at POST /v1/auth/signup.',
-        required: true,
+        description: 'Your ProofSlip API key (starts with ak_). Get one free at POST /v1/auth/signup or via the signup tool. Required for create_receipt; verify_receipt, check_status, and signup work without it.',
+        required: false,
       },
     ],
     tools: [
@@ -56,6 +56,19 @@ export function getMcpDiscovery(): object {
           required: ['receipt_id'],
           properties: {
             receipt_id: { type: 'string', description: 'Receipt ID (starts with rct_)' },
+          },
+        },
+      },
+      {
+        name: 'signup',
+        description:
+          'Get a free ProofSlip API key. Returns the key directly — save it immediately, it cannot be retrieved later. ' +
+          'Only needed once; afterwards set PROOFSLIP_API_KEY to use create_receipt.',
+        input_schema: {
+          type: 'object',
+          required: ['email'],
+          properties: {
+            email: { type: 'string', description: 'Your email address' },
           },
         },
       },

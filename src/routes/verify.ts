@@ -6,6 +6,7 @@ import { renderVerifyPage } from '../views/verify-page.js'
 import { renderNotFoundPage } from '../views/not-found-page.js'
 import { rateLimitByIp } from '../middleware/rate-limit.js'
 import { isTerminal, getNextPollAfterSeconds } from '../lib/polling.js'
+import { errorResponse } from '../lib/errors.js'
 
 const verifyRouter = new Hono()
 
@@ -28,10 +29,7 @@ verifyRouter.get('/:receiptId', async (c) => {
       c.req.query('format') === 'json'
 
     if (wantsJson) {
-      return c.json(
-        { error: 'receipt_not_found', message: 'Receipt does not exist, has expired, or has been deleted.' },
-        404
-      )
+      return errorResponse(c, 404, 'receipt_not_found', 'Receipt does not exist, has expired, or has been deleted.')
     }
     return c.html(renderNotFoundPage(), 404)
   }

@@ -5,15 +5,25 @@ import { receipts } from '../../src/db/schema.js'
 
 let apiKey: string
 let apiKeyId: string
+let originalCronSecret: string | undefined
+
+const TEST_CRON_SECRET = 'test-cron-secret'
 
 beforeAll(async () => {
   const result = await seedTestApiKey()
   apiKey = result.key
   apiKeyId = result.keyId
+  originalCronSecret = process.env.CRON_SECRET
+  process.env.CRON_SECRET = TEST_CRON_SECRET
 })
 
 afterAll(async () => {
   await cleanupTestApiKey(apiKeyId)
+  if (originalCronSecret === undefined) {
+    delete process.env.CRON_SECRET
+  } else {
+    process.env.CRON_SECRET = originalCronSecret
+  }
 })
 
 function postReceipt(expiresIn: number) {
@@ -50,7 +60,10 @@ describe('POST /cron/cleanup', () => {
     // Run cleanup
     const res = await app.request('/cron/cleanup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${TEST_CRON_SECRET}`,
+      },
     })
 
     expect(res.status).toBe(200)
@@ -68,7 +81,10 @@ describe('POST /cron/cleanup', () => {
   it('returns 0 deleted when nothing is expired', async () => {
     const res = await app.request('/cron/cleanup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${TEST_CRON_SECRET}`,
+      },
     })
 
     expect(res.status).toBe(200)
@@ -77,24 +93,38 @@ describe('POST /cron/cleanup', () => {
   })
 
   it('rejects invalid cron secret when CRON_SECRET is set', async () => {
-    const original = process.env.CRON_SECRET
-    process.env.CRON_SECRET = 'test-secret-123'
+    const res = await app.request('/cron/cleanup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer wrong-secret',
+      },
+    })
+    expect(res.status).toBe(401)
+  })
+
+  it('accepts GET requests (Vercel cron invokes with GET)', async () => {
+    const res = await app.request('/cron/cleanup', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${TEST_CRON_SECRET}` },
+    })
+
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data.deleted_count).toBeGreaterThanOrEqual(0)
+  })
+
+  it('rejects all callers when CRON_SECRET is unset (fail closed)', async () => {
+    delete process.env.CRON_SECRET
 
     try {
       const res = await app.request('/cron/cleanup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer wrong-secret',
-        },
+        headers: { 'Content-Type': 'application/json' },
       })
       expect(res.status).toBe(401)
     } finally {
-      if (original === undefined) {
-        delete process.env.CRON_SECRET
-      } else {
-        process.env.CRON_SECRET = original
-      }
+      process.env.CRON_SECRET = TEST_CRON_SECRET
     }
   })
 })

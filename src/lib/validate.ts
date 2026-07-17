@@ -60,11 +60,23 @@ export function validateCreateReceipt(body: unknown): CreateReceiptInput | Valid
     if (typeof b.ref !== 'object' || b.ref === null || Array.isArray(b.ref)) {
       return { error: 'validation_error', message: 'ref must be a JSON object.' }
     }
+    if (JSON.stringify(b.ref).length > 1024) {
+      return { error: 'validation_error', message: 'ref must be 1KB or smaller.' }
+    }
   }
 
   if (b.expires_in !== undefined) {
     if (typeof b.expires_in !== 'number' || b.expires_in < 60 || b.expires_in > 86400) {
       return { error: 'validation_error', message: 'expires_in must be between 60 and 86400 seconds.' }
+    }
+  }
+
+  if (b.idempotency_key !== undefined) {
+    if (typeof b.idempotency_key !== 'string' || !b.idempotency_key.trim()) {
+      return { error: 'validation_error', message: 'idempotency_key must be a non-empty string.' }
+    }
+    if (b.idempotency_key.length > 255) {
+      return { error: 'validation_error', message: 'idempotency_key must be 255 characters or fewer.' }
     }
   }
 

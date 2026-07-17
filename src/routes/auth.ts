@@ -53,11 +53,18 @@ authRouter.post('/signup', async (c) => {
 
   if (source === 'web') {
     // Human path: email the key, don't expose in response
-    await sendEmail({
+    const sent = await sendEmail({
       to: email,
       subject: 'Your ProofSlip API Key',
       html: renderWelcomeEmail(key),
     })
+
+    if (!sent) {
+      // The key is only ever delivered by email. If delivery failed, remove the
+      // record so the signup can be retried instead of stranding an unrecoverable key.
+      await db.delete(apiKeys).where(eq(apiKeys.id, keyId)).catch(() => {})
+      return errorResponse(c, 502, 'email_delivery_failed', 'Could not deliver your API key by email. Please try again.')
+    }
 
     return c.json({
       tier: 'free',

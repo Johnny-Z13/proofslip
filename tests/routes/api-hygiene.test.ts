@@ -93,6 +93,21 @@ describe('Body size limit', () => {
     expect(body.error).toBe('payload_too_large')
   })
 
+  it('rejects an oversized body even without a Content-Length header', async () => {
+    // 20,014-byte body, no Content-Length — must be caught by measuring actual bytes.
+    const res = await app.request('/v1/receipts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ type: 'action', status: 'ok', summary: 'x'.repeat(19950) }),
+    })
+    expect(res.status).toBe(413)
+    const body = await res.json()
+    expect(body.error).toBe('payload_too_large')
+  })
+
   it('allows normal-sized requests through', async () => {
     const res = await app.request('/v1/receipts', {
       method: 'POST',

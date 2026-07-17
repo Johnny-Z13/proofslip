@@ -6,7 +6,12 @@ import { sha256 } from '../src/lib/hash.js'
 import { eq } from 'drizzle-orm'
 
 export function getTestDb() {
-  const sql = neon(process.env.DATABASE_URL!)
+  if (!process.env.TEST_DATABASE_URL) {
+    throw new Error(
+      'TEST_DATABASE_URL is not set. Integration tests mutate their database — point this at a dedicated test database (e.g. a Neon branch), never production.',
+    )
+  }
+  const sql = neon(process.env.TEST_DATABASE_URL)
   return drizzle(sql)
 }
 

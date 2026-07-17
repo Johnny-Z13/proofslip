@@ -8,6 +8,7 @@ import { errorResponse } from '../lib/errors.js'
 import { apiKeyAuth } from '../middleware/api-key-auth.js'
 import { rateLimitByApiKey } from '../middleware/rate-limit.js'
 import { isTerminal, getNextPollAfterSeconds } from '../lib/polling.js'
+import { stableStringify } from '../lib/stable-json.js'
 
 const receiptsRouter = new Hono()
 
@@ -35,16 +36,6 @@ function receiptJson(receipt: ReceiptRow) {
     is_terminal: isTerminal(receipt.type, receipt.status),
     next_poll_after_seconds: getNextPollAfterSeconds(receipt.type, receipt.status),
   }
-}
-
-// JSON.stringify with recursively sorted keys, so jsonb round-trips
-// (which don't preserve key order) compare equal to the original input.
-function stableStringify(value: unknown): string {
-  if (value === null || typeof value !== 'object') return JSON.stringify(value)
-  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`
-  const obj = value as Record<string, unknown>
-  const keys = Object.keys(obj).sort()
-  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(obj[k])}`).join(',')}}`
 }
 
 function conflictsWith(receipt: ReceiptRow, validated: CreateReceiptInput): boolean {

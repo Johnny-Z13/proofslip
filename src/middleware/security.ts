@@ -38,10 +38,23 @@ export const requestId = createMiddleware(async (c, next) => {
  */
 export function bodyLimit(maxBytes: number) {
   return createMiddleware(async (c, next) => {
+    const tooLarge = () =>
+      errorResponse(c, 413, 'payload_too_large', `Request body must be ${Math.floor(maxBytes / 1024)}KB or smaller.`)
+
     const contentLength = c.req.header('content-length')
     if (contentLength && parseInt(contentLength, 10) > maxBytes) {
-      return errorResponse(c, 413, 'payload_too_large', `Request body must be ${Math.floor(maxBytes / 1024)}KB or smaller.`)
+      return tooLarge()
     }
+
+    // The header can be absent (chunked) or lie — measure the actual bytes.
+    // Hono caches the buffered body, so downstream json()/text() reuse it.
+    if (c.req.method !== 'GET' && c.req.method !== 'HEAD' && c.req.raw.body) {
+      const body = await c.req.arrayBuffer()
+      if (body.byteLength > maxBytes) {
+        return tooLarge()
+      }
+    }
+
     await next()
   })
 }

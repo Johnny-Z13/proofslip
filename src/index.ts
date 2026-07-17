@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { receiptsRouter } from './routes/receipts.js'
+import { proofsRouter, proofPageRouter } from './routes/proofs.js'
 import { verifyRouter } from './routes/verify.js'
 import { authRouter } from './routes/auth.js'
 import { cronRouter } from './routes/cron.js'
@@ -181,6 +182,8 @@ app.get('/dev/console', (c) => {
 })
 app.route('/v1/receipts', statusRouter)
 app.route('/v1/receipts', receiptsRouter)
+app.route('/v1/proofs', proofsRouter)
+app.route('/proof', proofPageRouter)
 app.route('/v1/verify', verifyRouter)
 app.route('/verify', verifyRouter)
 app.route('/v1/auth', authRouter)

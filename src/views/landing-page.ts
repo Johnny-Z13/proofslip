@@ -6,14 +6,14 @@ export function renderLandingPage(): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProofSlip — AI Agent Verification API | Ephemeral Receipts for Agent Workflows</title>
-  <meta name="description" content="Free API for AI agent verification. Create short-lived proof tokens that agents check before acting. Prevent duplicate actions, stale approvals, and unsafe retries in multi-agent workflows. Create, verify, expire.">
-  <meta name="keywords" content="AI agent verification, agent workflow receipts, ephemeral receipts API, agent to agent verification, prevent duplicate agent actions, AI proof token, multi-agent orchestration, LLM agent tools, agent workflow safety, idempotency for agents">
+  <title>ProofSlip — Verify What Your Coding Agent Shipped</title>
+  <meta name="description" content="ProofSlip turns GitHub Actions identity and release context into a portable proof that another coding agent or human can inspect.">
+  <meta name="keywords" content="coding agent release verification, GitHub Actions OIDC, AI coding agents, release proof, deployment evidence, CI verification">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="ProofSlip">
+  <meta name="author" content="Z13 Labs">
   <link rel="canonical" href="https://proofslip.ai">
-  <meta property="og:title" content="ProofSlip — Ephemeral Receipts for AI Agent Workflows">
-  <meta property="og:description" content="Free verification API for AI agents. Short-lived proof tokens that prevent duplicate actions, stale approvals, and unsafe retries. Create, verify, expire.">
+  <meta property="og:title" content="Your coding agent says it shipped. Check the slip.">
+  <meta property="og:description" content="Provider-backed release proof for coding agents, built on GitHub Actions identity.">
   <meta property="og:image" content="https://proofslip.ai/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -21,972 +21,821 @@ export function renderLandingPage(): string {
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="ProofSlip">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@proofslip">
-  <meta name="twitter:title" content="ProofSlip — Ephemeral Receipts for AI Agent Workflows">
-  <meta name="twitter:description" content="Free verification API for AI agents. Short-lived proof tokens that prevent duplicate actions, stale approvals, and unsafe retries.">
+  <meta name="twitter:title" content="Your coding agent says it shipped. Check the slip.">
+  <meta name="twitter:description" content="Provider-backed release proof for coding agents, built on GitHub Actions identity.">
   <meta name="twitter:image" content="https://proofslip.ai/og-image.png">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230a0a0a'/><text x='50' y='68' text-anchor='middle' font-size='52' font-family='monospace' fill='%23e0e0e0'>P</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%23090909'/><path d='M25 15h50v70H25z' fill='%23f2f0e8'/><path d='M25 78l7 7 7-7 7 7 7-7 7 7 7-7 8 7V15H25z' fill='%23f2f0e8'/><text x='50' y='61' text-anchor='middle' font-size='42' font-family='monospace' fill='%23090909'>P</text></svg>">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "ProofSlip",
-    "description": "Free AI agent verification API. Create ephemeral receipts that agents verify before acting. Prevents duplicate actions, stale approvals, and unsafe retries in multi-agent workflows.",
+    "description": "Provider-backed release proof for coding agents, built on GitHub Actions identity.",
     "url": "https://proofslip.ai",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "keywords": "AI agent verification, ephemeral receipts, agent workflow, multi-agent orchestration, proof token",
     "creator": {
       "@type": "Organization",
-      "name": "ProofSlip",
-      "url": "https://proofslip.ai"
+      "name": "Z13 Labs",
+      "url": "https://z13labs.com"
     },
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD",
-      "description": "Free tier — 500 receipts per month"
+      "priceCurrency": "USD"
     }
   }
   </script>
   <style>
     ${FONT_FACE_CSS}
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #090909;
+      --panel: #0f0f0f;
+      --panel-raised: #141414;
+      --line: #242424;
+      --line-strong: #343434;
+      --text: #f0eee7;
+      --muted: #9a9a93;
+      --dim: #777770;
+      --green: #3ddc84;
+      --green-dark: #123824;
+      --amber: #e0b45b;
+      --paper: #f1efe7;
+      --ink: #171713;
+      --paper-muted: #6d6c65;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 72% 4%, rgba(61, 220, 132, 0.07), transparent 27rem),
+        var(--bg);
+      color: var(--text);
       font-family: 'Departure Mono', monospace;
       font-size: 16px;
-      background: #0a0a0a;
-      color: #e0e0e0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 6rem 1.5rem;
-    }
-    .container {
-      max-width: 600px;
-      width: 100%;
-    }
-
-    /* Hero */
-    .hero {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-    .hero-brand {
-      font-size: 5.5rem;
-      font-weight: normal;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-      white-space: nowrap;
-    }
-    .hero-tagline {
-      font-size: 0.85rem;
-      color: #555;
-      margin-bottom: 2rem;
-    }
-    .hero-headline {
-      font-size: 1.2rem;
-      font-weight: normal;
       line-height: 1.6;
-      margin-bottom: 0;
     }
 
-    /* CTA — right after hero */
-    .cta {
-      margin-bottom: 3rem;
-      text-align: center;
+    a { color: inherit; }
+    code, pre { font-family: 'Departure Mono', monospace; }
+    ::selection { background: var(--green); color: #07150d; }
+
+    .shell {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
     }
-    .signup-row {
+
+    .site-header {
+      min-height: 76px;
       display: flex;
-      gap: 0;
-      margin-bottom: 0.75rem;
-      max-width: 440px;
-      margin-left: auto;
-      margin-right: auto;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      border-bottom: 1px solid var(--line);
     }
-    .signup-input {
-      flex: 1;
-      background: #111;
-      border: 1px solid #222;
-      border-right: none;
-      color: #e0e0e0;
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.85rem;
-      padding: 0.85rem 1rem;
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      letter-spacing: 0.14em;
+      font-size: 0.86rem;
     }
-    .signup-input:focus {
-      outline: none;
-      border-color: #444;
+
+    .brand-mark {
+      width: 25px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 0.75rem;
+      clip-path: polygon(0 0, 100% 0, 100% 86%, 84% 100%, 67% 86%, 50% 100%, 33% 86%, 16% 100%, 0 86%);
     }
-    .signup-input::placeholder { color: #444; }
-    .cta-button {
-      background: #16a34a;
-      color: #fff;
-      border: 1px solid #16a34a;
-      padding: 0.85rem 1.5rem;
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.85rem;
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+    }
+
+    .site-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
       letter-spacing: 0.05em;
-      cursor: pointer;
+    }
+
+    .site-nav a:hover { color: var(--text); }
+
+    .nav-cta {
+      border: 1px solid var(--line-strong);
+      padding: 0.48rem 0.72rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(370px, 0.97fr);
+      gap: clamp(3rem, 7vw, 7rem);
+      align-items: center;
+      min-height: 740px;
+      padding: 6rem 0;
+    }
+
+    .eyebrow, .section-kicker {
+      color: var(--green);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      max-width: 700px;
+      margin: 1.4rem 0 1.5rem;
+      font-size: clamp(2.6rem, 5.4vw, 5.35rem);
+      line-height: 1.04;
+      letter-spacing: -0.045em;
+      font-weight: normal;
+    }
+
+    .hero-copy {
+      max-width: 670px;
+      color: var(--muted);
+      font-size: clamp(0.9rem, 1.4vw, 1.04rem);
+      line-height: 1.85;
+    }
+
+    .hero-copy strong { color: var(--text); font-weight: normal; }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 2.2rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0.7rem 1.05rem;
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.75rem;
+    }
+
+    .button-primary {
+      border-color: var(--green);
+      background: var(--green);
+      color: #06120b;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button-primary:hover { background: #53e394; }
+
+    .hero-note {
+      margin-top: 1rem;
+      color: var(--dim);
+      font-size: 0.68rem;
+    }
+
+    .proof-wrap { position: relative; }
+    .proof-wrap::before {
+      content: 'PROOF ANATOMY / ILLUSTRATIVE';
+      position: absolute;
+      z-index: -1;
+      top: -2rem;
+      right: -1rem;
+      color: #242821;
+      font-size: clamp(1.4rem, 2.5vw, 2.6rem);
+      letter-spacing: 0.08em;
       white-space: nowrap;
     }
-    .cta-button:hover {
-      background: #15803d;
-      border-color: #15803d;
-    }
-    .cta-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .cta-subtext {
-      font-size: 0.75rem;
-      color: #444;
-    }
-    .cta-legal {
-      font-size: 0.65rem;
-      color: #333;
-      margin-top: 0.4rem;
-    }
-    .key-display {
-      background: #111;
-      border: 1px solid #16a34a;
-      padding: 1.25rem;
-      margin-bottom: 0.75rem;
-      text-align: left;
-      max-width: 440px;
+
+    .slip {
+      position: relative;
+      width: 100%;
+      max-width: 510px;
       margin-left: auto;
-      margin-right: auto;
-    }
-    .key-label {
-      font-size: 0.7rem;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-    .signup-error-msg {
-      font-size: 0.85rem;
-      color: #a85454;
+      padding: 2rem 2rem 2.35rem;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
     }
 
-    /* Receipt showcase */
-    .showcase {
-      margin-bottom: 5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .section-label {
-      font-size: 0.7rem;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .receipt {
-      background: #fafaf5;
-      color: #1a1a1a;
-      max-width: 400px;
-      width: 100%;
-      padding: 2rem 1.5rem;
-      position: relative;
-    }
-    .receipt::after {
+    .slip::after {
       content: '';
-      display: block;
       position: absolute;
-      bottom: -8px;
-      left: 0;
       right: 0;
-      height: 8px;
-      background: linear-gradient(135deg, #fafaf5 33.33%, transparent 33.33%) -8px 0,
-                  linear-gradient(225deg, #fafaf5 33.33%, transparent 33.33%) -8px 0;
-      background-size: 16px 8px;
+      bottom: -10px;
+      left: 0;
+      height: 10px;
+      background:
+        linear-gradient(135deg, var(--paper) 50%, transparent 50%) 0 0 / 20px 10px,
+        linear-gradient(225deg, var(--paper) 50%, transparent 50%) 10px 0 / 20px 10px;
     }
-    .receipt-header {
-      text-align: center;
+
+    .slip-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
       padding-bottom: 1rem;
-      border-bottom: 1px dashed #ccc;
-      margin-bottom: 1rem;
+      border-bottom: 1px dashed #bbb9b0;
     }
-    .receipt-header h2 {
+
+    .slip-brand {
+      font-size: 0.9rem;
+      letter-spacing: 0.16em;
+    }
+
+    .slip-subtitle {
+      margin-top: 0.18rem;
+      color: var(--paper-muted);
+      font-size: 0.59rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .status-badge {
+      padding: 0.34rem 0.55rem;
+      border: 1px solid #16884c;
+      color: #126a3c;
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .slip-id {
+      margin: 0.8rem 0 1.05rem;
+      color: #8b8980;
+      font-size: 0.62rem;
+    }
+
+    .proof-group {
+      margin-top: 0.9rem;
+      padding: 0.9rem;
+      border: 1px solid #d4d1c7;
+    }
+
+    .proof-group.provider { border-left: 3px solid #16884c; }
+    .proof-group.observed { border-left: 3px solid #b07d21; }
+    .proof-group.submitted { border-left: 3px solid #85827a; }
+
+    .proof-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      color: var(--paper-muted);
+      font-size: 0.57rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .proof-label .source { letter-spacing: 0; text-transform: none; }
+
+    .proof-row {
+      display: grid;
+      grid-template-columns: 7.6rem minmax(0, 1fr);
+      gap: 0.75rem;
+      padding: 0.24rem 0;
+      font-size: 0.67rem;
+    }
+
+    .proof-row .key { color: var(--paper-muted); }
+    .proof-row .value { text-align: right; overflow-wrap: anywhere; }
+    .proof-row .value.ok { color: #126a3c; }
+
+    .slip-disclaimer {
+      margin: 1rem 0 0;
+      padding-top: 0.9rem;
+      border-top: 1px dashed #bbb9b0;
+      color: var(--paper-muted);
+      font-size: 0.57rem;
+      line-height: 1.55;
+    }
+
+    .section {
+      padding: 7rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-heading {
+      max-width: 800px;
+      margin: 0.9rem 0 1rem;
+      font-size: clamp(1.9rem, 4vw, 3.4rem);
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      font-weight: normal;
+    }
+
+    .section-intro {
+      max-width: 700px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 3rem;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .evidence-card {
+      min-height: 270px;
+      padding: 1.6rem;
+      background: var(--panel);
+    }
+
+    .evidence-number { color: var(--dim); font-size: 0.62rem; }
+    .evidence-title {
+      margin: 2.2rem 0 0.6rem;
       font-size: 1rem;
       font-weight: normal;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
     }
-    .verified-badge {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.25rem 0.75rem;
-      border: 1px solid #16a34a;
-      color: #16a34a;
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    .evidence-title.provider { color: var(--green); }
+    .evidence-title.observed { color: var(--amber); }
+    .evidence-title.submitted { color: #b3b3ad; }
+    .evidence-card p { margin: 0; color: var(--muted); font-size: 0.76rem; }
+    .evidence-card ul { margin: 1rem 0 0; padding: 0; list-style: none; }
+    .evidence-card li {
+      padding: 0.28rem 0 0.28rem 0.9rem;
+      color: var(--dim);
+      font-size: 0.67rem;
+      position: relative;
     }
-    .receipt-id {
-      text-align: center;
-      font-size: 0.65rem;
-      color: #999;
-      margin-bottom: 1rem;
-    }
-    .divider {
-      border: none;
-      border-top: 1px dashed #ccc;
-      margin: 1rem 0;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-    .row .label {
-      color: #888;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      letter-spacing: 0.05em;
-      flex-shrink: 0;
-    }
-    .row .value {
-      text-align: right;
-      max-width: 65%;
-      word-break: break-word;
-    }
-    .summary-block {
-      margin: 1rem 0;
-      padding: 0.75rem;
-      background: #f0f0ea;
-      font-size: 0.8rem;
-      line-height: 1.5;
-    }
-    .receipt details { margin-top: 1rem; }
-    .receipt summary {
-      cursor: pointer;
-      font-size: 0.7rem;
-      color: #888;
-      letter-spacing: 0.05em;
-    }
-    .receipt pre {
-      background: #f0f0ea;
-      padding: 0.75rem;
-      overflow-x: auto;
-      font-size: 0.65rem;
-      margin-top: 0.5rem;
-      font-family: 'Departure Mono', monospace;
-    }
-    .receipt-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px dashed #ccc;
-    }
-    .receipt-footer a {
-      color: #888;
-      text-decoration: none;
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .receipt-footer a:hover { color: #1a1a1a; }
+    .evidence-card li::before { content: '—'; position: absolute; left: 0; }
 
-    /* How it works */
-    .how-it-works {
-      margin-bottom: 5rem;
+    .limits {
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr;
+      gap: 4rem;
+      align-items: start;
     }
+
+    .limit-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .limit-item {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .limit-mark { color: #a75757; }
+
     .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      min-height: 210px;
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .step-number { color: var(--green); font-size: 0.65rem; }
+    .step h3 { margin: 2.2rem 0 0.6rem; font-size: 1rem; font-weight: normal; }
+    .step p { margin: 0; color: var(--muted); font-size: 0.75rem; }
+
+    .quick-start-grid {
+      display: grid;
+      grid-template-columns: 0.68fr 1.32fr;
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .quick-notes {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
-    .step {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      padding: 1.5rem;
+
+    .quick-note {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
     }
-    .step-number {
-      font-size: 0.7rem;
-      color: #333;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-    .step-title {
-      font-size: 1.2rem;
-      color: #e0e0e0;
-      margin-bottom: 0.5rem;
+
+    .quick-note strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.75rem;
       font-weight: normal;
     }
-    .step-description {
-      font-size: 0.8rem;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-    .step-description:last-child {
-      margin-bottom: 0;
-    }
-    .code-block {
-      background: #0a0a0a;
-      border: 1px solid #1a1a1a;
-      color: #7c9a5e;
-      padding: 1rem;
-      font-size: 0.75rem;
-      line-height: 1.6;
-      overflow-x: auto;
-      font-family: 'Departure Mono', monospace;
-    }
-    .code-block .comment {
-      color: #444;
+
+    .quick-note span { color: var(--dim); font-size: 0.68rem; }
+
+    .code-panel {
+      border: 1px solid var(--line);
+      background: #070707;
+      min-width: 0;
     }
 
-    /* Comparison */
-    .comparison {
-      margin-bottom: 5rem;
-    }
-    .comparison-grid {
+    .code-head {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .comparison-item {
-      display: flex;
+      justify-content: space-between;
       gap: 1rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #111;
-    }
-    .comparison-what {
-      font-size: 0.8rem;
-      color: #555;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .comparison-problem {
-      font-size: 0.8rem;
-      color: #333;
-      line-height: 1.5;
-    }
-    .comparison-punchline {
-      font-size: 0.8rem;
-      color: #888;
-      line-height: 1.6;
-      padding-left: 1rem;
-      border-left: 2px solid #16a34a;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--dim);
+      font-size: 0.62rem;
     }
 
-    /* Two interfaces */
-    .two-ways {
-      margin-bottom: 5rem;
-    }
-    .two-ways-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: #1a1a1a;
-      border: 1px solid #1a1a1a;
-    }
-    .two-ways-item {
-      background: #0a0a0a;
-      padding: 1.25rem;
-    }
-    .two-ways-label {
-      font-size: 0.65rem;
-      color: #444;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 0.5rem;
-    }
-    .two-ways-title {
-      font-size: 0.9rem;
-      color: #e0e0e0;
-      margin-bottom: 0.4rem;
-    }
-    .two-ways-desc {
-      font-size: 0.75rem;
-      color: #555;
-      line-height: 1.5;
-    }
-    .two-ways-footnote {
-      font-size: 0.75rem;
-      color: #333;
-      margin-top: 1rem;
-      text-align: center;
-    }
+    .code-head span:last-child { color: var(--green); }
 
-    /* Failure cases */
-    .failures {
-      margin-bottom: 5rem;
-    }
-    .failure-card {
-      border: 1px solid #1a1a1a;
-      margin-bottom: 1rem;
-      overflow: hidden;
-    }
-    .failure-scenario {
-      padding: 1.25rem;
-      background: #0d0d0d;
-    }
-    .failure-label {
-      font-size: 0.65rem;
-      color: #333;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-    .failure-title {
-      font-size: 0.9rem;
-      color: #e0e0e0;
-      margin-bottom: 0.5rem;
-    }
-    .failure-halves {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: #1a1a1a;
-    }
-    .failure-half {
-      padding: 1rem 1.25rem;
-      background: #0a0a0a;
-    }
-    .failure-half-label {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-    }
-    .failure-half-label.without { color: #a85454; }
-    .failure-half-label.with { color: #16a34a; }
-    .failure-half p {
-      font-size: 0.75rem;
-      color: #666;
-      line-height: 1.6;
+    .code-panel pre {
       margin: 0;
-    }
-    .failure-half.bad p { color: #776060; }
-    .failure-half.good p { color: #8a8a8a; }
-    .failure-half code {
-      font-family: 'Departure Mono', monospace;
-      font-size: 0.7rem;
-      background: #111;
-      padding: 0.1rem 0.35rem;
+      padding: 1.2rem;
+      overflow-x: auto;
+      color: #a6c694;
+      font-size: 0.67rem;
+      line-height: 1.8;
+      white-space: pre;
     }
 
-    @media (max-width: 640px) {
-      .failure-halves { grid-template-columns: 1fr; }
-    }
-
-    /* Use cases */
-    .use-cases {
-      margin-bottom: 5rem;
-    }
-    .use-case-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .use-case {
-      display: flex;
-      gap: 1rem;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #111;
-      align-items: baseline;
-    }
-    .use-case:last-child { border-bottom: none; }
-    .use-case-type {
-      font-size: 0.75rem;
-      color: #e0e0e0;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      flex-shrink: 0;
-      min-width: 90px;
-    }
-    .use-case-scenario {
-      font-size: 0.75rem;
-      color: #555;
-      line-height: 1.5;
-    }
-
-    /* MCP install */
-    .mcp-install {
-      margin-bottom: 5rem;
-      text-align: center;
-    }
-    .mcp-install-cmd {
-      display: inline-block;
-      background: #111;
-      border: 1px solid #1a1a1a;
-      padding: 0.6rem 1.25rem;
-      font-size: 0.75rem;
-      color: #7c9a5e;
-      font-family: 'Departure Mono', monospace;
-      margin-top: 1rem;
-      letter-spacing: 0.02em;
-    }
-    .mcp-install-note {
-      font-size: 0.65rem;
-      color: #333;
-      margin-top: 0.6rem;
-    }
-    .mcp-install-note a {
-      color: #444;
-      text-decoration: none;
-    }
-    .mcp-install-note a:hover {
-      color: #888;
-    }
-
-    /* Ecosystem */
-    .ecosystem {
-      margin-bottom: 5rem;
-      text-align: center;
-    }
-    .ecosystem-grid {
+    .agent-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin-top: 1.25rem;
-      max-width: 560px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-top: 3rem;
     }
-    .ecosystem-item {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      padding: 1.25rem 1rem;
+
+    .agent-card {
+      padding: 1.5rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
     }
-    .ecosystem-name {
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
+
+    .agent-card h3 { margin: 0 0 0.8rem; font-size: 0.9rem; font-weight: normal; }
+    .agent-card p { margin: 0; color: var(--muted); font-size: 0.74rem; }
+    .agent-command {
+      margin-top: 1.2rem;
+      padding: 0.9rem;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      background: #080808;
+      color: #a6c694;
+      font-size: 0.66rem;
+      white-space: nowrap;
     }
-    .ecosystem-role {
-      font-size: 0.65rem;
-      color: #16a34a;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
+
+    .open-source {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
     }
-    .ecosystem-desc {
-      font-size: 0.7rem;
-      color: #555;
-      line-height: 1.5;
-    }
-    .ecosystem-footnote {
-      font-size: 0.65rem;
-      color: #333;
-      margin-top: 1rem;
-    }
-    .ecosystem-footnote a {
-      color: #444;
+
+    .open-card {
+      min-height: 240px;
+      padding: 1.6rem;
+      background: var(--panel);
       text-decoration: none;
     }
-    .ecosystem-footnote a:hover { color: #888; }
 
-    /* Footer nav */
-    .footer-nav {
+    .open-card:hover { background: var(--panel-raised); }
+    .open-card .arrow { color: var(--green); }
+    .open-card h3 { margin: 3rem 0 0.7rem; font-size: 1rem; font-weight: normal; }
+    .open-card p { margin: 0; max-width: 430px; color: var(--muted); font-size: 0.73rem; }
+
+    .legacy {
       display: flex;
-      justify-content: center;
+      align-items: center;
+      justify-content: space-between;
       gap: 2rem;
-      margin-bottom: 2rem;
-      padding-top: 2rem;
-      border-top: 1px solid #111;
-      width: 100%;
-    }
-    .footer-nav a {
-      font-size: 0.75rem;
-      color: #444;
-      text-decoration: none;
-      letter-spacing: 0.05em;
-    }
-    .footer-nav a:hover {
-      color: #888;
+      padding: 1.3rem 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
 
-    /* Footer */
+    .legacy p { margin: 0; color: var(--dim); font-size: 0.68rem; }
+    .legacy strong { color: var(--muted); font-weight: normal; }
+    .legacy a { color: var(--muted); font-size: 0.7rem; white-space: nowrap; }
+
     .site-footer {
-      font-size: 0.75rem;
-      color: #333;
-      text-align: center;
-      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      min-height: 140px;
+      color: var(--dim);
+      font-size: 0.65rem;
     }
 
-    /* Mobile responsive */
-    @media (max-width: 640px) {
-      body { padding: 3rem 1rem; }
-      .hero { margin-bottom: 2rem; }
-      .hero-brand { font-size: 2.5rem; letter-spacing: 0.15em; }
-      .hero-tagline { font-size: 0.75rem; }
-      .hero-headline { font-size: 1rem; }
-      .section-label { font-size: 0.65rem; }
-      .receipt { padding: 1.5rem 1rem; max-width: 100%; }
-      .row .value { max-width: 60%; font-size: 0.7rem; }
-      .step { padding: 1rem; }
-      .step-title { font-size: 1rem; }
-      .code-block { font-size: 0.65rem; padding: 0.75rem; }
-      .two-ways-grid { grid-template-columns: 1fr; }
-      .use-case { flex-direction: column; gap: 0.25rem; }
-      .use-case-type { min-width: auto; }
-      .how-it-works, .use-cases, .showcase, .comparison, .two-ways, .mcp-install, .ecosystem { margin-bottom: 3rem; }
-      .ecosystem-grid { grid-template-columns: 1fr; }
-      .cta { margin-bottom: 2rem; }
-      .cta-button { padding: 0.75rem 1.5rem; font-size: 0.85rem; }
-      .signup-row { flex-direction: column; }
-      .signup-input { border-right: 1px solid #222; }
-      .comparison-item { flex-direction: column; gap: 0.25rem; }
+    .footer-links { display: flex; gap: 1.2rem; }
+    .footer-links a { color: var(--dim); text-decoration: none; }
+    .footer-links a:hover { color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .proof-wrap { max-width: 560px; }
+      .slip { margin-left: 0; }
+      .evidence-grid, .steps { grid-template-columns: 1fr; }
+      .evidence-card, .step { min-height: auto; }
+      .evidence-title, .step h3 { margin-top: 1.2rem; }
+      .limits, .quick-start-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     }
 
-    @media (max-width: 380px) {
-      .hero-brand { font-size: 2rem; }
-      .row { flex-direction: column; gap: 0.2rem; }
-      .row .value { text-align: left; max-width: 100%; }
+    @media (max-width: 680px) {
+      .shell { width: min(calc(100% - 28px), var(--max)); }
+      .site-header { min-height: 68px; }
+      .site-nav a:not(.nav-cta) { display: none; }
+      .hero { padding: 4.5rem 0 5rem; gap: 4.5rem; }
+      .hero h1 { font-size: clamp(2.45rem, 12vw, 4.2rem); }
+      .hero-actions { align-items: stretch; flex-direction: column; }
+      .button { width: 100%; }
+      .proof-wrap::before { right: 0; font-size: 1.2rem; }
+      .slip { padding: 1.25rem 1.1rem 1.8rem; }
+      .slip-head { flex-direction: column; }
+      .proof-row { grid-template-columns: 1fr; gap: 0.1rem; }
+      .proof-row .value { text-align: left; }
+      .section { padding: 5rem 0; }
+      .agent-grid, .open-source { grid-template-columns: 1fr; }
+      .legacy, .site-footer { align-items: flex-start; flex-direction: column; }
+      .legacy { padding: 1.3rem 0; }
+      .site-footer { justify-content: center; padding: 2rem 0; }
+      .footer-links { flex-wrap: wrap; }
     }
 
-    /* Glyph flicker — subtle O ↔ 0 swap */
-    .glyph-flicker {
-      display: inline-block;
-      transition: opacity 0.12s ease;
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button:hover { transform: none; }
     }
   </style>
 </head>
 <body>
-  <main class="container">
-
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-brand" aria-label="ProofSlip"><span>P</span><span>R</span><span class="glyph-flicker" data-alt="0">O</span><span class="glyph-flicker" data-alt="0">O</span><span>F</span><span>S</span><span>L</span><span>I</span><span>P</span></div>
-      <div class="hero-tagline">ephemeral verification for agent workflows</div>
-      <h1 class="hero-headline">24-hour receipts your agents check before they act.</h1>
-    </section>
-
-    <!-- CTA — immediately visible -->
-    <section class="cta" id="signup">
-      <div id="signup-form">
-        <div class="signup-row">
-          <input type="email" id="signup-email" placeholder="you@example.com" class="signup-input" autocomplete="email">
-          <button id="signup-btn" class="cta-button" onclick="doSignup()">Get API key</button>
-        </div>
-        <div class="cta-subtext">Free — 500 receipts/month. No credit card.</div>
-      </div>
-      <div id="signup-result" style="display:none">
-        <div class="key-display">
-          <div class="key-label" style="color:#16a34a;font-size:0.85rem;margin-bottom:0.75rem">Check your email</div>
-          <div style="font-size:0.8rem;color:#888;line-height:1.6;">Your API key has been sent to <strong id="sent-email" style="color:#e0e0e0"></strong>.<br>It looks like a receipt — you'll recognize it.</div>
-        </div>
-        <div class="cta-subtext" style="margin-top:0.75rem">Didn't get it? Check spam, or sign up via curl for instant access.</div>
-      </div>
-      <div id="signup-error" style="display:none">
-        <div class="signup-error-msg" id="signup-error-msg"></div>
-        <button class="cta-button" onclick="resetSignup()" style="margin-top:0.75rem">Try again</button>
-      </div>
-    </section>
-
-    <!-- Receipt Showcase -->
-    <section class="showcase">
-      <div class="receipt">
-        <div class="receipt-header">
-          <h2>ProofSlip</h2>
-          <div class="verified-badge">Verified</div>
-        </div>
-        <a href="/example" class="receipt-id" style="text-decoration:none;color:#999;">rct_7f3k9x2m</a>
-        <div class="row"><span class="label">Type</span><span class="value">action</span></div>
-        <div class="row"><span class="label">Status</span><span class="value">success</span></div>
-        <div class="summary-block">Refund of $42.00 issued to customer #8812</div>
-        <hr class="divider">
-        <div class="row"><span class="label">Created</span><span class="value">Mon, 23 Mar 2026 12:00:00 GMT</span></div>
-        <div class="row"><span class="label">Expires</span><span class="value">Tue, 24 Mar 2026 12:00:00 GMT</span></div>
-        <details>
-          <summary>&gt; view payload</summary>
-          <pre>{
-  "customer_id": 8812,
-  "refund_amount": 42.00,
-  "currency": "USD",
-  "reason": "duplicate_charge",
-  "initiated_by": "agent/billing-v2"
-}</pre>
-        </details>
-        <div class="receipt-footer">
-          <a href="/example">view live receipt &rarr;</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works">
-      <div class="section-label">How It Works</div>
-      <div class="steps">
-
-        <div class="step">
-          <div class="step-number">01</div>
-          <div class="step-title">Create</div>
-          <p class="step-description">Issue a receipt when something happens — a payment, an approval, a handshake.</p>
-          <div class="code-block"><span class="comment"># POST /v1/receipts</span>
-{
-  "type": "action",
-  "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "idempotency_key": "refund-8812-2026-03-23"
-}</div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">02</div>
-          <div class="step-title">Verify</div>
-          <p class="step-description">Before acting, your agent checks the receipt. Valid receipt = go. No receipt = stop.</p>
-          <div class="code-block"><span class="comment"># GET /verify/rct_7f3k9x2m</span>
-{
-  "id": "rct_7f3k9x2m",
-  "valid": true,
-  "expires_at": "2026-03-24T12:00:00Z"
-}</div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">03</div>
-          <div class="step-title">Expire</div>
-          <p class="step-description">Receipts auto-expire after 24 hours. No cleanup. No stale state.</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Two ways to verify -->
-    <section class="two-ways">
-      <div class="section-label">One receipt, two interfaces</div>
-      <div class="two-ways-grid">
-        <div class="two-ways-item">
-          <div class="two-ways-label">For humans</div>
-          <div class="two-ways-title">Shareable URL</div>
-          <div class="two-ways-desc">Every receipt has a unique verification page. Send the link — anyone can confirm the receipt is real and current.</div>
-        </div>
-        <div class="two-ways-item">
-          <div class="two-ways-label">For agents</div>
-          <div class="two-ways-title">JSON API</div>
-          <div class="two-ways-desc">Same receipt, machine-readable. Your agent GETs the endpoint and gets a yes/no with an expiry window.</div>
-        </div>
-      </div>
-      <div class="two-ways-footnote">Every receipt ID is cryptographically random and verifiable.</div>
-    </section>
-
-    <!-- Why not just... -->
-    <section class="comparison">
-      <div class="section-label">Why not just use...</div>
-      <div class="comparison-grid">
-        <div class="comparison-item">
-          <div class="comparison-what">A database flag?</div>
-          <div class="comparison-problem">No expiry, no portability between services.</div>
-        </div>
-        <div class="comparison-item">
-          <div class="comparison-what">A webhook?</div>
-          <div class="comparison-problem">Pushes events but doesn't prove they happened.</div>
-        </div>
-        <div class="comparison-item">
-          <div class="comparison-what">A log?</div>
-          <div class="comparison-problem">Records history. Doesn't answer "is this still valid?"</div>
-        </div>
-      </div>
-      <div class="comparison-punchline">ProofSlip gives the next agent portable, expiring proof it can verify before acting.</div>
-    </section>
-
-    <!-- Why agents need receipts -->
-    <section class="failures">
-      <div class="section-label">Why agents need receipts</div>
-
-      <div class="failure-card">
-        <div class="failure-scenario">
-          <div class="failure-label">Duplicate refund</div>
-          <div class="failure-title">Two agents process the same refund because neither can prove it already happened.</div>
-        </div>
-        <div class="failure-halves">
-          <div class="failure-half bad">
-            <div class="failure-half-label without">Without ProofSlip</div>
-            <p>Agent A refunds $42. Agent B sees the same ticket, refunds $42 again. Customer gets $84. Your DB flag was stale.</p>
-          </div>
-          <div class="failure-half good">
-            <div class="failure-half-label with">With ProofSlip</div>
-            <p>Agent A creates a receipt with <code>idempotency_key: "refund-8812"</code>. Agent B tries the same key &mdash; gets the existing receipt back. One refund, one proof.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="failure-card">
-        <div class="failure-scenario">
-          <div class="failure-label">Stale approval</div>
-          <div class="failure-title">An agent acts on a human approval that was given 3 days ago for a different context.</div>
-        </div>
-        <div class="failure-halves">
-          <div class="failure-half bad">
-            <div class="failure-half-label without">Without ProofSlip</div>
-            <p>Manager approved a $500 payment on Monday. Friday, a different agent finds that approval flag and pushes $5,000. The flag never expired.</p>
-          </div>
-          <div class="failure-half good">
-            <div class="failure-half-label with">With ProofSlip</div>
-            <p>Approval receipt expires in 1 hour. Agent checks <code>valid: true</code> and <code>expired: false</code> before every action. Stale approval = automatic stop.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="failure-card">
-        <div class="failure-scenario">
-          <div class="failure-label">Broken handshake</div>
-          <div class="failure-title">Agent B starts writing to a shared resource before Agent A is done reading it.</div>
-        </div>
-        <div class="failure-halves">
-          <div class="failure-half bad">
-            <div class="failure-half-label without">Without ProofSlip</div>
-            <p>Agent A is mid-read. Agent B assumes it&rsquo;s done and starts writing. Data corruption. No coordination, just hope.</p>
-          </div>
-          <div class="failure-half good">
-            <div class="failure-half-label with">With ProofSlip</div>
-            <p>Agent A creates a <code>handshake</code> receipt when ready. Agent B verifies it exists before writing. No receipt = wait.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="failure-card">
-        <div class="failure-scenario">
-          <div class="failure-label">Unsafe retry</div>
-          <div class="failure-title">A pipeline crashes and restarts from the beginning instead of where it left off.</div>
-        </div>
-        <div class="failure-halves">
-          <div class="failure-half bad">
-            <div class="failure-half-label without">Without ProofSlip</div>
-            <p>Pipeline fails at step 7 of 10. Restarts at step 1. Re-sends emails, re-processes payments, re-deploys artifacts. Chaos.</p>
-          </div>
-          <div class="failure-half good">
-            <div class="failure-half-label with">With ProofSlip</div>
-            <p>Each step creates a <code>resume</code> receipt. On restart, the pipeline checks which receipts are still valid and skips to step 8.</p>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- Use Cases -->
-    <section class="use-cases">
-      <div class="section-label">Receipt Types</div>
-      <div class="use-case-list">
-        <div class="use-case">
-          <div class="use-case-type">action</div>
-          <div class="use-case-scenario">Verify a refund happened before emailing the customer.</div>
-        </div>
-        <div class="use-case">
-          <div class="use-case-type">approval</div>
-          <div class="use-case-scenario">Gate a payment on a fresh human approval — not a cached one.</div>
-        </div>
-        <div class="use-case">
-          <div class="use-case-type">handshake</div>
-          <div class="use-case-scenario">Prove both agents acknowledged before either starts writing.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- MCP -->
-    <section class="mcp-install">
-      <div class="section-label">MCP Server</div>
-      <div class="mcp-install-cmd">npx -y @proofslip/mcp-server</div>
-      <div class="mcp-install-note">Works with Claude Desktop, Cursor, Windsurf, and any MCP client. <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm ↗</a></div>
-    </section>
-
-    <!-- Context Capsule + ProofSlip ecosystem -->
-    <section class="ecosystem">
-      <div class="section-label">Two primitives, one coordination layer</div>
-      <div class="ecosystem-grid">
-        <div class="ecosystem-item">
-          <div class="ecosystem-name">ProofSlip</div>
-          <div class="ecosystem-role">Verification</div>
-          <div class="ecosystem-desc">Did it happen? Ephemeral receipts your agents verify before they act. Proof of past actions.</div>
-        </div>
-        <div class="ecosystem-item">
-          <div class="ecosystem-name">Context Capsule</div>
-          <div class="ecosystem-role">Knowledge</div>
-          <div class="ecosystem-desc">What do I need to know? Structured handoff packets that carry decisions, findings, and next steps forward.</div>
-        </div>
-      </div>
-      <div class="ecosystem-footnote">Receipts prove what capsules describe. Capsules reference receipts. <a href="https://www.contextcapsule.ai" target="_blank">contextcapsule.ai &rarr;</a></div>
-    </section>
-
-    <!-- Footer nav -->
-    <nav class="footer-nav">
-      <a href="/docs">API docs</a>
-      <a href="/llms.txt">llms.txt</a>
-      <a href="https://www.contextcapsule.ai" target="_blank">Context Capsule</a>
-      <a href="https://www.npmjs.com/package/@proofslip/mcp-server" target="_blank">npm</a>
-      <a href="https://github.com/Johnny-Z13/proofslip" target="_blank">GitHub</a>
+  <header class="site-header shell">
+    <a class="brand" href="/" aria-label="ProofSlip home">
+      <span class="brand-mark" aria-hidden="true">P</span>
+      <span>PROOFSLIP</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="#trust">Trust model</a>
+      <a href="/docs">Legacy API</a>
+      <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
+      <a class="nav-cta" href="#quick-start">Add release proof</a>
     </nav>
+  </header>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-      proofslip.ai — receipts expire, trust compounds.
-    </footer>
+  <main>
+    <section class="hero shell">
+      <div>
+        <div class="eyebrow">Release proof for coding agents</div>
+        <h1>Your coding agent says it shipped. Check the slip.</h1>
+        <p class="hero-copy">
+          ProofSlip cryptographically verifies the <strong>GitHub Actions job identity</strong>
+          behind a release claim and binds it to an exact repository, commit, workflow reference,
+          and run. It then issues a portable proof another agent or human can inspect.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#quick-start">Add release proof</a>
+          <a class="button" href="#proof-anatomy">Inspect a proof</a>
+        </div>
+        <div class="hero-note">GitHub Actions first · no ProofSlip account or API key · open source</div>
+      </div>
 
+      <div class="proof-wrap" id="proof-anatomy">
+        <article class="slip" aria-label="Illustrative release proof">
+          <div class="slip-head">
+            <div>
+              <div class="slip-brand">PROOFSLIP</div>
+              <div class="slip-subtitle">release-proof/v1 · illustrative</div>
+            </div>
+            <div class="status-badge">Provider verified</div>
+          </div>
+          <div class="slip-id">prf_demo_7f3k9x2m</div>
+
+          <section class="proof-group provider">
+            <div class="proof-label">
+              <span>Provider-verified</span>
+              <span class="source">GitHub OIDC</span>
+            </div>
+            <div class="proof-row"><span class="key">Repository</span><span class="value">acme/checkout</span></div>
+            <div class="proof-row"><span class="key">Commit</span><span class="value">8d21c9f…</span></div>
+            <div class="proof-row"><span class="key">Ref</span><span class="value">refs/heads/main</span></div>
+            <div class="proof-row"><span class="key">Workflow</span><span class="value">release.yml</span></div>
+            <div class="proof-row"><span class="key">Run</span><span class="value">#1842 · attempt 1</span></div>
+          </section>
+
+          <section class="proof-group observed">
+            <div class="proof-label">
+              <span>ProofSlip-observed</span>
+              <span class="source">HTTP check</span>
+            </div>
+            <div class="proof-row"><span class="key">URL</span><span class="value">app.acme.dev/health</span></div>
+            <div class="proof-row"><span class="key">Observed</span><span class="value ok">HTTP 200 · 143ms</span></div>
+          </section>
+
+          <section class="proof-group submitted">
+            <div class="proof-label">
+              <span>Submitted, not verified</span>
+              <span class="source">Workflow input</span>
+            </div>
+            <div class="proof-row"><span class="key">Environment</span><span class="value">production</span></div>
+          </section>
+
+          <p class="slip-disclaimer">
+            This proves the GitHub job identity and recorded observations at issuance time.
+            It does not prove that every test passed or that the observed deployment contains this commit.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="trust">
+      <div class="section-kicker">Trust, with labels</div>
+      <h2 class="section-heading">Every fact says where it came from.</h2>
+      <p class="section-intro">
+        A release proof is useful only if provider facts, ProofSlip observations, and workflow-supplied context never blur together.
+      </p>
+
+      <div class="evidence-grid">
+        <article class="evidence-card">
+          <div class="evidence-number">01 / GITHUB</div>
+          <h3 class="evidence-title provider">Provider-verified</h3>
+          <p>Claims cryptographically tied to a valid GitHub Actions OIDC token.</p>
+          <ul>
+            <li>repository and owner</li>
+            <li>commit SHA and ref</li>
+            <li>workflow, run, actor and event</li>
+          </ul>
+        </article>
+        <article class="evidence-card">
+          <div class="evidence-number">02 / PROOFSLIP</div>
+          <h3 class="evidence-title observed">ProofSlip-observed</h3>
+          <p>Facts ProofSlip measured directly at the moment the proof was issued.</p>
+          <ul>
+            <li>deployment URL requested</li>
+            <li>HTTP status and latency</li>
+            <li>observation timestamp</li>
+          </ul>
+        </article>
+        <article class="evidence-card">
+          <div class="evidence-number">03 / WORKFLOW</div>
+          <h3 class="evidence-title submitted">Submitted, not verified</h3>
+          <p>Useful labels supplied by the workflow, visibly separated from evidence.</p>
+          <ul>
+            <li>environment label</li>
+            <li>release name</li>
+            <li>human-readable context</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="limits">
+        <div>
+          <div class="section-kicker">What it does not prove</div>
+          <h2 class="section-heading">A proof with limits is stronger than a bigger claim.</h2>
+        </div>
+        <div class="limit-list">
+          <div class="limit-item"><span class="limit-mark">×</span><span>GitHub OIDC does not prove that every test passed or that the entire workflow completed successfully.</span></div>
+          <div class="limit-item"><span class="limit-mark">×</span><span>An HTTP 200 observation does not prove that the deployment contains the provider-verified commit.</span></div>
+          <div class="limit-item"><span class="limit-mark">×</span><span>Labels submitted by the workflow do not become verified facts because they appear on the same slip.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-kicker">The workflow</div>
+      <h2 class="section-heading">One release. One portable proof.</h2>
+      <div class="steps">
+        <article class="step">
+          <div class="step-number">01</div>
+          <h3>Release from GitHub Actions</h3>
+          <p>Your workflow requests a short-lived OIDC token scoped to the ProofSlip audience.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">02</div>
+          <h3>Issue the slip</h3>
+          <p>ProofSlip verifies GitHub's signature and required claims, records optional observations, and stores an immutable proof.</p>
+        </article>
+        <article class="step">
+          <div class="step-number">03</div>
+          <h3>Check before continuing</h3>
+          <p>The next agent fetches the proof URL and sees the exact verified facts, limits, and expiry.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="quick-start">
+      <div class="section-kicker">GitHub Actions quick start</div>
+      <h2 class="section-heading">Add release proof after your release job.</h2>
+      <p class="section-intro">
+        The release workflow grants OIDC permission, requests a token for ProofSlip, and exchanges it for a public proof URL.
+      </p>
+
+      <div class="quick-start-grid">
+        <div class="quick-notes">
+          <div class="quick-note"><strong>No stored GitHub credential</strong><span>The OIDC token is short-lived, verified, and never persisted.</span></div>
+          <div class="quick-note"><strong>No ProofSlip account</strong><span>The GitHub job identity is the credential for this narrow workflow.</span></div>
+          <div class="quick-note"><strong>Public proof URL</strong><span>Add it to the Actions summary, release, task, or agent handoff.</span></div>
+        </div>
+
+        <div class="code-panel" aria-label="GitHub Actions workflow example">
+          <div class="code-head"><span>.github/workflows/release.yml</span><span>release-proof/v1</span></div>
+          <pre>permissions:
+  contents: read
+  id-token: write
+
+steps:
+  - name: Create ProofSlip release proof
+    shell: bash
+    run: |
+      TOKEN="$(curl -fsS \\
+        -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \\
+        "\${ACTIONS_ID_TOKEN_REQUEST_URL}&amp;audience=https%3A%2F%2Fproofslip.ai" \\
+        | jq -r '.value')"
+
+      RESPONSE="$(curl -fsS -X POST \\
+        -H "Authorization: Bearer $TOKEN" \\
+        -H "Content-Type: application/json" \\
+        https://proofslip.ai/v1/proofs/releases/github-actions \\
+        --data '{"idempotency_key":"\${{ github.repository }}:\${{ github.run_id }}:\${{ github.run_attempt }}"}')"
+
+      PROOF_URL="$(jq -r '.proof_url' &lt;&lt;&lt; "$RESPONSE")"
+      echo "### [View release proof]($PROOF_URL)" &gt;&gt; "$GITHUB_STEP_SUMMARY"</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-kicker">For the next agent</div>
+      <h2 class="section-heading">Fetch the proof. Read the provenance. Decide.</h2>
+      <div class="agent-grid">
+        <article class="agent-card">
+          <h3>Machine-readable</h3>
+          <p>Public JSON exposes provider claims, ProofSlip observations, submitted context, validity, and expiry as separate fields.</p>
+          <div class="agent-command">curl https://proofslip.ai/v1/proofs/prf_...</div>
+        </article>
+        <article class="agent-card">
+          <h3>Human-readable</h3>
+          <p>The same proof opens as an evidence page with direct links to the exact GitHub run and commit.</p>
+          <div class="agent-command">https://proofslip.ai/proof/prf_...</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="section-kicker">Open by default</div>
+      <h2 class="section-heading">Inspect it. Self-host it. Improve it.</h2>
+      <div class="open-source">
+        <a class="open-card" href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">
+          <span class="arrow">↗</span>
+          <h3>Source on GitHub</h3>
+          <p>The API, trust contract, tests, and workflow integration live in the open.</p>
+        </a>
+        <a class="open-card" href="https://github.com/Johnny-Z13/proofslip#development" target="_blank" rel="noreferrer">
+          <span class="arrow">↗</span>
+          <h3>Run your own</h3>
+          <p>Hono, TypeScript, Postgres, and a small explicit trust boundary. No dashboard required.</p>
+        </a>
+      </div>
+    </section>
+
+    <aside class="legacy shell">
+      <p><strong>Existing integration?</strong> The general receipt API, MCP server, SDK, and LangChain tools remain available and backward compatible.</p>
+      <a href="/docs">Open legacy API docs →</a>
+    </aside>
   </main>
-  <script>
-    var SIGNUP_URL = "/v1/auth/signup";
-    async function doSignup() {
-      var email = document.getElementById("signup-email").value.trim();
-      if (!email) return;
-      var btn = document.getElementById("signup-btn");
-      btn.disabled = true;
-      btn.textContent = "...";
-      try {
-        var res = await fetch(SIGNUP_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email, source: "web" })
-        });
-        var data = await res.json();
-        if (!res.ok) {
-          document.getElementById("signup-form").style.display = "none";
-          document.getElementById("signup-error-msg").textContent = data.message || "Something went wrong.";
-          document.getElementById("signup-error").style.display = "block";
-          return;
-        }
-        document.getElementById("signup-form").style.display = "none";
-        document.getElementById("sent-email").textContent = email;
-        document.getElementById("signup-result").style.display = "block";
-      } catch (err) {
-        document.getElementById("signup-form").style.display = "none";
-        document.getElementById("signup-error-msg").textContent = "Network error. Try again.";
-        document.getElementById("signup-error").style.display = "block";
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Get API key";
-      }
-    }
-    function resetSignup() {
-      document.getElementById("signup-error").style.display = "none";
-      document.getElementById("signup-form").style.display = "block";
-    }
-    document.getElementById("signup-email").addEventListener("keydown", function(e) {
-      if (e.key === "Enter") doSignup();
-    });
 
-    // Glyph flicker: O ↔ 0
-    (function() {
-      var glyphs = document.querySelectorAll('.glyph-flicker');
-      glyphs.forEach(function(el, i) {
-        var original = el.textContent;
-        var alt = el.getAttribute('data-alt');
-        var showing = true;
-        var delay = i * 2400;
-        setTimeout(function tick() {
-          el.style.opacity = '0';
-          setTimeout(function() {
-            showing = !showing;
-            el.textContent = showing ? original : alt;
-            el.style.opacity = '1';
-          }, 120);
-          setTimeout(tick, 4000 + Math.random() * 2000);
-        }, 3000 + delay);
-      });
-    })();
-  </script>
+  <footer class="site-footer shell">
+    <span>PROOFSLIP · A Z13 LABS PROJECT</span>
+    <div class="footer-links">
+      <a href="/privacy">Privacy</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
+      <a href="https://z13labs.com" target="_blank" rel="noreferrer">Z13 Labs</a>
+    </div>
+  </footer>
 </body>
 </html>`
 }

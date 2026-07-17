@@ -8,7 +8,7 @@ describe('Landing page', () => {
     const html = await res.text()
     expect(html).toContain('ProofSlip')
     expect(html).toContain('Departure Mono')
-    expect(html).toContain('receipt')
+    expect(html).toContain('Your coding agent says it shipped. Check the slip.')
   })
 
   it('has SEO meta tags', async () => {
@@ -21,17 +21,29 @@ describe('Landing page', () => {
     expect(html).toContain('application/ld+json')
   })
 
-  it('has signup form', async () => {
+  it('leads with release proof instead of email signup', async () => {
     const res = await app.request('/')
     const html = await res.text()
-    expect(html).toContain('signup-email')
-    expect(html).toContain('doSignup')
+    expect(html).toContain('Add release proof')
+    expect(html).toContain('/v1/proofs/releases/github-actions')
+    expect(html).not.toContain('signup-email')
+    expect(html).not.toContain('doSignup')
   })
 
-  it('has trust section', async () => {
+  it('keeps the three evidence categories visibly separate', async () => {
     const res = await app.request('/')
     const html = await res.text()
-    expect(html.toLowerCase()).toContain('trust')
+    expect(html).toContain('Provider-verified')
+    expect(html).toContain('ProofSlip-observed')
+    expect(html).toContain('Submitted, not verified')
+    expect(html).toContain('does not prove that every test passed')
+  })
+
+  it('preserves a route to the legacy receipt API', async () => {
+    const res = await app.request('/')
+    const html = await res.text()
+    expect(html).toContain('general receipt API')
+    expect(html).toContain('href="/docs"')
   })
 
   it('serves OG image at /og-image.png as PNG', async () => {

@@ -55,6 +55,7 @@ app.get('/sitemap.xml', (c) => {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://proofslip.ai</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://proofslip.ai/docs</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://proofslip.ai/privacy</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://proofslip.ai/llms.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://proofslip.ai/llms-full.txt</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://proofslip.ai/.well-known/openapi.json</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -126,21 +127,21 @@ app.get('/.well-known/agent.json', (c) => {
   return c.json({
     name: 'ProofSlip',
     description:
-      'Ephemeral verification receipts for AI agent workflows. ' +
-      'Create short-lived proof tokens that agents verify before acting. ' +
-      'Prevents duplicate actions, verifies approvals, coordinates handshakes.',
+      'Provider-backed public release proofs for GitHub Actions, with a legacy short-lived receipt API for agent workflows.',
     url: 'https://proofslip.ai',
     version: '1.0.0',
-    capabilities: ['receipts', 'verification', 'polling'],
+    capabilities: ['release_proofs', 'github_actions_oidc', 'public_verification', 'legacy_receipts', 'polling'],
     protocol: 'openapi',
     api: {
       type: 'openapi',
       url: 'https://proofslip.ai/.well-known/openapi.json',
     },
     auth: {
-      type: 'bearer',
+      type: 'per_operation',
+      release_proofs: 'GitHub Actions OIDC bearer token; no ProofSlip account',
+      legacy_receipts: 'ProofSlip bearer API key',
       signup_url: 'https://proofslip.ai/v1/auth/signup',
-      instructions: 'POST /v1/auth/signup with {"email": "you@example.com", "source": "api"} to get a free API key.',
+      instructions: 'Signup is required only for legacy receipt creation.',
     },
     mcp: {
       package: '@proofslip/mcp-server',
@@ -156,16 +157,16 @@ app.get('/.well-known/ai-plugin.json', (c) => {
     schema_version: 'v1',
     name_for_human: 'ProofSlip',
     name_for_model: 'proofslip',
-    description_for_human: 'Ephemeral verification receipts for AI agent workflows.',
+    description_for_human: 'Public GitHub Actions release proofs and legacy workflow receipts.',
     description_for_model:
-      'Create, verify, and poll short-lived proof receipts that agents check before acting. ' +
-      'Use this to prevent duplicate actions, verify approvals, coordinate handshakes between agents, ' +
-      'and gate workflows on fresh state. Receipts expire after 24 hours.',
+      'Fetch public provider-backed release proofs created from GitHub Actions OIDC attestations. ' +
+      'The issuer category proves job identity and execution context only; observations are ProofSlip-sourced and submitted_context is unverified. ' +
+      'The authenticated legacy API creates and polls short-lived workflow receipts.',
     auth: { type: 'service_http', authorization_type: 'bearer' },
     api: { type: 'openapi', url: 'https://proofslip.ai/.well-known/openapi.json' },
     logo_url: 'https://proofslip.ai/og-image.png',
     contact_email: 'hello@proofslip.ai',
-    legal_info_url: 'https://proofslip.ai',
+    legal_info_url: 'https://proofslip.ai/privacy',
   })
 })
 app.get('/og-image.png', (c) => {

@@ -1,301 +1,220 @@
 export function renderLlmsFullTxt(): string {
-  return `# ProofSlip — Complete API Reference
+  return `# ProofSlip — Complete Agent Reference
 
-> Ephemeral verification receipts for AI agent workflows.
+> ProofSlip creates provider-backed, publicly inspectable release proofs from GitHub Actions OIDC attestations. The legacy short-lived receipt API remains operational as a separate surface.
 
-ProofSlip is a free API that creates short-lived proof tokens (receipts) that agents verify before acting. Receipts expire after 24 hours. No stale state, no replay attacks, no duplicate actions.
+Base URL: https://proofslip.ai
+Human docs: https://proofslip.ai/docs
+OpenAPI 3.1: https://proofslip.ai/.well-known/openapi.json
+Privacy: https://proofslip.ai/privacy
+Source: https://github.com/Johnny-Z13/proofslip
 
-## API Base URL
+## 1. release-proof/v1
 
-https://proofslip.ai
+### What is verified
 
-## Authentication
+ProofSlip validates a GitHub Actions OIDC token's signature against GitHub's JWKS, then validates:
 
-Most endpoints require a Bearer token.
-Header: Authorization: Bearer ak_...
+- issuer: https://token.actions.githubusercontent.com
+- audience: https://proofslip.ai
+- exp, nbf, and iat time constraints with 60 seconds of clock tolerance
+- required GitHub job claims, including repository identity, visibility, ref, SHA, workflow reference, run ID, run attempt, actor, event, subject, and token ID
 
-Get a free key:
+The raw token is never persisted. The token ID is stored only as a SHA-256 digest for replay protection.
+
+### Trust categories
+
+Every proof keeps three evidence sources structurally separate:
+
+1. issuer — provider-verified GitHub Actions job identity and execution context.
+2. observations — facts ProofSlip observed itself at issuance time.
+3. submitted_context — caller-supplied labels, stored and displayed as unverified.
+
+Never infer that a proof establishes more than these fields say. In particular, GitHub OIDC does not prove that tests passed, that the whole workflow succeeded, or that a deployment contains the claimed commit.
+
+### Create a release proof
+
+POST /v1/proofs/releases/github-actions
+Authorization: Bearer <GitHub Actions OIDC JWT>
+Content-Type: application/json
+
+No ProofSlip API key or account is required.
+
+All request-body fields are optional:
+
+{
+  "schema_version": "release-proof/v1",
+  "idempotency_key": "owner/repo:run_id:attempt",
+  "deployment": {
+    "url": "https://app.example.com",
+    "health_path": "/health"
+  },
+  "submitted_context": {
+    "environment": "production",
+    "label": "web release"
+  }
+}
+
+Constraints:
+
+- total request body: at most 16KB
+- idempotency_key: 1 to 255 characters, unique per provider-verified repository
+- deployment.url: public HTTPS URL, default port only, at most 512 characters
+- deployment.health_path: begins with /, at most 256 characters
+- submitted_context: flat string map, at most 10 entries and 1KB serialized UTF-8
+
+Deployment observations:
+
+- DNS is resolved once and the request is pinned to a validated public address.
+- Private, loopback, link-local, metadata, CGNAT, multicast, and other blocked addresses are rejected.
+- Redirects are not followed.
+- Response bodies and headers are not read or stored.
+- Observation timeout is five seconds.
+- Observation failure is recorded separately and does not invalidate the provider-backed proof.
+
+Example response:
+
+{
+  "proof_id": "prf_...",
+  "proof_url": "https://proofslip.ai/proof/prf_...",
+  "schema_version": "release-proof/v1",
+  "is_valid": true,
+  "is_expired": false,
+  "trust_level": "provider_verified",
+  "verification_method": "github_actions_oidc",
+  "issuer": {
+    "type": "github_actions",
+    "repository": "owner/repo",
+    "repository_id": "123",
+    "repository_owner": "owner",
+    "repository_owner_id": "456",
+    "repository_visibility": "public",
+    "ref": "refs/heads/main",
+    "sha": "0123456789abcdef0123456789abcdef01234567",
+    "workflow_ref": "owner/repo/.github/workflows/release.yml@refs/heads/main",
+    "run_id": "789",
+    "run_attempt": 1,
+    "actor": "octocat",
+    "event_name": "push",
+    "subject": "repo:owner/repo:ref:refs/heads/main",
+    "run_url": "https://github.com/owner/repo/actions/runs/789",
+    "commit_url": "https://github.com/owner/repo/commit/0123456789abcdef0123456789abcdef01234567"
+  },
+  "observations": [],
+  "submitted_context": null,
+  "issued_at": "2026-07-18T00:00:00.000Z",
+  "expires_at": "2026-10-16T00:00:00.000Z"
+}
+
+Status codes:
+
+- 201: new proof created
+- 200: identical token replay or idempotent retry; existing proof returned
+- 400 validation_error: invalid body
+- 400 unsupported_issuer: token issuer is not GitHub Actions
+- 401 invalid_attestation: missing token or failed signature, audience, time, or claim validation
+- 409 idempotency_conflict: token or idempotency key reused with different request or provider claims
+- 413 payload_too_large: body exceeds 16KB
+- 429 rate_limited: creation exceeds 30 requests/min per source IP
+
+### Fetch a proof
+
+GET /v1/proofs/{proof_id}
+
+Public JSON; no authentication.
+
+- 200: proof exists inside its 90-day validity window
+- 410: proof is expired; full record is still returned with is_valid=false and is_expired=true
+- 404 proof_not_found: unknown proof ID
+
+Human view:
+
+GET /proof/{proof_id}
+
+The human route serves HTML by default. It serves JSON when Accept includes application/json or when ?format=json is supplied.
+
+### Replay and idempotency
+
+- A reused OIDC token ID can return only the identical existing proof.
+- idempotency_key is scoped to the provider-verified repository.
+- Changing provider claims, deployment target, submitted context, or idempotency key creates a conflict instead of mutating or replacing evidence.
+- Proof records are immutable through the application API.
+
+### Public access and retention
+
+Proof URLs are public, including proofs created from private repositories. Provider claims may reveal repository name, owner, ref, SHA, workflow, actor, and run identifiers. submitted_context is also public.
+
+Release proofs have a 90-day validity window. V1 retains expired proof records so they remain inspectable and returns them with HTTP 410. Expiration is not automatic deletion. See https://proofslip.ai/privacy for deletion requests.
+
+## 2. Legacy receipt API
+
+The following API predates release-proof/v1 and remains operational for general agent workflows. It is not provider-backed.
+
+### Get an API key
+
 POST /v1/auth/signup
-Body: {"email": "you@example.com", "source": "api"}
+Content-Type: application/json
 
-The API key is returned once in the response. Save it immediately — it cannot be retrieved later.
+{"email":"dev@example.com","source":"api"}
 
-Verification endpoints (GET /v1/verify/*) are public and require NO authentication.
+The response returns an ak_ API key once. Save it immediately. This key is used only for legacy receipt creation.
 
-## Rate Limits
+### Create a receipt
 
-- 60 requests per minute per API key
-- 500 receipts per month on the free tier
-- Exceeding limits returns HTTP 429 with a Retry-After header
-
----
-
-## Endpoints
-
-### POST /v1/receipts — Create a Receipt
-
-Creates a verifiable receipt when something happens in your agent workflow.
-
-**Auth:** Required (Bearer token)
-
-**Request body:**
-| Field            | Type     | Required | Description                                      |
-|------------------|----------|----------|--------------------------------------------------|
-| type             | string   | yes      | One of: action, approval, handshake, resume, failure |
-| status           | string   | yes      | Freeform status string (e.g. "success", "pending") |
-| summary          | string   | yes      | Human-readable summary, max 280 chars            |
-| payload          | object   | no       | Structured JSON data, max 4KB                    |
-| ref              | object   | no       | Workflow reference IDs (see below)               |
-| expires_in       | integer  | no       | TTL in seconds, 60–86400. Default: 86400 (24h)  |
-| idempotency_key  | string   | no       | Prevents duplicate creation on retry             |
-| audience         | string   | no       | Set to "human" for enriched social cards on verify page |
-
-**ref object fields (all optional):**
-- run_id, agent_id, action_id, workflow_id, session_id
-
-**Example request:**
-\`\`\`
 POST /v1/receipts
-Authorization: Bearer ak_live_abc123
+Authorization: Bearer ak_...
 Content-Type: application/json
 
 {
   "type": "action",
   "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "payload": {
-    "amount": 42.00,
-    "currency": "USD",
-    "customer_id": "8812"
-  },
-  "ref": {
-    "run_id": "run_abc",
-    "agent_id": "billing-agent"
-  },
-  "idempotency_key": "refund-8812-2026-03-23",
-  "expires_in": 3600
+  "summary": "Refund issued",
+  "payload": {"amount": 42},
+  "idempotency_key": "refund-8812",
+  "expires_in": 86400
 }
-\`\`\`
 
-**Example response (201):**
-\`\`\`json
-{
-  "receipt_id": "rct_k7x9m2p4",
-  "type": "action",
-  "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "verify_url": "https://proofslip.ai/verify/rct_k7x9m2p4",
-  "created_at": "2026-03-23T12:00:00Z",
-  "expires_at": "2026-03-23T13:00:00Z",
-  "idempotency_key": "refund-8812-2026-03-23",
-  "is_terminal": true,
-  "next_poll_after_seconds": null
-}
-\`\`\`
+Receipt types: action, approval, handshake, resume, failure.
 
-**Error responses:**
-- 400 — Validation error (missing required field, summary too long, invalid type)
-- 401 — Missing or invalid API key
-- 409 — Idempotency conflict (same key, different body)
-- 429 — Rate limited
+Receipt TTL: 60 to 86400 seconds. Default: 86400 seconds. Expired receipts return 404 and are deleted by automated cleanup.
 
----
+### Verify a receipt
 
-### GET /v1/verify/{receipt_id} — Verify a Receipt
+GET /v1/verify/{receipt_id}?format=json
 
-Returns full receipt data. No authentication required.
+Public. Returns the full valid receipt or 404 when missing, expired, or deleted.
 
-**Query params:**
-| Param  | Required | Description                    |
-|--------|----------|--------------------------------|
-| format | no       | Set to "json" to force JSON    |
+### Poll receipt status
 
-**Example request:**
-\`\`\`
-GET /v1/verify/rct_k7x9m2p4?format=json
-\`\`\`
+GET /v1/receipts/{receipt_id}/status
 
-**Example response (200):**
-\`\`\`json
-{
-  "receipt_id": "rct_k7x9m2p4",
-  "valid": true,
-  "type": "action",
-  "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "payload": {
-    "amount": 42.00,
-    "currency": "USD",
-    "customer_id": "8812"
-  },
-  "ref": {
-    "run_id": "run_abc",
-    "agent_id": "billing-agent"
-  },
-  "created_at": "2026-03-23T12:00:00Z",
-  "expires_at": "2026-03-23T13:00:00Z",
-  "expired": false,
-  "is_terminal": true,
-  "next_poll_after_seconds": null
-}
-\`\`\`
+Public. Returns receipt_id, status, is_terminal, next_poll_after_seconds, and expires_at.
 
-**Error responses:**
-- 404 — Receipt not found, expired, or deleted
+### Published integrations
 
-Without ?format=json, the endpoint returns an HTML verification page suitable for sharing.
+The current MCP and LangChain packages expose the legacy receipt API:
 
----
-
-### GET /v1/receipts/{receipt_id}/status — Poll Receipt Status
-
-Lightweight status check. Returns only status fields — no summary, payload, or ref. Ideal for polling loops.
-
-**Example request:**
-\`\`\`
-GET /v1/receipts/rct_k7x9m2p4/status
-\`\`\`
-
-**Example response (200):**
-\`\`\`json
-{
-  "receipt_id": "rct_k7x9m2p4",
-  "status": "success",
-  "is_terminal": true,
-  "next_poll_after_seconds": null,
-  "expires_at": "2026-03-23T13:00:00Z"
-}
-\`\`\`
-
-**Polling guidance:**
-- If is_terminal is true, stop polling — the status won't change.
-- If is_terminal is false, poll again after next_poll_after_seconds.
-- Receipts expire; once expired, this returns 404.
-
----
-
-### POST /v1/auth/signup — Get a Free API Key
-
-**No auth required.**
-
-**Request body:**
-| Field  | Type   | Required | Description                              |
-|--------|--------|----------|------------------------------------------|
-| email  | string | yes      | Your email address                       |
-| source | string | no       | "api" returns key directly, "web" emails it. Default: "api" |
-
-**Example request:**
-\`\`\`
-POST /v1/auth/signup
-Content-Type: application/json
-
-{"email": "dev@example.com", "source": "api"}
-\`\`\`
-
-**Example response (201):**
-\`\`\`json
-{
-  "api_key": "ak_live_abc123def456",
-  "tier": "free",
-  "message": "Save this key — it cannot be retrieved later."
-}
-\`\`\`
-
-**Error responses:**
-- 400 — Invalid email
-- 409 — Email already has an API key
-
----
-
-## Receipt Types
-
-| Type       | Use Case                                                  |
-|------------|-----------------------------------------------------------|
-| action     | Record a completed event (refund issued, deploy finished) |
-| approval   | Gate an action on a human or agent decision               |
-| handshake  | Coordinate between two agents before either acts          |
-| resume     | Bookmark a safe continuation point in a pipeline          |
-| failure    | Structured error record with bounded retry window         |
-
----
-
-## Common Patterns
-
-### Idempotent Operations
-Use idempotency_key to ensure an action isn't recorded twice:
-\`\`\`
-POST /v1/receipts
-{"type": "action", "status": "success", "summary": "Deploy v2.1.0", "idempotency_key": "deploy-v2.1.0"}
-\`\`\`
-If the same key is sent again with the same body, you get the original receipt back. Different body = 409 conflict.
-
-### Agent-to-Agent Handshake
-Agent A creates a handshake receipt. Agent B verifies it before proceeding:
-\`\`\`
-# Agent A creates
-POST /v1/receipts
-{"type": "handshake", "status": "ready", "summary": "Data pipeline output ready for analysis"}
-
-# Agent B verifies before acting
-GET /v1/verify/rct_...?format=json
-# Only proceed if valid: true and expired: false
-\`\`\`
-
-### Human Approval Gate
-Create an approval receipt and share the verify URL with a human:
-\`\`\`
-POST /v1/receipts
-{"type": "approval", "status": "pending", "summary": "Approve $5,000 vendor payment", "audience": "human"}
-\`\`\`
-The verify URL renders a human-readable page with social card metadata when audience is "human".
-
-### Short-Lived Tokens
-Set expires_in to create receipts that expire quickly:
-\`\`\`
-POST /v1/receipts
-{"type": "action", "status": "success", "summary": "OTP generated", "expires_in": 300}
-\`\`\`
-This receipt expires in 5 minutes.
-
----
-
-## MCP Server
-
-Install as an MCP tool for Claude, Cursor, or any MCP-compatible client:
-
-\`\`\`
 npx -y @proofslip/mcp-server
-\`\`\`
+pip install langchain-proofslip
 
-Available MCP tools:
-- create_receipt — Create a new receipt
-- verify_receipt — Verify a receipt by ID
-- check_status — Lightweight status poll
+MCP tools: create_receipt, verify_receipt, check_status, signup.
+LangChain tools: ProofSlipCreateReceiptTool, ProofSlipVerifyReceiptTool, ProofSlipCheckStatusTool.
 
----
+## 3. Common error envelope
 
-## Error Format
+All API errors use:
 
-All errors return JSON:
-\`\`\`json
-{
-  "error": "error_code",
-  "message": "Human-readable description",
-  "request_id": "req_..."
-}
-\`\`\`
+{"error":"error_code","message":"Human-readable description","request_id":"req_..."}
 
-Error codes: validation_error, unauthorized, not_found, idempotency_conflict, rate_limited, internal_error
+Use request_id when reporting a problem to hello@proofslip.ai.
 
----
+## 4. Discovery endpoints
 
-## Key Properties
-
-- Receipts expire after 24 hours by default (configurable 60s–24h)
-- Receipt IDs are cryptographically random (rct_ prefix)
-- Idempotency keys prevent duplicate creation
-- Verification is public — no API key needed
-- Every receipt has a human-readable verify URL and a JSON API
-- Free tier: 500 receipts/month, 60 req/min
-`;
+- https://proofslip.ai/llms.txt — compact agent reference
+- https://proofslip.ai/llms-full.txt — this full reference
+- https://proofslip.ai/.well-known/openapi.json — OpenAPI 3.1
+- https://proofslip.ai/.well-known/agent.json — agent manifest
+- https://proofslip.ai/.well-known/mcp.json — current legacy receipt MCP package
+- https://proofslip.ai/docs — human documentation
+`
 }

@@ -1,90 +1,70 @@
 export function renderLlmsTxt(): string {
   return `# ProofSlip
 
-> Ephemeral verification receipts for AI agent workflows.
+> Provider-backed release proofs for GitHub Actions. Verify the workflow job identity behind a release, then share a public proof URL.
 
-ProofSlip is a free API that creates short-lived proof tokens (receipts) that agents verify before acting. Receipts expire after 24 hours. No stale state, no replay attacks, no duplicate actions.
+Website: https://proofslip.ai
+Docs: https://proofslip.ai/docs
+OpenAPI: https://proofslip.ai/.well-known/openapi.json
+Privacy: https://proofslip.ai/privacy
+Full agent reference: https://proofslip.ai/llms-full.txt
 
-## API Base URL
+## Primary API: release-proof/v1
 
-https://proofslip.ai
+Create:
+POST /v1/proofs/releases/github-actions
+Authorization: Bearer <GitHub Actions OIDC token>
 
-## Authentication
+The OIDC token must use audience https://proofslip.ai. No ProofSlip account or API key is required.
 
-Create receipts requires a Bearer token API key. Verification is public.
-Get a free key: POST /v1/auth/signup with {"email": "you@example.com", "source": "api"}
-
-## Endpoints
-
-### Create Receipt
-POST /v1/receipts
-Authorization: Bearer ak_...
-
-Request:
+Optional JSON body:
 {
-  "type": "action | approval | handshake | resume | failure",
-  "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "payload": { ... },
-  "idempotency_key": "refund-8812-2026-03-23",
-  "expires_in": 86400
+  "schema_version": "release-proof/v1",
+  "idempotency_key": "owner/repo:run_id:attempt",
+  "deployment": {"url": "https://app.example.com", "health_path": "/health"},
+  "submitted_context": {"environment": "production"}
 }
 
-Response (201):
-{
-  "receipt_id": "rct_...",
-  "verify_url": "https://proofslip.ai/verify/rct_...",
-  "created_at": "2026-03-23T12:00:00Z",
-  "expires_at": "2026-03-24T12:00:00Z"
-}
+Successful creation returns 201. An identical replay or idempotent retry returns 200.
 
-### Verify Receipt
-GET /v1/verify/{receipt_id}?format=json
+Fetch JSON:
+GET /v1/proofs/{proof_id}
 
-Response (200):
-{
-  "receipt_id": "rct_...",
-  "valid": true,
-  "type": "action",
-  "status": "success",
-  "summary": "Refund of $42.00 issued to customer #8812",
-  "payload": { ... },
-  "expires_at": "2026-03-24T12:00:00Z",
-  "expired": false
-}
+Human view:
+GET /proof/{proof_id}
 
-### Check Status (lightweight poll)
-GET /v1/receipts/{receipt_id}/status
+Both fetch routes are public. Proofs have a 90-day validity window. Expired proofs remain inspectable and return 410 with is_expired=true and the full record.
 
-Response (200):
-{
-  "receipt_id": "rct_...",
-  "status": "success",
-  "is_terminal": true,
-  "next_poll_after_seconds": null,
-  "expires_at": "2026-03-24T12:00:00Z"
-}
+## Trust boundary
 
-## Receipt Types
+- issuer: provider-verified GitHub Actions job identity and execution-context claims.
+- observations: facts observed separately by ProofSlip, such as an HTTP status at issuance time.
+- submitted_context: caller-supplied labels; always unverified.
 
-- action — Record a completed event (refund, deploy, notification)
-- approval — Gate an action on a human or agent decision
-- handshake — Coordinate between two agents before either acts
-- resume — Bookmark a safe continuation point in a pipeline
-- failure — Structured error record with bounded retry window
+A release proof does NOT prove that tests passed, that the full workflow succeeded, or that a deployment contains the claimed commit.
 
-## MCP Server
+## Privacy warning
 
-Install as an MCP tool for Claude, Cursor, or any MCP client:
-npx -y @proofslip/mcp-server
+Proof URLs are public, including proofs created from private repositories. Repository metadata and submitted context in the proof can be read by anyone with the URL. Review https://proofslip.ai/privacy before enabling private-repository workflows.
 
-## Key Properties
+## Legacy receipt API
 
-- Receipts expire after 24 hours (configurable 60s–24h)
-- Receipt IDs are cryptographically random
-- Idempotency keys prevent duplicate creation
-- Verification is public — no API key needed to verify
-- Every receipt has a human-readable URL and a JSON API
-- Free tier: 500 receipts/month
-`;
+The original ephemeral receipt API remains available:
+
+- POST /v1/auth/signup — create a ProofSlip API key.
+- POST /v1/receipts — create a 60-second to 24-hour receipt; API key required.
+- GET /v1/verify/{receipt_id}?format=json — public receipt verification.
+- GET /v1/receipts/{receipt_id}/status — public lightweight polling.
+
+Published MCP and LangChain integrations currently expose these legacy receipt tools:
+
+- npx -y @proofslip/mcp-server
+- pip install langchain-proofslip
+
+## Error envelope
+
+{"error":"error_code","message":"Description","request_id":"req_..."}
+
+Release-proof error codes include validation_error, unsupported_issuer, invalid_attestation, proof_not_found, idempotency_conflict, payload_too_large, and rate_limited.
+`
 }

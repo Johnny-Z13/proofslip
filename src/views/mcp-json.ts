@@ -3,13 +3,21 @@ export function getMcpDiscovery(): object {
     schema_version: '1.0',
     name: 'ProofSlip',
     description:
-      'Ephemeral verification receipts for AI agent workflows. ' +
-      'Create short-lived proof tokens that agents verify before acting.',
+      'ProofSlip creates provider-backed public release proofs from GitHub Actions. ' +
+      'This MCP package currently exposes the separate legacy short-lived receipt API.',
     repository: 'https://github.com/proofslip/mcp-server',
     package: '@proofslip/mcp-server',
     install: 'npx -y @proofslip/mcp-server',
     runtime: 'node',
     transport: 'stdio',
+    scope: 'legacy_receipt_api',
+    primary_api: {
+      schema_version: 'release-proof/v1',
+      create: 'POST https://proofslip.ai/v1/proofs/releases/github-actions',
+      fetch: 'GET https://proofslip.ai/v1/proofs/{proof_id}',
+      auth: 'GitHub Actions OIDC; no ProofSlip API key',
+      note: 'Release-proof creation is not currently an MCP tool.',
+    },
     env: [
       {
         name: 'PROOFSLIP_API_KEY',

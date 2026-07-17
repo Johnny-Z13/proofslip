@@ -24,6 +24,19 @@ function extractTextUrls(text: string): string[] {
 
 function shouldSkip(url: string): boolean {
   if (SKIP_DOMAINS.some((d) => url.includes(d))) return true
+  // RFC-reserved example hosts are documentation placeholders, not outbound
+  // links. llms.txt intentionally includes one inside its request example.
+  try {
+    const hostname = new URL(url).hostname.toLowerCase()
+    if (
+      hostname === 'example.com' || hostname.endsWith('.example.com') ||
+      hostname === 'example.net' || hostname.endsWith('.example.net') ||
+      hostname === 'example.org' || hostname.endsWith('.example.org') ||
+      hostname === 'example' || hostname.endsWith('.example')
+    ) return true
+  } catch {
+    return false
+  }
   // Skip example/placeholder URLs from docs (e.g., /verify/rct_ with no full ID)
   if (url.match(/\/verify\/rct_[^a-zA-Z0-9]/)) return true
   if (url.endsWith('/verify/rct_')) return true
@@ -46,6 +59,12 @@ async function checkUrl(url: string): Promise<{ url: string; status: number; ok:
 }
 
 describe('Smoke: Link Checker', () => {
+  it('ignores standards-reserved example hosts used in snippets', () => {
+    expect(shouldSkip('https://app.example.com/health')).toBe(true)
+    expect(shouldSkip('https://deployment.example/health')).toBe(true)
+    expect(shouldSkip('https://proofslip.ai/docs')).toBe(false)
+  })
+
   it('all links on landing page resolve', async () => {
     const res = await fetch(BASE)
     const html = await res.text()

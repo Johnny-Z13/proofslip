@@ -4,6 +4,15 @@ Running record of what's been shipped, listed, and submitted.
 
 ---
 
+## 2026-07-18
+
+- **Shipped `release-proof/v1` to production.** ProofSlip now verifies GitHub Actions OIDC and publishes public proof JSON and human evidence pages for a repository, commit, ref, workflow, and run.
+- Repositioned the homepage, README, docs, privacy policy, OpenAPI, llms files, and agent discovery around provider-backed release proofs. Legacy receipt APIs and packages remain available but are explicitly labeled.
+- Hardened proof verification and storage: raw `jti` is no longer persisted, provider claims participate in idempotency matching, temporal claims fail closed, concurrent retries return the winning proof, submitted-context size is measured in UTF-8 bytes, and tests cannot target the production database.
+- Created a persistent isolated Neon test branch and verified all four test layers plus post-deploy production checks.
+- Established `docs/growth/message-source.md` as the canonical growth message and aligned the active thesis, playbook, listing cheat sheet, and GPT maintenance guide.
+- Added a Codex scheduled-task plan for reliability, privacy-safe adoption signals, ecosystem scouting, artifact briefs, and weekly review. No automations have been enabled yet.
+
 ## 2026-07-17
 
 - **P0 fix: flipped canonical domain.** proofslip.ai now serves production directly; www.proofslip.ai 308-redirects to it. Previously the bare domain 307-redirected to www, and Node fetch / Python requests strip Authorization headers on cross-host redirects — so every published integration (SDK, MCP server, langchain-proofslip, OpenAPI spec, docs curl examples) got 401 on authenticated calls with default settings. Agents could sign up (no auth header) but never create a receipt. Verified fixed live.

@@ -1,74 +1,91 @@
 # ProofSlip Growth Thesis
 
-## The Bet
+Canonical messaging: [`message-source.md`](message-source.md)
 
-Agents are getting smarter at discovering the tools they need. As agentic workflows become more autonomous, agents will encounter a recurring problem: **how do I know what already happened before I decide what to do next?**
+## The bet
 
-ProofSlip is the answer to that question. Ephemeral, verifiable receipts that prove actions happened.
+AI coding agents are getting better at writing, testing, and shipping software, but their release claims are still usually transmitted as prose: "deployed," "tests passed," or "production is updated."
 
-The bet is: **if ProofSlip is plumbed into enough discovery surfaces, agents will find it themselves.** We don't need to market to developers. We need to be present where agents look for tools.
+The next agent or human needs a narrower, verifiable answer: **which provider-backed GitHub Actions job identity stands behind this release claim?**
 
-## Why Ecosystem Saturation Beats Marketing
+ProofSlip verifies the GitHub Actions OIDC token and produces a stable public proof of the repository, commit, ref, workflow, and run. The bet is that this proof becomes a standard handoff object for agent-driven releases.
 
-Traditional dev tool marketing: write blog posts, grind Twitter, hope for Hacker News. That's a broadcast game that requires audience, consistency, and time.
+## Why the proof itself can propagate the product
 
-ProofSlip has a different advantage: **built-in virality through the protocol itself.**
+ProofSlip has a protocol-level distribution loop:
 
-1. Agent A uses ProofSlip to create a receipt
-2. That receipt ID gets passed to Agent B (via ContextCapsule, tool output, or context)
-3. Agent B needs to verify the receipt — discovers ProofSlip
-4. Agent B's developer sees ProofSlip in their agent's tool calls
-5. Developer integrates ProofSlip into more workflows
+1. A release workflow creates a ProofSlip.
+2. The proof URL is attached to a job summary, release, task, or agent handoff.
+3. Another agent or human fetches the proof before continuing.
+4. The proof visibly identifies ProofSlip and exposes a reusable public contract.
+5. The receiving workflow can adopt the same pattern.
 
-The receipt *is* the marketing. Every `verify_url` is a breadcrumb that leads back to ProofSlip.
+The public proof is the breadcrumb. Distribution should therefore prioritize places where release artifacts and agent handoffs already move, rather than generic broadcast marketing.
 
-## Why Not a Generic Utility Library
+## Why ecosystem saturation still matters
 
-GPT suggested building a `safe-step` npm package — a retry-safe wrapper that secretly uses ProofSlip under the hood. We rejected this because:
+Agents and their developers discover tools through machine-readable and workflow-native surfaces:
 
-- **It competes with solved problems.** Stripe has idempotency keys. Temporal has workflow deduplication. Bull has job deduplication. Generic retry-safety is a crowded space.
-- **It requires npm SEO grind** — that's social media with a different name.
-- **It positions ProofSlip as a utility, not a protocol.** We want ProofSlip to be the standard verification primitive for agent workflows, not a convenience wrapper.
-- **"Powered by ProofSlip" funnels are weak.** Most devs never click through.
+- GitHub Actions workflow examples and reusable release patterns.
+- OpenAPI and agent manifests.
+- `llms.txt` and other agent-readable context.
+- CI/CD, provenance, and deployment ecosystems.
+- MCP registries and framework packages, where the integration really supports the advertised capability.
 
-## The Actual Position
+ProofSlip should be present wherever an agent looks for release verification, but presence alone is not enough. Every surface must use the same narrow trust claim and must distinguish the primary release-proof API from legacy receipt integrations.
 
-ProofSlip is not a retry library. It's the **verification layer for agentic workflows.**
+## Why not a generic utility library
 
-- **ProofSlip** (evidential) — "Here's what actually happened, and you can verify it."
-- **ContextCapsule** (navigational) — "Here's the situation, what matters, and what should happen next."
+A generic retry or idempotency wrapper would compete with mature queue, workflow, and payment infrastructure. It would also position ProofSlip as an implementation convenience rather than an evidence protocol.
 
-Together they form two primitives that make multi-agent handoffs reliable.
+ProofSlip is not a retry library. Its defensible role is **portable release evidence with explicit trust boundaries**.
 
-## Who Finds Us
+## The product position
 
-We're not targeting generic JS/TS backend devs. Our users are:
+- **ProofSlip** is evidential: "Here is what was verified, by whom, and when."
+- **ContextCapsule** is navigational: "Here is the situation, what matters, and what should happen next."
 
-1. **Agent orchestration devs** — building with LangChain, CrewAI, AutoGen, LangGraph. They need verification between pipeline steps.
-2. **MCP-native tool builders** — the Claude/Cursor/Windsurf ecosystem where MCP tools are first-class.
-3. **Agents themselves** — increasingly capable of searching tool registries and discovering what they need.
+Together they support reliable agent handoffs. ProofSlip supplies inspectable evidence; ContextCapsule supplies the context and next-step intent.
 
-## How Discovery Works
+The original short-lived receipt API remains useful for approvals, handshakes, failure records, and polling. It is a legacy product surface, not the lead message for release-proof/v1.
 
-Agents and frameworks discover tools through:
+## Who should find ProofSlip
 
-- **MCP registries** (Smithery, mcp.run, framework MCP configs)
-- **Tool marketplace listings** (Composio, LangChain hub)
-- **LLM context files** (llms.txt, served at well-known URLs)
-- **OpenAPI specs** (indexed by agent frameworks)
-- **Agent protocol manifests** (agent.json, ai-plugin.json)
+1. Developers supervising AI coding agents.
+2. Teams automating releases with GitHub Actions.
+3. CI/CD and platform engineers who need portable provenance.
+4. Agent-framework and tool builders that need a verifiable handoff object.
+5. Agents deciding whether a release claim has provider-backed evidence.
 
-We've already built all the machine-readable discovery endpoints. The strategy is to **push these into every registry and listing that exists**, then let the network effects compound.
+## Trust is part of the distribution strategy
 
-## Success Looks Like
+ProofSlip should grow by making a precise claim, not the largest possible claim.
 
-Not vanity metrics. Success is:
+A release proof establishes the GitHub Actions job identity and execution context that requested it. ProofSlip observations and workflow-supplied labels remain separate. It does not prove that tests passed, that the full workflow succeeded, or that a deployment contains the commit.
 
-- Receipts being created by agents we didn't directly onboard
-- `verify_url` hits from agent frameworks we didn't build integrations for
-- Developers finding ProofSlip because their agent suggested it
-- ContextCapsule references appearing in workflows that chain with ProofSlip receipts
+This restraint makes the proof more reusable. Agents can reason from each evidence category without inheriting hidden assumptions.
 
-## Revenue Model
+## Success looks like
 
-Free tier (500 receipts/month) is generous enough for experimentation. Revenue comes when workflows go to production and receipt volume scales. This is a usage-based API business — adoption first, monetization follows naturally.
+Primary signals:
+
+- Proofs created by repositories outside known Z13 and canary traffic.
+- Public proof URLs fetched or viewed by other workflows and humans.
+- Proof URLs appearing in release records and agent handoffs.
+- External repositories adopting the workflow pattern without direct onboarding.
+- ProofSlip suggested by an agent in response to a release-verification need.
+
+Supporting signals:
+
+- Current, accurate registry and directory listings.
+- Package downloads and dependents.
+- Inbound issues, integration requests, and references.
+- ContextCapsule workflows referencing ProofSlip evidence.
+
+Email signups, first-party smoke tests, and automated canaries are not organic adoption.
+
+## Monetization stance
+
+The legacy receipt API has an account and usage model. Release-proof/v1 currently requires no ProofSlip account or API key, and its monetization model is not yet established.
+
+Do not reuse legacy receipt quotas or pricing as the release-proof growth story. The immediate objective is to learn whether public release evidence becomes a repeated workflow primitive. Monetization should follow demonstrated production usage and its actual cost/retention requirements.

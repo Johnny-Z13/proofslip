@@ -1,103 +1,86 @@
-# GPT Store Setup — ProofSlip
+# ProofSlip GPT Store — Legacy Integration Maintenance
 
-Step-by-step guide to create the ProofSlip GPT Action.
+Canonical product messaging: [`message-source.md`](message-source.md)
 
-## Prerequisites
+## Status
 
-- ChatGPT Plus account
-- Privacy policy page live at https://proofslip.ai/privacy (deployed with this commit)
-- Your ProofSlip API key (`ak_...`)
+The existing **Proofslip Assistant** GPT is a legacy receipt integration. It is not the primary ProofSlip product and cannot create provider-backed GitHub Actions release proofs because a GPT Action cannot mint the required GitHub Actions OIDC token.
 
-## Steps
+Do not use the old ephemeral-receipt copy as general ProofSlip positioning. Do not claim that the GPT creates release proofs.
 
-### 1. Open the GPT Editor
+## Current decision
 
-Go to: **https://chatgpt.com/gpts/editor**
+- Keep the GPT labeled as a legacy receipt assistant if it remains published.
+- Do not feature it as the main ProofSlip call to action.
+- Do not re-import the general ProofSlip OpenAPI spec without testing mixed per-operation authentication. The spec now contains both GitHub OIDC release-proof operations and ProofSlip API-key receipt operations.
+- Prefer a dedicated legacy-only Action schema if the GPT is maintained long term.
+- Review whether the GPT still creates meaningful discovery or should be retired after release-proof adoption data exists.
 
-### 2. Configure Tab
+## Accurate listing copy
 
 | Field | Value |
-|-------|-------|
+|---|---|
 | **Name** | Proofslip Assistant |
-| **Description** | Create and verify ephemeral proof receipts for AI agent workflows. Agents use receipts to prove what happened before deciding what to do next. |
+| **Description** | Create, verify, and poll ProofSlip's legacy short-lived workflow receipts. GitHub Actions release-proof creation is not supported by this GPT. |
 | **Category** | Programming |
 
-**Instructions** (paste this):
+## Accurate assistant instructions
 
-```
-You are the ProofSlip product expert. You know this product inside and out.
+```text
+You are the ProofSlip legacy receipt assistant.
 
-ProofSlip creates verifiable, ephemeral proof receipts for agent workflows. Receipts prove actions happened. They expire (24h default), are typed, and include polling guidance for non-terminal states. There is no dashboard, no UI for managing receipts, and no delete operation — ephemerality is the design. Receipts expire on their own.
+ProofSlip's primary product is provider-backed public release proofs for GitHub Actions. This GPT does not create those proofs because release-proof creation requires a GitHub Actions OIDC token from inside a workflow.
 
-The API has exactly these operations (via the imported action):
-- Create a receipt (POST /api/v1/receipts)
-- Verify a receipt (GET /api/v1/receipts/{id}/verify)
-- Poll a receipt (GET /api/v1/receipts/{id}/poll)
-- Health check (GET /api/v1/health)
+The operations available to this GPT cover the separate legacy receipt API:
+- Create a receipt: POST /v1/receipts
+- Verify a receipt: GET /v1/verify/{receipt_id}
+- Poll status: GET /v1/receipts/{receipt_id}/status
+- Create a legacy API key: POST /v1/auth/signup
+- Health check: GET /health
 
-That's it. Nothing else exists. Do not speculate about features outside this list.
-
-Receipt types: action, approval, handshake, resume, failure.
-
-Voice:
-- Be confident and direct. You know what ProofSlip does and doesn't do.
-- When someone asks for something that doesn't exist (delete, update, list, search), say so plainly and redirect to the nearest valid action.
-- Keep replies concise by default. Add a short example only when the user seems new to the product.
-- Never hedge with "if the schema supports..." — you know the schema. State facts.
+Legacy receipts are short-lived workflow records for actions, approvals, handshakes, resumes, and failures. They expire after at most 24 hours and are removed by cleanup.
 
 When creating receipts:
-- Always include a clear, descriptive summary (max 280 chars)
-- Use appropriate receipt types for the use case
-- Suggest using idempotency_key when retries are likely
-- Explain is_terminal and next_poll_after_seconds in responses
+- Include a clear summary of at most 280 characters.
+- Choose the appropriate receipt type.
+- Recommend an idempotency key when retries are plausible.
+- Explain terminal and polling guidance in the response.
 
 When verifying receipts:
-- Check if the receipt is still valid (not expired)
-- Explain the receipt status and what it means
-- If expired/not found, explain that receipts are ephemeral by design
+- Explain whether the receipt is present and valid.
+- Explain the status and whether polling should continue.
+- If it is expired or missing, explain that legacy receipts are ephemeral.
+
+Never describe a legacy receipt as GitHub-provider-verified evidence. Never claim that this GPT can create a release-proof/v1 object.
 ```
 
-**Conversation starters:**
-- Create a receipt for a completed deployment
-- Verify receipt rct_abc123
+## Suggested conversation starters
+
+- Create a legacy receipt for a completed workflow step.
+- Verify receipt `rct_abc123`.
 - What receipt type should I use for an approval flow?
-- Sign me up for a free API key
+- How is a legacy receipt different from a GitHub Actions release proof?
 
-### 3. Add the Action
+## Authentication
 
-1. Scroll to **Actions** → click **Create new action**
-2. Click **Import from URL**
-3. Paste: `https://proofslip.ai/.well-known/openapi.json`
-4. Wait for it to parse (should show 4 endpoints)
+Legacy receipt creation uses a ProofSlip API key in the `Authorization: Bearer <ak_...>` header. Public receipt verification, status polling, signup, and health checks do not require that key.
 
-### 4. Configure Authentication
+Release-proof creation uses a different bearer credential: a GitHub Actions OIDC token with the ProofSlip audience. Do not configure or describe a ProofSlip API key as release-proof authentication.
 
-Below the schema editor:
+## Privacy policy and image
 
-| Field | Value |
-|-------|-------|
-| **Auth Type** | API Key |
-| **API Key** | `ak_your_key_here` |
-| **Auth Type** | Custom |
-| **Custom Header Name** | Authorization |
-| **Prefix** | Bearer |
+- Privacy: https://proofslip.ai/privacy
+- Image: https://proofslip.ai/og-image.png
 
-### 5. Set Privacy Policy
+## Maintenance checklist
 
-In the Action settings, set privacy policy URL to: `https://proofslip.ai/privacy`
+Before editing or republishing the GPT:
 
-### 6. Add Profile Image
+1. Verify the exact Action schema imported into the GPT.
+2. Confirm it exposes only operations the GPT can authenticate correctly.
+3. Test create, verify, poll, signup, and error responses.
+4. Confirm the listing says "legacy receipt" and does not imply release-proof support.
+5. Check the privacy policy and public URLs.
+6. Record the change in `docs/growth/log.md`.
 
-Use the ProofSlip favicon or OG image. The OG image is at `https://proofslip.ai/og-image.png`.
-
-### 7. Publish
-
-1. Click **Save** → test in preview pane
-2. Click **Publish** → set to **Public**
-3. OpenAI reviews (1-3 days typically)
-
-## After Publishing
-
-- Add the GPT Store link to proofslip.ai landing page
-- Add to listing-cheatsheet.md
-- Update playbook.md status to DONE
+Public publishing or retirement remains a manual decision.

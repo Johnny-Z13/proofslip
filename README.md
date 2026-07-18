@@ -226,4 +226,4 @@ The existing legacy loop remains: an agent creates a receipt, a capsule referenc
 
 ## Status
 
-ProofSlip is live and open source. `release-proof/v1` is implemented locally and should be deployed only after the database migration, public-contract review, and full test stack pass together.
+ProofSlip is live and open source. `release-proof/v1`, its database migration, public contract, and release-proof-first website are deployed in production. The full local test stack and post-deploy production smoke checks pass.

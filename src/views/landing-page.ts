@@ -7,7 +7,7 @@ export function renderLandingPage(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ProofSlip — Verify What Your Coding Agent Shipped</title>
-  <meta name="description" content="ProofSlip turns GitHub Actions identity and release context into a portable proof that another coding agent or human can inspect.">
+  <meta name="description" content="Use ProofSlip with your favourite coding agent to add or verify a provider-backed GitHub Actions release proof. No ProofSlip account or API key required.">
   <meta name="keywords" content="coding agent release verification, GitHub Actions OIDC, AI coding agents, release proof, deployment evidence, CI verification">
   <meta name="robots" content="index, follow">
   <meta name="author" content="Z13Labs">
@@ -141,11 +141,11 @@ export function renderLandingPage(): string {
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.03fr) minmax(370px, 0.97fr);
-      gap: clamp(3rem, 7vw, 7rem);
+      grid-template-columns: minmax(0, 1fr) minmax(390px, 1fr);
+      gap: clamp(3rem, 5vw, 4.5rem);
       align-items: center;
-      min-height: 740px;
-      padding: 6rem 0;
+      min-height: 610px;
+      padding: 3.5rem 0 4rem;
     }
 
     .eyebrow, .section-kicker {
@@ -158,7 +158,7 @@ export function renderLandingPage(): string {
     .hero h1 {
       max-width: 700px;
       margin: 1.4rem 0 1.5rem;
-      font-size: clamp(2.6rem, 5.4vw, 5.35rem);
+      font-size: clamp(2.6rem, 4vw, 3.65rem);
       line-height: 1.04;
       letter-spacing: -0.045em;
       font-weight: normal;
@@ -168,7 +168,7 @@ export function renderLandingPage(): string {
       max-width: 670px;
       color: var(--muted);
       font-size: clamp(0.9rem, 1.4vw, 1.04rem);
-      line-height: 1.85;
+      line-height: 1.72;
     }
 
     .hero-copy strong { color: var(--text); font-weight: normal; }
@@ -206,6 +206,29 @@ export function renderLandingPage(): string {
       margin-top: 1rem;
       color: var(--dim);
       font-size: 0.68rem;
+    }
+
+    .agent-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 1.35rem;
+    }
+
+    .agent-line > span:first-child {
+      margin-right: 0.2rem;
+      color: var(--dim);
+      font-size: 0.63rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .agent-pill {
+      padding: 0.32rem 0.5rem;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.62rem;
     }
 
     .proof-wrap { position: relative; }
@@ -423,6 +446,128 @@ export function renderLandingPage(): string {
     .step h3 { margin: 2.2rem 0 0.6rem; font-size: 1rem; font-weight: normal; }
     .step p { margin: 0; color: var(--muted); font-size: 0.75rem; }
 
+    .onboarding-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 3rem;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .onboarding-card {
+      display: flex;
+      min-width: 0;
+      min-height: 365px;
+      flex-direction: column;
+      padding: 1.5rem;
+      background: var(--panel);
+    }
+
+    .onboarding-card .step-number { margin-bottom: 1.8rem; }
+    .onboarding-card h3 { margin: 0 0 0.7rem; font-size: 1rem; font-weight: normal; }
+    .onboarding-card > p { margin: 0; color: var(--muted); font-size: 0.74rem; }
+
+    .start-command {
+      display: flex;
+      flex-direction: column;
+      margin-top: auto;
+      border: 1px solid var(--line);
+      background: #070707;
+    }
+
+    .start-command code {
+      padding: 0.9rem;
+      overflow-x: auto;
+      color: #a6c694;
+      font-size: 0.64rem;
+      white-space: nowrap;
+    }
+
+    .start-command .copy-button {
+      min-height: 40px;
+      border-top: 1px solid var(--line);
+      border-left: 0;
+    }
+
+    .setup-option {
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .setup-label {
+      display: block;
+      margin-bottom: 0.45rem;
+      color: var(--dim);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .setup-prompt {
+      display: block;
+      max-height: 5.4rem;
+      padding: 0.75rem;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #080808;
+      color: var(--muted);
+      font-size: 0.61rem;
+      line-height: 1.55;
+    }
+
+    .setup-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.55rem;
+    }
+
+    .setup-actions button {
+      border: 1px solid var(--line-strong);
+      padding: 0.55rem 0.65rem;
+      background: transparent;
+      color: var(--text);
+      font: 0.62rem 'Departure Mono', monospace;
+      cursor: pointer;
+    }
+
+    .setup-actions button:hover { border-color: var(--green); }
+    .setup-actions a { color: var(--dim); font-size: 0.6rem; }
+
+    .prompt-box, .result-box {
+      margin-top: auto;
+      padding: 1rem;
+      border: 1px solid var(--line-strong);
+      background: #080808;
+      color: #c6c6bf;
+      font-size: 0.68rem;
+      line-height: 1.7;
+    }
+
+    .prompt-box::before {
+      content: '> ';
+      color: var(--green);
+    }
+
+    .result-box { border-left: 2px solid var(--green); }
+    .result-box strong { display: block; margin-bottom: 0.35rem; color: var(--green); font-weight: normal; }
+    .result-box span { display: block; color: var(--dim); font-size: 0.61rem; }
+
+    .onboarding-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      color: var(--dim);
+      font-size: 0.66rem;
+    }
+
+    .onboarding-footer a { color: var(--muted); }
+
     .quick-start-grid {
       display: grid;
       grid-template-columns: 0.68fr 1.32fr;
@@ -605,8 +750,8 @@ export function renderLandingPage(): string {
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .proof-wrap { max-width: 560px; }
       .slip { margin-left: 0; }
-      .evidence-grid, .steps { grid-template-columns: 1fr; }
-      .evidence-card, .step { min-height: auto; }
+      .evidence-grid, .steps, .onboarding-grid { grid-template-columns: 1fr; }
+      .evidence-card, .step, .onboarding-card { min-height: auto; }
       .evidence-title, .step h3 { margin-top: 1.2rem; }
       .limits, .quick-start-grid { grid-template-columns: 1fr; gap: 2.5rem; }
     }
@@ -619,6 +764,7 @@ export function renderLandingPage(): string {
       .hero h1 { font-size: clamp(2.45rem, 12vw, 4.2rem); }
       .hero-actions { align-items: stretch; flex-direction: column; }
       .button { width: 100%; }
+      .agent-line { justify-content: flex-start; }
       .proof-wrap::before { right: 0; font-size: 1.2rem; }
       .slip { padding: 1.25rem 1.1rem 1.8rem; }
       .slip-head { flex-direction: column; }
@@ -632,6 +778,7 @@ export function renderLandingPage(): string {
       .legacy { padding: 1.3rem 0; }
       .site-footer { justify-content: center; padding: 2rem 0; }
       .footer-links { flex-wrap: wrap; }
+      .onboarding-footer { align-items: flex-start; flex-direction: column; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -650,7 +797,7 @@ export function renderLandingPage(): string {
       <a href="#trust">Trust model</a>
       <a href="/docs">Docs</a>
       <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
-      <a class="nav-cta" href="#install-skill">Install skill</a>
+      <a class="nav-cta" href="#get-started">Get started</a>
     </nav>
   </header>
 
@@ -660,15 +807,21 @@ export function renderLandingPage(): string {
         <div class="eyebrow">Release proof for coding agents</div>
         <h1>Your coding agent says it shipped. Check the slip.</h1>
         <p class="hero-copy">
-          ProofSlip cryptographically verifies the <strong>GitHub Actions job identity</strong>
-          behind a release claim and binds it to an exact repository, commit, workflow reference,
-          and run. It then issues a portable proof another agent or human can inspect.
+          ProofSlip gives you a checkable link showing <strong>which GitHub Actions job released
+          which commit</strong>—so you or the next coding agent can verify the claim before moving on.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#install-skill">Install the skill</a>
-          <a class="button" href="#proof-anatomy">Inspect a proof</a>
+          <a class="button button-primary" href="#get-started">Use with your coding agent</a>
+          <a class="button" href="/example">See an example slip</a>
         </div>
-        <div class="hero-note">GitHub Actions first · no ProofSlip account or API key · open source</div>
+        <div class="hero-note">Install once · no ProofSlip account or API key · open source</div>
+        <div class="agent-line" aria-label="Compatible coding agents">
+          <span>Works with</span>
+          <span class="agent-pill">Codex</span>
+          <span class="agent-pill">Claude Code</span>
+          <span class="agent-pill">Cursor</span>
+          <span class="agent-pill">Compatible agents</span>
+        </div>
       </div>
 
       <div class="proof-wrap" id="proof-anatomy">
@@ -716,6 +869,48 @@ export function renderLandingPage(): string {
             It does not prove that every test passed or that the observed deployment contains this commit.
           </p>
         </article>
+      </div>
+    </section>
+
+    <section class="section shell" id="get-started">
+      <div class="section-kicker">Use the agent you already work with</div>
+      <h2 class="section-heading">From install to a checkable release in three steps.</h2>
+      <p class="section-intro">No new dashboard and no ProofSlip login. Add the open-source skill, ask your favourite coding agent to wire it into the real release workflow, and get a proof URL on the next release.</p>
+
+      <div class="onboarding-grid">
+        <article class="onboarding-card">
+          <div class="step-number">01 / INSTALL</div>
+          <h3>Add the skill once</h3>
+          <p>This teaches your agent how to add release proof safely and how to inspect an existing slip.</p>
+          <div class="start-command">
+            <code id="install-command">npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof</code>
+            <button class="copy-button" id="copy-button" type="button" aria-live="polite" onclick="copyInstall()">Copy install command</button>
+          </div>
+          <div class="setup-option">
+            <span class="setup-label">Or paste this into your agent</span>
+            <code class="setup-prompt" id="setup-prompt">Install the proofslip-release-proof skill from https://github.com/Johnny-Z13/proofslip using the skills CLI. Then inspect this repository's real release workflow and explain what ProofSlip would change. Do not edit yet.</code>
+            <div class="setup-actions">
+              <button id="copy-setup-button" type="button" aria-live="polite" onclick="copySetupPrompt()">Copy AI setup prompt</button>
+              <a href="https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof">View on GitHub</a>
+            </div>
+          </div>
+        </article>
+        <article class="onboarding-card">
+          <div class="step-number">02 / ASK</div>
+          <h3>Prompt your favourite agent</h3>
+          <p>It finds the workflow that actually releases the project and shows you the smallest safe patch first.</p>
+          <div class="prompt-box">Add ProofSlip to the GitHub Actions workflow that releases this project. Show me the patch before changing it.</div>
+        </article>
+        <article class="onboarding-card">
+          <div class="step-number">03 / CHECK</div>
+          <h3>Get the proof URL</h3>
+          <p>After the next release, the Actions summary contains a portable slip for the exact job and commit.</p>
+          <div class="result-box"><strong>Provider verified</strong>acme/checkout · 8d21c9f…<span>proofslip.ai/proof/prf_…</span></div>
+        </article>
+      </div>
+      <div class="onboarding-footer">
+        <span>Already have a slip? Paste its URL into your agent and ask it to verify the repository, commit, workflow, run, and limits.</span>
+        <a href="https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof">Read the skill source →</a>
       </div>
     </section>
 
@@ -796,21 +991,17 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
-    <section class="section shell" id="install-skill">
-      <div class="section-kicker">Open-source Agent Skill</div>
-      <h2 class="section-heading">Let your coding agent add or check the proof.</h2>
+    <section class="section shell" id="agent-tasks">
+      <div class="section-kicker">Two useful prompts</div>
+      <h2 class="section-heading">Add a slip, or check one you received.</h2>
       <p class="section-intro">
         The readable skill can inspect an existing release proof, or prepare the smallest GitHub Actions change in the workflow that actually releases your project. It asks before editing and never commits, pushes, or releases on its own.
       </p>
-      <div class="install-strip">
-        <code class="install-command" id="install-command">npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof</code>
-        <button class="copy-button" id="copy-button" type="button" onclick="copyInstall()">Copy</button>
-      </div>
       <div class="skill-prompts">
         <div class="skill-prompt">“Add ProofSlip to the GitHub Actions workflow that actually releases this project. Show me the patch before changing it.”</div>
         <div class="skill-prompt">“Verify this ProofSlip URL. Separate provider facts, ProofSlip observations, submitted context, and limitations.”</div>
       </div>
-      <div class="skill-meta">For Codex, Claude Code, Cursor, and compatible agents · <a href="https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof">read the skill source</a></div>
+      <div class="skill-meta">Use these in Codex, Claude Code, Cursor, or another compatible coding agent · <a href="#get-started">copy the install command</a></div>
     </section>
 
     <section class="section shell" id="quick-start">
@@ -924,17 +1115,23 @@ steps:
       }
       return copied;
     }
-    async function copyInstall() {
-      var command = document.getElementById('install-command').textContent;
-      var source = document.getElementById('install-command');
-      var button = document.getElementById('copy-button');
+    async function copyText(sourceId, buttonId, resetLabel) {
+      var source = document.getElementById(sourceId);
+      var command = source.textContent;
+      var button = document.getElementById(buttonId);
       var copied = false;
       if (navigator.clipboard && window.isSecureContext) {
         try { await navigator.clipboard.writeText(command); copied = true; } catch (error) { copied = false; }
       }
       if (!copied) copied = fallbackCopy(command, source);
       button.textContent = copied ? 'Copied' : 'Selected';
-      setTimeout(function () { button.textContent = 'Copy'; }, 2500);
+      setTimeout(function () { button.textContent = resetLabel; }, 2500);
+    }
+    function copyInstall() {
+      return copyText('install-command', 'copy-button', 'Copy install command');
+    }
+    function copySetupPrompt() {
+      return copyText('setup-prompt', 'copy-setup-button', 'Copy AI setup prompt');
     }
   </script>
 </body>

@@ -24,7 +24,10 @@ describe('Landing page', () => {
   it('leads with release proof instead of email signup', async () => {
     const res = await app.request('/')
     const html = await res.text()
-    expect(html).toContain('Install the skill')
+    expect(html).toContain('Use with your coding agent')
+    expect(html).toContain('From install to a checkable release in three steps.')
+    expect(html).toContain('Prompt your favourite agent')
+    expect(html).toContain('Copy AI setup prompt')
     expect(html).toContain('npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof')
     expect(html).toContain('/v1/proofs/releases/github-actions')
     expect(html).not.toContain('signup-email')

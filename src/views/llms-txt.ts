@@ -9,7 +9,22 @@ OpenAPI: https://proofslip.ai/.well-known/openapi.json
 Privacy: https://proofslip.ai/privacy
 Full agent reference: https://proofslip.ai/llms-full.txt
 
-## Primary API: release-proof/v1
+## Primary agent workflow: proofslip-release-proof skill
+
+Install:
+npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof
+
+Source:
+https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof
+
+Use the skill to verify an existing release-proof URL or to prepare the smallest change to the GitHub Actions workflow that actually deploys or releases a project. Inspect before editing, show the proposed change, and ask for approval. Do not create a synthetic proof-only workflow. Do not commit, push, or release without separate authorization.
+
+The bundled verification helper accepts a proof ID or URL:
+node .agents/skills/proofslip-release-proof/scripts/verify-proof.mjs https://proofslip.ai/proof/prf_...
+
+Report provider-verified issuer facts, ProofSlip observations, submitted context, expiry, and limitations as separate lanes.
+
+## API contract: release-proof/v1
 
 Create:
 POST /v1/proofs/releases/github-actions

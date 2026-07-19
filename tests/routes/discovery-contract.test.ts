@@ -55,4 +55,19 @@ describe('release-proof public contract', () => {
     expect(manifest.primary_api.schema_version).toBe('release-proof/v1')
     expect(manifest.primary_api.note).toContain('not currently an MCP tool')
   })
+
+  it('publishes the focused Agent Skill as the primary agent workflow', async () => {
+    const agentResponse = await app.request('/.well-known/agent.json')
+    const manifest = await agentResponse.json()
+    expect(manifest.skill.install).toContain('--skill proofslip-release-proof')
+    expect(manifest.skill.modes).toEqual([
+      'verify_existing_proof',
+      'prepare_github_actions_integration',
+    ])
+
+    const llmsResponse = await app.request('/llms.txt')
+    const llms = await llmsResponse.text()
+    expect(llms).toContain('Primary agent workflow: proofslip-release-proof skill')
+    expect(llms).toContain('Do not create a synthetic proof-only workflow')
+  })
 })

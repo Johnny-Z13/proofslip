@@ -63,17 +63,54 @@ export function isPublicIpv4(ip: string): boolean {
   return !blocked.some(([base, bits]) => inCidr4(n, base, bits))
 }
 
-export function isPublicIpv6(ip: string): boolean {
-  const lower = ip.toLowerCase()
-  // IPv4-mapped (::ffff:a.b.c.d) — unwrap and check as IPv4
-  const mapped = lower.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/)
-  if (mapped) return isPublicIpv4(mapped[1])
+function ipv6Hextets(ip: string): number[] | null {
+  let normalized = ip.toLowerCase()
+  const dottedTail = normalized.match(/(\d+\.\d+\.\d+\.\d+)$/)
+  if (dottedTail) {
+    const parts = dottedTail[1].split('.').map(Number)
+    if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return null
+    normalized = normalized.slice(0, -dottedTail[1].length) +
+      `${((parts[0] << 8) | parts[1]).toString(16)}:${((parts[2] << 8) | parts[3]).toString(16)}`
+  }
 
-  if (lower === '::' || lower === '::1') return false          // unspecified / loopback
-  if (lower.startsWith('fe8') || lower.startsWith('fe9') ||
-      lower.startsWith('fea') || lower.startsWith('feb')) return false // link-local fe80::/10
-  if (lower.startsWith('fc') || lower.startsWith('fd')) return false  // unique-local fc00::/7
-  if (lower.startsWith('ff')) return false                     // multicast
+  if ((normalized.match(/::/g) ?? []).length > 1) return null
+  const [leftRaw, rightRaw] = normalized.split('::')
+  const left = leftRaw ? leftRaw.split(':') : []
+  const right = rightRaw ? rightRaw.split(':') : []
+  const missing = 8 - left.length - right.length
+  if ((!normalized.includes('::') && missing !== 0) || missing < 0) return null
+  const values = [...left, ...Array(missing).fill('0'), ...right].map((part) => Number.parseInt(part, 16))
+  if (values.length !== 8 || values.some((part) => !Number.isInteger(part) || part < 0 || part > 0xffff)) return null
+  return values
+}
+
+function embeddedIpv4(parts: number[]): string {
+  return `${parts[6] >> 8}.${parts[6] & 0xff}.${parts[7] >> 8}.${parts[7] & 0xff}`
+}
+
+export function isPublicIpv6(ip: string): boolean {
+  const parts = ipv6Hextets(ip)
+  if (!parts) return false
+
+  // IPv4-mapped ::ffff:0:0/96, including hexadecimal forms such as
+  // ::ffff:7f00:1. Unwrap before applying the IPv4 policy.
+  if (parts.slice(0, 5).every((part) => part === 0) && parts[5] === 0xffff) {
+    return isPublicIpv4(embeddedIpv4(parts))
+  }
+
+  // Deprecated IPv4-compatible addresses (::/96) and the well-known NAT64
+  // prefix (64:ff9b::/96) can also encode private IPv4 destinations.
+  if (parts.slice(0, 6).every((part) => part === 0)) {
+    return isPublicIpv4(embeddedIpv4(parts))
+  }
+  if (parts[0] === 0x64 && parts[1] === 0xff9b && parts.slice(2, 6).every((part) => part === 0)) {
+    return isPublicIpv4(embeddedIpv4(parts))
+  }
+
+  if (parts[0] >= 0xfe80 && parts[0] <= 0xfebf) return false // link-local fe80::/10
+  if (parts[0] >= 0xfc00 && parts[0] <= 0xfdff) return false // unique-local fc00::/7
+  if (parts[0] >= 0xff00) return false // multicast ff00::/8
+  if (parts[0] === 0x2001 && parts[1] === 0x0db8) return false // documentation only
   return true
 }
 
@@ -154,6 +191,7 @@ export async function observeDeployment(
   deps?: {
     resolve?: (hostname: string) => Promise<Array<{ address: string }>>
     requestImpl?: ObservationRequestImpl
+    timeoutMs?: number
   },
 ): Promise<HttpObservation> {
   const observedAt = new Date().toISOString()
@@ -180,14 +218,23 @@ export async function observeDeployment(
   let pinnedAddress: string
   try {
     const resolve = deps?.resolve ?? ((h: string) => lookup(h, { all: true }))
-    const addresses = await resolve(hostname)
+    const timeoutMs = deps?.timeoutMs ?? OBSERVATION_TIMEOUT_MS
+    let timeout: ReturnType<typeof setTimeout> | undefined
+    const addresses = await Promise.race([
+      resolve(hostname),
+      new Promise<never>((_, reject) => {
+        timeout = setTimeout(() => reject(new Error('dns_timeout')), timeoutMs)
+      }),
+    ]).finally(() => {
+      if (timeout) clearTimeout(timeout)
+    })
     if (addresses.length === 0) return fail('dns_no_records')
     if (!addresses.every((a) => isPublicAddress(a.address))) {
       return fail('private_address_blocked')
     }
     pinnedAddress = addresses[0].address
-  } catch {
-    return fail('dns_resolution_failed')
+  } catch (error) {
+    return fail(error instanceof Error && error.message === 'dns_timeout' ? 'dns_timeout' : 'dns_resolution_failed')
   }
 
   const startedAt = Date.now()

@@ -53,6 +53,11 @@ describe('isPublicIpv6', () => {
     'ff02::1',                 // multicast
     '::ffff:192.168.1.1',      // IPv4-mapped private — unwrapped and blocked
     '::ffff:127.0.0.1',        // IPv4-mapped loopback
+    '::ffff:7f00:1',           // IPv4-mapped loopback, hexadecimal form
+    '0:0:0:0:0:ffff:a00:1',    // IPv4-mapped private, expanded hexadecimal form
+    '::7f00:1',                // deprecated IPv4-compatible loopback
+    '64:ff9b::a00:1',          // NAT64 encoding of private 10.0.0.1
+    '2001:db8::1',             // documentation-only range
   ]
   for (const ip of blocked) {
     it(`blocks ${ip}`, () => {
@@ -172,6 +177,18 @@ describe('observeDeployment', () => {
       { resolve: async () => { throw new Error('ENOTFOUND') }, requestImpl: fakeRequest(200) },
     )
     expect(obs.reason).toBe('dns_resolution_failed')
+  })
+
+  it('bounds DNS resolution time', async () => {
+    const obs = await observeDeployment(
+      { url: 'https://slow-dns.example.com' },
+      {
+        resolve: async () => new Promise(() => {}),
+        requestImpl: fakeRequest(200),
+        timeoutMs: 5,
+      },
+    )
+    expect(obs.reason).toBe('dns_timeout')
   })
 
   it('rejects a non-observable URL before any network access', async () => {

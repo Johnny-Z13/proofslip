@@ -62,6 +62,7 @@ export function renderDocsPage(): string {
 
   <nav class="docs-nav">
     <ul>
+      <li><a href="#skill">Agent Skill</a></li>
       <li><a href="#quickstart">GitHub Actions quickstart</a></li>
       <li><a href="#trust">Trust model</a></li>
       <li><a href="#create-proof">Create a release proof</a></li>
@@ -73,8 +74,16 @@ export function renderDocsPage(): string {
     </ul>
   </nav>
 
+  <section id="skill">
+    <h2>Agent Skill</h2>
+    <p>Install the readable, repository-owned skill for Codex, Claude Code, Cursor, and other skills-compatible coding agents:</p>
+    <pre>npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof</pre>
+    <p>The skill can verify an existing proof URL or prepare a minimal edit to the GitHub Actions workflow that actually releases the project. It inspects first, shows the proposed change, asks before editing, and does not commit, push, or release without separate authorization.</p>
+    <p><a href="https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof">Read the skill, verification helper, and workflow template on GitHub.</a></p>
+  </section>
+
   <section id="quickstart">
-    <h2>GitHub Actions quickstart</h2>
+    <h2>Manual GitHub Actions quickstart</h2>
     <p>No ProofSlip account or API key is needed. The workflow requests a GitHub OIDC token whose audience is <span class="code">https://proofslip.ai</span>, then exchanges it for a public proof.</p>
     <pre>permissions:
   contents: read

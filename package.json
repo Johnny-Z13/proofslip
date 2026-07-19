@@ -1,7 +1,7 @@
 {
   "name": "proofslip",
   "version": "1.0.0",
-  "description": "",
+  "description": "Provider-backed GitHub Actions release proofs for coding agents",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -17,9 +17,9 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["github-actions", "oidc", "release-proof", "coding-agents", "agent-skills"],
+  "author": "Z13Labs",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
     "@hono/node-server": "^1.19.11",

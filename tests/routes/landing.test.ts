@@ -24,10 +24,19 @@ describe('Landing page', () => {
   it('leads with release proof instead of email signup', async () => {
     const res = await app.request('/')
     const html = await res.text()
-    expect(html).toContain('Add release proof')
+    expect(html).toContain('Install the skill')
+    expect(html).toContain('npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof')
     expect(html).toContain('/v1/proofs/releases/github-actions')
     expect(html).not.toContain('signup-email')
     expect(html).not.toContain('doSignup')
+  })
+
+  it('makes authoring boundaries explicit', async () => {
+    const res = await app.request('/')
+    const html = await res.text()
+    expect(html).toContain('asks before editing')
+    expect(html).toContain('never commits, pushes, or releases on its own')
+    expect(html).toContain('workflow that actually releases your project')
   })
 
   it('keeps the three evidence categories visibly separate', async () => {
@@ -50,5 +59,15 @@ describe('Landing page', () => {
     const res = await app.request('/og-image.png')
     expect(res.status).toBe(200)
     expect(res.headers.get('content-type')).toContain('image/png')
+  })
+
+  it('serves a clearly labelled illustrative release proof at /example', async () => {
+    const res = await app.request('/example')
+    const html = await res.text()
+    expect(res.status).toBe(200)
+    expect(html).toContain('ILLUSTRATIVE')
+    expect(html).toContain('No provider token was verified')
+    expect(html).toContain('release-proof/v1')
+    expect(html).not.toContain('machine-readable JSON')
   })
 })

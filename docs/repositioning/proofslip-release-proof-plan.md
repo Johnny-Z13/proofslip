@@ -1,8 +1,7 @@
 # ProofSlip Repositioning Plan: Release Proof
 
-Status: proposed
-Implementation owner: Fable
-Product and launch owner: Codex
+Status: implemented locally; validation and publication pending
+Implementation, product, and launch owner: Codex
 
 ## 1. Outcome
 
@@ -189,7 +188,7 @@ Constraints:
 
 ### Agent Skill
 
-Add a repository Skill such as `skills/release-proof/SKILL.md`.
+Maintain the repository Skill at `.agents/skills/proofslip-release-proof/SKILL.md`.
 
 Responsibilities:
 
@@ -202,7 +201,7 @@ Responsibilities:
 Target install route:
 
 ```bash
-npx skills add Johnny-Z13/proofslip
+npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof
 ```
 
 ### GitHub workflow helper

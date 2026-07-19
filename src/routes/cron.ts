@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { getDb } from '../db/client.js'
-import { receipts } from '../db/schema.js'
+import { proofEvents, receipts } from '../db/schema.js'
 import { lt } from 'drizzle-orm'
 import { errorResponse } from '../lib/errors.js'
 
@@ -19,6 +19,7 @@ cronRouter.on(['GET', 'POST'], '/cleanup', async (c) => {
 
   const db = getDb()
   const now = new Date()
+  const proofEventCutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
 
   // Delete in batches to avoid long-running queries
   const deleted = await db
@@ -26,8 +27,14 @@ cronRouter.on(['GET', 'POST'], '/cleanup', async (c) => {
     .where(lt(receipts.expiresAt, now))
     .returning({ id: receipts.id })
 
+  const deletedProofEvents = await db
+    .delete(proofEvents)
+    .where(lt(proofEvents.createdAt, proofEventCutoff))
+    .returning({ id: proofEvents.id })
+
   return c.json({
     deleted_count: deleted.length,
+    deleted_proof_events_count: deletedProofEvents.length,
     cleaned_at: now.toISOString(),
   })
 })

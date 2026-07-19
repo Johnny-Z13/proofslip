@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import app from '../../src/index.js'
 import { seedTestApiKey, cleanupTestApiKey, getTestDb } from '../helpers.js'
-import { receipts } from '../../src/db/schema.js'
+import { proofEvents, receipts } from '../../src/db/schema.js'
+import { eq } from 'drizzle-orm'
 
 let apiKey: string
 let apiKeyId: string
 let originalCronSecret: string | undefined
 
 const TEST_CRON_SECRET = 'test-cron-secret'
+const OLD_EVENT_ID = `pevt_cron_old_${Date.now()}`
+const FRESH_EVENT_ID = `pevt_cron_fresh_${Date.now()}`
 
 beforeAll(async () => {
   const result = await seedTestApiKey()
@@ -18,6 +21,9 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+  const db = getTestDb()
+  await db.delete(proofEvents).where(eq(proofEvents.id, OLD_EVENT_ID))
+  await db.delete(proofEvents).where(eq(proofEvents.id, FRESH_EVENT_ID))
   await cleanupTestApiKey(apiKeyId)
   if (originalCronSecret === undefined) {
     delete process.env.CRON_SECRET
@@ -51,7 +57,6 @@ describe('POST /cron/cleanup', () => {
 
     // Manually expire it by updating expires_at in the past
     const db = getTestDb()
-    const { eq } = await import('drizzle-orm')
     await db
       .update(receipts)
       .set({ expiresAt: new Date(Date.now() - 1000) })
@@ -76,6 +81,35 @@ describe('POST /cron/cleanup', () => {
       headers: { Accept: 'application/json' },
     })
     expect(verifyRes.status).toBe(404)
+  })
+
+  it('deletes aggregate proof events after 90 days and keeps fresh events', async () => {
+    const db = getTestDb()
+    await db.insert(proofEvents).values([
+      {
+        id: OLD_EVENT_ID,
+        event: 'release_proof_fetched_json',
+        createdAt: new Date(Date.now() - 91 * 24 * 60 * 60 * 1000),
+      },
+      {
+        id: FRESH_EVENT_ID,
+        event: 'release_proof_fetched_json',
+        createdAt: new Date(),
+      },
+    ])
+
+    const res = await app.request('/cron/cleanup', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${TEST_CRON_SECRET}` },
+    })
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data.deleted_proof_events_count).toBeGreaterThanOrEqual(1)
+
+    const oldRows = await db.select().from(proofEvents).where(eq(proofEvents.id, OLD_EVENT_ID))
+    const freshRows = await db.select().from(proofEvents).where(eq(proofEvents.id, FRESH_EVENT_ID))
+    expect(oldRows).toHaveLength(0)
+    expect(freshRows).toHaveLength(1)
   })
 
   it('returns 0 deleted when nothing is expired', async () => {

@@ -60,6 +60,7 @@ export function renderPrivacyPage(): string {
     <ul>
       <li><strong>Release proofs</strong> have a 90-day validity window. After 90 days they return HTTP 410 and are marked expired, but the full record remains publicly inspectable so it can show what was verified and when. V1 does not automatically delete expired proof records.</li>
       <li><strong>Legacy receipts</strong> expire after at most 24 hours and are permanently removed by automated cleanup.</li>
+      <li><strong>Release-proof event rows</strong> are retained for at most 90 days and then permanently removed by automated cleanup.</li>
       <li><strong>Account and API-key records</strong> remain until deletion is requested or they are removed for security or operational reasons.</li>
       <li><strong>Application logs</strong> are held by our hosting provider under the configured service retention period.</li>
     </ul>

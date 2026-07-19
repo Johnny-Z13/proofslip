@@ -1,0 +1,4 @@
+interface:
+  display_name: "ProofSlip Release Proof"
+  short_description: "Verify coding-agent releases with provider proof."
+  default_prompt: "Use $proofslip-release-proof to verify an existing release proof or prepare the minimal GitHub Actions proof workflow."

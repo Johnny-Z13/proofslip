@@ -14,7 +14,7 @@ import { getOpenApiSpec } from './views/openapi.js'
 import { getMcpDiscovery } from './views/mcp-json.js'
 import { renderDocsPage } from './views/docs-page.js'
 import { renderPrivacyPage } from './views/privacy-page.js'
-import { renderVerifyPage } from './views/verify-page.js'
+import { renderProofPage } from './views/proof-page.js'
 import { cors, requestId, bodyLimit, securityHeaders } from './middleware/security.js'
 import { requestLogger } from './middleware/logger.js'
 import { errorResponse } from './lib/errors.js'
@@ -93,27 +93,43 @@ app.get('/docs', (c) => c.html(renderDocsPage()))
 app.get('/privacy', (c) => c.html(renderPrivacyPage()))
 app.get('/example', (c) => {
   c.header('Cache-Control', 'public, max-age=86400')
-  return c.html(renderVerifyPage({
-    id: 'rct_example_7f3k9x2m',
-    type: 'action',
-    status: 'success',
-    summary: 'Refund of $42.00 issued to customer #8812',
-    payload: {
-      customer_id: 8812,
-      refund_amount: 42.00,
-      currency: 'USD',
-      reason: 'duplicate_charge',
-      initiated_by: 'agent/billing-v2',
+  return c.html(renderProofPage({
+    proof_id: 'prf_example_7f3k9x2m',
+    proof_url: 'https://proofslip.ai/example',
+    schema_version: 'release-proof/v1',
+    is_valid: false,
+    is_expired: false,
+    trust_level: 'provider_verified',
+    verification_method: 'github_actions_oidc',
+    issuer: {
+      type: 'github_actions',
+      repository: 'example/checkout',
+      repository_id: '123456',
+      repository_owner: 'example',
+      repository_owner_id: '7890',
+      repository_visibility: 'public',
+      ref: 'refs/heads/main',
+      sha: '8d21c9f0123456789abcdef0123456789abcdef0',
+      workflow_ref: 'example/checkout/.github/workflows/release.yml@refs/heads/main',
+      run_id: '1842',
+      run_attempt: 1,
+      actor: 'release-agent',
+      event_name: 'push',
+      subject: 'repo:example/checkout:ref:refs/heads/main',
+      run_url: 'https://github.com/example/checkout/actions/runs/1842',
+      commit_url: 'https://github.com/example/checkout/commit/8d21c9f0123456789abcdef0123456789abcdef0',
     },
-    ref: {
-      workflow_id: 'billing-run-2026-03-23',
-      agent_id: 'billing-agent',
-      action_id: 'refund-8812',
-    },
-    audience: 'human',
-    createdAt: '2026-03-23T12:00:00.000Z',
-    expiresAt: '2099-12-31T23:59:59.000Z',
-  }))
+    observations: [{
+      type: 'http_status',
+      url: 'https://app.example.com/health',
+      status_code: 200,
+      response_time_ms: 143,
+      observed_at: '2026-07-19T12:00:00.000Z',
+    }],
+    submitted_context: { environment: 'production' },
+    issued_at: '2026-07-19T12:00:00.000Z',
+    expires_at: '2026-10-17T12:00:00.000Z',
+  }, { illustrative: true }))
 })
 app.get('/.well-known/openapi.json', (c) => {
   c.header('Cache-Control', 'public, max-age=86400')
@@ -135,6 +151,11 @@ app.get('/.well-known/agent.json', (c) => {
     url: 'https://proofslip.ai',
     version: '1.0.0',
     capabilities: ['release_proofs', 'github_actions_oidc', 'public_verification', 'legacy_receipts', 'polling'],
+    skill: {
+      repository: 'https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof',
+      install: 'npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof',
+      modes: ['verify_existing_proof', 'prepare_github_actions_integration'],
+    },
     protocol: 'openapi',
     api: {
       type: 'openapi',

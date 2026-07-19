@@ -505,6 +505,54 @@ export function renderLandingPage(): string {
       white-space: nowrap;
     }
 
+    .install-strip {
+      display: flex;
+      align-items: stretch;
+      margin-top: 2rem;
+      border: 1px solid var(--line);
+      background: #070707;
+    }
+
+    .install-command {
+      flex: 1;
+      min-width: 0;
+      padding: 1rem 1.1rem;
+      overflow-x: auto;
+      color: #a6c694;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+
+    .copy-button {
+      border: 0;
+      border-left: 1px solid var(--line);
+      padding: 0 1.2rem;
+      background: var(--green);
+      color: #06120b;
+      font: 0.7rem 'Departure Mono', monospace;
+      cursor: pointer;
+    }
+
+    .copy-button:hover { background: #53e394; }
+
+    .skill-prompts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .skill-prompt {
+      padding: 1.1rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .skill-meta { margin-top: 1rem; color: var(--dim); font-size: 0.66rem; }
+    .skill-meta a { color: var(--muted); }
+
     .open-source {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -577,7 +625,9 @@ export function renderLandingPage(): string {
       .proof-row { grid-template-columns: 1fr; gap: 0.1rem; }
       .proof-row .value { text-align: left; }
       .section { padding: 5rem 0; }
-      .agent-grid, .open-source { grid-template-columns: 1fr; }
+      .agent-grid, .open-source, .skill-prompts { grid-template-columns: 1fr; }
+      .install-strip { flex-direction: column; }
+      .copy-button { min-height: 42px; border-left: 0; border-top: 1px solid var(--line); }
       .legacy, .site-footer { align-items: flex-start; flex-direction: column; }
       .legacy { padding: 1.3rem 0; }
       .site-footer { justify-content: center; padding: 2rem 0; }
@@ -598,9 +648,9 @@ export function renderLandingPage(): string {
     </a>
     <nav class="site-nav" aria-label="Primary navigation">
       <a href="#trust">Trust model</a>
-      <a href="/docs">Legacy API</a>
+      <a href="/docs">Docs</a>
       <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
-      <a class="nav-cta" href="#quick-start">Add release proof</a>
+      <a class="nav-cta" href="#install-skill">Install skill</a>
     </nav>
   </header>
 
@@ -615,7 +665,7 @@ export function renderLandingPage(): string {
           and run. It then issues a portable proof another agent or human can inspect.
         </p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#quick-start">Add release proof</a>
+          <a class="button button-primary" href="#install-skill">Install the skill</a>
           <a class="button" href="#proof-anatomy">Inspect a proof</a>
         </div>
         <div class="hero-note">GitHub Actions first · no ProofSlip account or API key · open source</div>
@@ -746,6 +796,23 @@ export function renderLandingPage(): string {
       </div>
     </section>
 
+    <section class="section shell" id="install-skill">
+      <div class="section-kicker">Open-source Agent Skill</div>
+      <h2 class="section-heading">Let your coding agent add or check the proof.</h2>
+      <p class="section-intro">
+        The readable skill can inspect an existing release proof, or prepare the smallest GitHub Actions change in the workflow that actually releases your project. It asks before editing and never commits, pushes, or releases on its own.
+      </p>
+      <div class="install-strip">
+        <code class="install-command" id="install-command">npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof</code>
+        <button class="copy-button" id="copy-button" type="button" onclick="copyInstall()">Copy</button>
+      </div>
+      <div class="skill-prompts">
+        <div class="skill-prompt">“Add ProofSlip to the GitHub Actions workflow that actually releases this project. Show me the patch before changing it.”</div>
+        <div class="skill-prompt">“Verify this ProofSlip URL. Separate provider facts, ProofSlip observations, submitted context, and limitations.”</div>
+      </div>
+      <div class="skill-meta">For Codex, Claude Code, Cursor, and compatible agents · <a href="https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof">read the skill source</a></div>
+    </section>
+
     <section class="section shell" id="quick-start">
       <div class="section-kicker">GitHub Actions quick start</div>
       <h2 class="section-heading">Add release proof after your release job.</h2>
@@ -811,7 +878,7 @@ steps:
         <a class="open-card" href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">
           <span class="arrow">↗</span>
           <h3>Source on GitHub</h3>
-          <p>The API, trust contract, tests, and workflow integration live in the open.</p>
+          <p>The Agent Skill, verification helper, API, trust contract, tests, and workflow integration live in the open.</p>
         </a>
         <a class="open-card" href="https://github.com/Johnny-Z13/proofslip#development" target="_blank" rel="noreferrer">
           <span class="arrow">↗</span>
@@ -836,6 +903,40 @@ steps:
       <a href="https://z13labs.com" target="_blank" rel="noreferrer">Z13Labs</a>
     </div>
   </footer>
+  <script>
+    function fallbackCopy(command, source) {
+      var temporary = document.createElement('textarea');
+      temporary.value = command;
+      temporary.setAttribute('readonly', '');
+      temporary.style.position = 'fixed';
+      temporary.style.opacity = '0';
+      document.body.appendChild(temporary);
+      temporary.select();
+      var copied = false;
+      try { copied = document.execCommand('copy'); } catch (error) { copied = false; }
+      temporary.remove();
+      if (!copied) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(source);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      return copied;
+    }
+    async function copyInstall() {
+      var command = document.getElementById('install-command').textContent;
+      var source = document.getElementById('install-command');
+      var button = document.getElementById('copy-button');
+      var copied = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        try { await navigator.clipboard.writeText(command); copied = true; } catch (error) { copied = false; }
+      }
+      if (!copied) copied = fallbackCopy(command, source);
+      button.textContent = copied ? 'Copied' : 'Selected';
+      setTimeout(function () { button.textContent = 'Copy'; }, 2500);
+    }
+  </script>
 </body>
 </html>`
 }

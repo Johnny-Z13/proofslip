@@ -9,6 +9,26 @@ OpenAPI 3.1: https://proofslip.ai/.well-known/openapi.json
 Privacy: https://proofslip.ai/privacy
 Source: https://github.com/Johnny-Z13/proofslip
 
+## 0. Agent Skill
+
+Install:
+
+npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof
+
+Skill source:
+https://github.com/Johnny-Z13/proofslip/tree/master/.agents/skills/proofslip-release-proof
+
+The skill has two bounded modes:
+
+1. Verify an existing proof. Fetch JSON, validate release-proof/v1, and report issuer facts, ProofSlip observations, submitted context, expiry, and limitations separately.
+2. Prepare GitHub Actions integration. Find the workflow that actually deploys or releases the target, propose the minimal permissions and post-release step, ask before editing, and preserve existing behavior.
+
+The skill must not create a proof-only workflow that can succeed without a real release. It must not claim that OIDC proves tests passed or that a deployment contains a commit. It must not commit, push, deploy, or publish without separate authorization.
+
+Bundled verifier:
+
+node .agents/skills/proofslip-release-proof/scripts/verify-proof.mjs <proof-id-or-url>
+
 ## 1. release-proof/v1
 
 ### What is verified
@@ -145,6 +165,8 @@ The human route serves HTML by default. It serves JSON when Accept includes appl
 Proof URLs are public, including proofs created from private repositories. Provider claims may reveal repository name, owner, ref, SHA, workflow, actor, and run identifiers. submitted_context is also public.
 
 Release proofs have a 90-day validity window. V1 retains expired proof records so they remain inspectable and returns them with HTTP 410. Expiration is not automatic deletion. See https://proofslip.ai/privacy for deletion requests.
+
+Aggregate release-proof event rows contain only event type, timestamp, optional reason, visibility, and a public repository slug or non-public repository digest. They are deleted after at most 90 days.
 
 ## 2. Legacy receipt API
 

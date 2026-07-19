@@ -4,7 +4,28 @@
 
 ProofSlip verifies a GitHub Actions OIDC token, records the provider-backed job identity and execution context, and returns a stable public proof URL. No ProofSlip account or API key is required for release proofs.
 
-[Live site](https://proofslip.ai) · [Docs](https://proofslip.ai/docs) · [OpenAPI](https://proofslip.ai/.well-known/openapi.json) · [Privacy](https://proofslip.ai/privacy)
+[Live site](https://proofslip.ai) · [Agent Skill](.agents/skills/proofslip-release-proof/SKILL.md) · [Docs](https://proofslip.ai/docs) · [OpenAPI](https://proofslip.ai/.well-known/openapi.json) · [Privacy](https://proofslip.ai/privacy)
+
+## Install the Agent Skill
+
+```bash
+npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof
+```
+
+The open-source skill gives Codex, Claude Code, Cursor, and other skills-compatible agents two focused workflows:
+
+- verify an existing ProofSlip URL and report provider facts, ProofSlip observations, submitted context, expiry, and limitations separately;
+- prepare the smallest GitHub Actions change in the workflow that actually deploys or releases a project.
+
+The skill inspects before editing, shows the proposed workflow change, and asks for approval. It does not create a synthetic “proof-only” workflow, and it never commits, pushes, or releases without separate authorization.
+
+Example prompts:
+
+```text
+Verify this ProofSlip URL and tell me exactly what it proves and does not prove.
+
+Add ProofSlip after the real deploy step in this repository. Show me the patch before changing it.
+```
 
 ## What a release proof means
 
@@ -18,7 +39,7 @@ Every `release-proof/v1` object keeps three evidence sources separate:
 
 A proof does **not** establish that tests passed, that the entire workflow succeeded, or that a deployment contains the claimed commit.
 
-## GitHub Actions quickstart
+## Manual GitHub Actions quickstart
 
 ```yaml
 permissions:
@@ -115,6 +136,8 @@ Release proofs have a 90-day validity window. After that window they return HTTP
 
 Legacy receipts are different: they expire after at most 24 hours and are deleted by automated cleanup.
 
+Aggregate release-proof event rows contain no tokens, emails, IPs, or payload content and are deleted after at most 90 days.
+
 ## Security properties
 
 - GitHub OIDC signature verification against GitHub's JWKS.
@@ -177,7 +200,7 @@ Important environment variables:
 | `DATABASE_URL` | Application database. Production deployments point this at the production branch. |
 | `TEST_DATABASE_URL` | Dedicated test database or Neon branch. It must not resolve to the same target as `DATABASE_URL`. |
 | `BASE_URL` | Public base URL; defaults to `https://proofslip.ai`. |
-| `CRON_SECRET` | Protects the receipt-cleanup route. |
+| `CRON_SECRET` | Protects cleanup of expired receipts and 90-day aggregate proof events. |
 | `RESEND_API_KEY` | Optional transactional signup email. |
 | `PROOFSLIP_API_KEY` | Used by production smoke tests for legacy receipts. |
 
@@ -215,15 +238,15 @@ tests/
 └── packages/
 ```
 
-## ContextCapsule
+## Context Capsule
 
-ProofSlip is the evidential primitive in the ProofSlip + ContextCapsule pair:
+ProofSlip and Context Capsule remain separate products with one narrow connection:
 
-- **ProofSlip:** “Here is what was verified, by whom, and when.”
-- **ContextCapsule:** “Here is the situation, what matters, and what should happen next.”
+- **ProofSlip is evidential:** “What did the release environment attest, and can the next agent check it?”
+- **Context Capsule is navigational:** “What is the situation, what matters, and what should happen next?”
 
-The existing legacy loop remains: an agent creates a receipt, a capsule references its `receipt_id`, and the next agent verifies the receipt before continuing. Release proofs add a stronger provider-backed evidence object for GitHub release workflows.
+A `coding-handoff/v1` capsule can include release-proof IDs in `references.proofslip_ids`. The receiving agent still fetches and inspects each proof; a reference alone does not make a handoff claim verified. See [Context Capsule](https://www.contextcapsule.ai).
 
 ## Status
 
-ProofSlip is live and open source. `release-proof/v1`, its database migration, public contract, and release-proof-first website are deployed in production. The full local test stack and post-deploy production smoke checks pass.
+ProofSlip is live and open source. `release-proof/v1` and the backward-compatible receipt API are deployed. The repository-owned release-proof Agent Skill is the primary authoring and verification path under active validation; website and discovery changes should be deployed only after the full local and production checks pass.

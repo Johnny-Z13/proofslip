@@ -1,9 +1,8 @@
 # ProofSlip + Context Capsule Repositioning
 
-Status: proposed execution plan
-Owner: Z13 Labs
-Implementation lead: Fable
-Product, positioning, launch, and measurement lead: Codex
+Status: active execution (2026-07-19)
+Owner: Z13Labs
+Implementation, product, positioning, launch, and measurement lead: Codex
 
 ## Objective
 
@@ -15,7 +14,7 @@ Monetization is not required for the first win. It should be pursued as soon as 
 
 ### ProofSlip
 
-**Receipts for what coding agents actually shipped.**
+**Provider-backed release proof for coding agents.**
 
 ProofSlip independently verifies a release claim against an authoritative provider and produces a portable proof that another agent or human can check.
 
@@ -42,7 +41,7 @@ Initial wedge: local-first `/handoff` and `/resume` Skills. Hosted sharing remai
 
 ## Execution Order
 
-### Phase 0: Stabilize the existing products
+### Phase 0: Stabilize the existing products — complete locally
 
 - Finish the active bug-fix work already present in both worktrees.
 - Preserve the current uncommitted work; do not reset or overwrite it when beginning repositioning.
@@ -50,19 +49,19 @@ Initial wedge: local-first `/handoff` and `/resume` Skills. Hosted sharing remai
 - Record the stable production commit for each product.
 - Treat this as repair work, not validation of the old positioning.
 
-### Phase 1: Ship ProofSlip Release Proof
+### Phase 1: Ship ProofSlip Release Proof — local implementation and validation complete
 
 Follow [proofslip-release-proof-plan.md](./proofslip-release-proof-plan.md).
 
 ProofSlip goes first because authoritative provider verification offers the stronger commercial wedge.
 
-### Phase 2: Ship Context Capsule Handoff
+### Phase 2: Ship Context Capsule Handoff — local implementation and validation complete
 
 Follow [context-capsule-handoff-plan.md](./context-capsule-handoff-plan.md).
 
 Context Capsule follows as a smaller, local-first utility. It should not delay ProofSlip.
 
-### Phase 3: Launch and automate measurement
+### Phase 3: Launch and automate measurement — pending controlled publication
 
 Follow [automated-adoption-plan.md](./automated-adoption-plan.md).
 
@@ -108,3 +107,10 @@ The following ideas should be retained as historical learning but no longer driv
 
 The corrected viral thesis is: **agents encounter useful artifacts produced by other agents; the artifact introduces the tool.**
 
+## Current implementation snapshot
+
+- ProofSlip: `release-proof/v1`, GitHub OIDC verification, public evidence views, and the focused `.agents/skills/proofslip-release-proof` workflow exist.
+- Context Capsule: the local `coding-handoff/v1` helper and `.agents/skills/contextcapsule-handoff` workflow exist; hosted APIs remain backward compatible and optional.
+- Both websites, READMEs, docs, and discovery surfaces now lead with their narrow jobs rather than generic agent infrastructure.
+- Local acceptance is complete: type checks, automated suites, desktop/mobile browser review, and fresh-agent forward tests all pass.
+- Publication gates remain: controlled commits, push/deploy approval, then post-deploy production smoke checks on the canonical domains.

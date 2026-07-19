@@ -139,3 +139,5 @@ Human evidence view. Sections in order: status banner, provider-verified facts (
 ## Instrumentation (aggregate only)
 
 `proof_events` rows: event name ∈ {`release_proof_created`, `release_proof_create_failed`, `release_proof_viewed_html`, `release_proof_fetched_json`}, failure reason code where applicable, repository digest (SHA-256 of repo slug for private repos; public repos keep the public slug), visibility flag, timestamp. No tokens, emails, IPs, or payload content.
+
+Aggregate event rows are retained for at most 90 days and removed by the authenticated cleanup job.

@@ -11,9 +11,10 @@ import type { ProofResponse } from '../lib/proof-format.js'
  *   3. submitted context — labelled "submitted, not verified"
  * Plus an explicit "what this does not prove" section.
  */
-export function renderProofPage(proof: ProofResponse): string {
-  const statusLabel = proof.is_expired ? 'EXPIRED' : 'VALID'
-  const statusColor = proof.is_expired ? '#b45309' : '#16a34a'
+export function renderProofPage(proof: ProofResponse, options: { illustrative?: boolean } = {}): string {
+  const illustrative = options.illustrative === true
+  const statusLabel = illustrative ? 'ILLUSTRATIVE' : proof.is_expired ? 'EXPIRED' : 'VALID'
+  const statusColor = illustrative ? '#b45309' : proof.is_expired ? '#b45309' : '#16a34a'
   const shortSha = proof.issuer.sha.slice(0, 12)
 
   const observationRows = proof.observations.length === 0
@@ -39,7 +40,7 @@ export function renderProofPage(proof: ProofResponse): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Release proof ${escapeHtml(proof.proof_id)} | ProofSlip</title>
+  <title>${illustrative ? 'Illustrative release proof' : `Release proof ${escapeHtml(proof.proof_id)}`} | ProofSlip</title>
   <style>
     ${FONT_FACE_CSS}
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,6 +65,7 @@ export function renderProofPage(proof: ProofResponse): string {
     .receipt-header h1 { font-size: 1rem; font-weight: normal; letter-spacing: 0.15em; text-transform: uppercase; }
     .status-badge { display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; border: 1px solid ${statusColor}; color: ${statusColor}; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
     .proof-id { text-align: center; font-size: 0.65rem; color: #999; margin-bottom: 1rem; }
+    .example-note { margin-bottom: 1rem; padding: 0.65rem; border: 1px dashed #b45309; color: #8a5b14; font-size: 0.62rem; line-height: 1.5; text-align: center; }
     .section-title { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.25rem 0 0.5rem; padding-top: 1rem; border-top: 1px dashed #ccc; }
     .section-note { font-size: 0.6rem; color: #999; margin-bottom: 0.5rem; line-height: 1.5; }
     .row { display: flex; justify-content: space-between; margin-bottom: 0.45rem; font-size: 0.75rem; line-height: 1.4; gap: 0.5rem; }
@@ -88,14 +90,15 @@ export function renderProofPage(proof: ProofResponse): string {
       <h1>ProofSlip · Release Proof</h1>
       <div class="status-badge">${statusLabel}</div>
     </div>
-    <div class="proof-id">${escapeHtml(proof.proof_id)}</div>
+    <div class="proof-id">${escapeHtml(proof.proof_id)} · ${escapeHtml(proof.schema_version)}</div>
+    ${illustrative ? '<div class="example-note">Example only. No provider token was verified and this page is not release evidence.</div>' : ''}
 
     <div class="section-title">Provider-verified · GitHub Actions OIDC</div>
     <div class="section-note">Verified by ProofSlip against GitHub's signing keys. Proves the identity and execution context of the workflow job that requested the token.</div>
-    <div class="row"><span class="label">Repository</span><span class="value"><a href="https://github.com/${escapeHtml(proof.issuer.repository)}" rel="noopener">${escapeHtml(proof.issuer.repository)}</a></span></div>
-    <div class="row"><span class="label">Commit</span><span class="value"><a href="${escapeHtml(proof.issuer.commit_url)}" rel="noopener">${escapeHtml(shortSha)}</a></span></div>
+    <div class="row"><span class="label">Repository</span><span class="value">${illustrative ? escapeHtml(proof.issuer.repository) : `<a href="https://github.com/${escapeHtml(proof.issuer.repository)}" rel="noopener">${escapeHtml(proof.issuer.repository)}</a>`}</span></div>
+    <div class="row"><span class="label">Commit</span><span class="value">${illustrative ? escapeHtml(shortSha) : `<a href="${escapeHtml(proof.issuer.commit_url)}" rel="noopener">${escapeHtml(shortSha)}</a>`}</span></div>
     <div class="row"><span class="label">Ref</span><span class="value">${escapeHtml(proof.issuer.ref)}</span></div>
-    <div class="row"><span class="label">Workflow run</span><span class="value"><a href="${escapeHtml(proof.issuer.run_url)}" rel="noopener">#${escapeHtml(proof.issuer.run_id)} (attempt ${proof.issuer.run_attempt})</a></span></div>
+    <div class="row"><span class="label">Workflow run</span><span class="value">${illustrative ? `#${escapeHtml(proof.issuer.run_id)} (attempt ${proof.issuer.run_attempt})` : `<a href="${escapeHtml(proof.issuer.run_url)}" rel="noopener">#${escapeHtml(proof.issuer.run_id)} (attempt ${proof.issuer.run_attempt})</a>`}</span></div>
     <div class="row"><span class="label">Workflow</span><span class="value">${escapeHtml(proof.issuer.workflow_ref)}</span></div>
     <div class="row"><span class="label">Actor</span><span class="value">${escapeHtml(proof.issuer.actor)}</span></div>
     <div class="row"><span class="label">Event</span><span class="value">${escapeHtml(proof.issuer.event_name)}</span></div>
@@ -124,13 +127,13 @@ export function renderProofPage(proof: ProofResponse): string {
     <div class="receipt-footer">
       <a href="/">proofslip.ai</a>
       <div class="tagline">your coding agent says it shipped. check the slip.</div>
-      <div class="json-link"><a href="/v1/proofs/${escapeHtml(proof.proof_id)}">machine-readable JSON</a></div>
+      <div class="json-link">${illustrative ? '<a href="/docs">read the release-proof contract</a>' : `<a href="/v1/proofs/${escapeHtml(proof.proof_id)}">machine-readable JSON</a>`}</div>
     </div>
   </div>
 
   <div class="install-hint">
-    Verify releases in your project:<br>
-    add the ProofSlip release-proof workflow — <a href="/docs" style="color:#7c9a5e">proofslip.ai/docs</a>
+    Add or verify release proof with your coding agent:<br>
+    <code>npx skills add Johnny-Z13/proofslip --skill proofslip-release-proof</code>
   </div>
 </body>
 </html>`

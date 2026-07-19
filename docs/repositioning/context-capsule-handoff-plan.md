@@ -1,8 +1,7 @@
 # Context Capsule Repositioning Plan: Cross-Agent Handoff
 
-Status: proposed
-Implementation owner: Fable
-Product and launch owner: Codex
+Status: implemented locally; validation and publication pending
+Implementation, product, and launch owner: Codex
 
 ## 1. Outcome
 
@@ -14,8 +13,8 @@ Core promise:
 
 Primary interface:
 
-- `/handoff` creates a compact, repository-aware capsule.
-- `/resume` loads it, checks whether it is still compatible with the current repository state, and tells the next agent exactly where to continue.
+- The `contextcapsule-handoff` Agent Skill authors a compact, repository-aware capsule.
+- Its bundled `capture`, `create`, and `resume` commands make repository inspection, rendering, and freshness classification deterministic.
 
 The hosted service remains available as an optional sharing layer. It is not required for the first useful result.
 
@@ -166,7 +165,7 @@ Never silently inject a stale capsule into the next agent's context.
 
 ## 8. Agent Skill and Scripts
 
-Add a repository Skill such as `skills/context-handoff/SKILL.md` with small deterministic scripts for:
+Maintain `.agents/skills/contextcapsule-handoff/SKILL.md` with small deterministic scripts for:
 
 - Reading Git repository metadata.
 - Building the bounded fingerprint.
@@ -178,7 +177,7 @@ Add a repository Skill such as `skills/context-handoff/SKILL.md` with small dete
 Target install route:
 
 ```bash
-npx skills add Johnny-Z13/context-capsule
+npx skills add Johnny-Z13/context-capsule --skill contextcapsule-handoff
 ```
 
 The Skill instructions must:
@@ -361,7 +360,7 @@ Potential paid features, only after direct demand:
 
 Do not attempt to monetize generic JSON storage.
 
-## 17. Fable Implementation Sequence
+## 17. Implementation Sequence
 
 Execute after the active stabilization/V2 work has reached a safe commit. Do not discard or rewrite the current worktree to begin this plan.
 

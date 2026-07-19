@@ -1,0 +1,44 @@
+# Merge these permissions and this step into the workflow/job that performs the release.
+# Do not run this as an unrelated standalone workflow: the OIDC claims describe
+# the job that requests the token.
+
+permissions:
+  contents: read
+  id-token: write
+
+steps:
+  # Add after the required tests and deployment step.
+  - name: Create ProofSlip release proof
+    shell: bash
+    env:
+      # Optional. Remove both lines when no HTTP observation is wanted.
+      PROOFSLIP_DEPLOYMENT_URL: "https://example.com"
+      PROOFSLIP_HEALTH_PATH: "/health"
+    run: |
+      set -euo pipefail
+
+      token_response="$(curl --fail --silent --show-error --connect-timeout 5 --max-time 15 \
+        -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+        "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https%3A%2F%2Fproofslip.ai")"
+      oidc_token="$(jq -er '.value' <<<"${token_response}")"
+      echo "::add-mask::${oidc_token}"
+
+      request_body="$(jq -n \
+        --arg key "${GITHUB_REPOSITORY}:${GITHUB_RUN_ID}:${GITHUB_RUN_ATTEMPT}" \
+        --arg url "${PROOFSLIP_DEPLOYMENT_URL:-}" \
+        --arg path "${PROOFSLIP_HEALTH_PATH:-}" \
+        '{schema_version:"release-proof/v1",idempotency_key:$key}
+         + if $url == "" then {} else {deployment:({url:$url} + if $path == "" then {} else {health_path:$path} end)} end')"
+
+      proof_response="$(curl --fail --silent --show-error --connect-timeout 5 --max-time 20 \
+        -X POST https://proofslip.ai/v1/proofs/releases/github-actions \
+        -H "Authorization: Bearer ${oidc_token}" \
+        -H "Content-Type: application/json" \
+        --data "${request_body}")"
+      proof_url="$(jq -er '.proof_url' <<<"${proof_response}")"
+
+      {
+        echo "### ProofSlip release proof"
+        echo
+        echo "${proof_url}"
+      } >> "${GITHUB_STEP_SUMMARY}"

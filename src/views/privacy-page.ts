@@ -85,10 +85,10 @@ export function renderPrivacyPage(): string {
     <p>Traffic is encrypted with TLS. API keys and OIDC token IDs are one-way hashed before storage. Release creation verifies token signature, issuer, audience, time constraints, and required claims. Rate limits apply per key or source IP.</p>
 
     <h2>Your rights and deletion</h2>
-    <p>You can request deletion of account data, release proofs, or other associated records by emailing <a href="mailto:hello@proofslip.ai">hello@proofslip.ai</a>. Include the relevant proof IDs or account email. We may request reasonable verification before deleting records.</p>
+    <p>You can request deletion of account data, release proofs, or other associated records by emailing <a href="mailto:hello@z13labs.com">hello@z13labs.com</a>. Include the relevant proof IDs or account email. We may request reasonable verification before deleting records.</p>
 
     <h2>Contact</h2>
-    <p><a href="mailto:hello@proofslip.ai">hello@proofslip.ai</a></p>
+    <p><a href="mailto:hello@z13labs.com">hello@z13labs.com</a></p>
 
     <p style="margin-top:3rem"><a href="/" style="color:#666">← proofslip.ai</a></p>
   </main>

@@ -1089,6 +1089,7 @@ steps:
     <span>PROOFSLIP · A Z13Labs PROJECT</span>
     <div class="footer-links">
       <a href="/privacy">Privacy</a>
+      <a href="mailto:hello@z13labs.com">hello@z13labs.com</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
       <a href="https://z13labs.com" target="_blank" rel="noreferrer">Z13Labs</a>

@@ -173,7 +173,7 @@ app.get('/.well-known/agent.json', (c) => {
       install: 'npx -y @proofslip/mcp-server',
     },
     llms_txt: 'https://proofslip.ai/llms.txt',
-    contact: 'hello@proofslip.ai',
+    contact: 'hello@z13labs.com',
   })
 })
 app.get('/.well-known/ai-plugin.json', (c) => {
@@ -191,7 +191,7 @@ app.get('/.well-known/ai-plugin.json', (c) => {
     auth: { type: 'service_http', authorization_type: 'bearer' },
     api: { type: 'openapi', url: 'https://proofslip.ai/.well-known/openapi.json' },
     logo_url: 'https://proofslip.ai/og-image.png',
-    contact_email: 'hello@proofslip.ai',
+    contact_email: 'hello@z13labs.com',
     legal_info_url: 'https://proofslip.ai/privacy',
   })
 })

@@ -10,7 +10,7 @@ export function renderLandingPage(): string {
   <meta name="description" content="Use ProofSlip with your favourite coding agent to add or verify a provider-backed GitHub Actions release proof. No ProofSlip account or API key required.">
   <meta name="keywords" content="coding agent release verification, GitHub Actions OIDC, AI coding agents, release proof, deployment evidence, CI verification">
   <meta name="robots" content="index, follow">
-  <meta name="author" content="Z13Labs">
+  <meta name="author" content="Z13 Labs">
   <link rel="canonical" href="https://proofslip.ai">
   <meta property="og:title" content="Your coding agent says it shipped. Check the slip.">
   <meta property="og:description" content="Provider-backed release proof for coding agents, built on GitHub Actions identity.">
@@ -36,8 +36,8 @@ export function renderLandingPage(): string {
     "operatingSystem": "Any",
     "creator": {
       "@type": "Organization",
-      "name": "Z13Labs",
-      "url": "https://z13labs.com"
+      "name": "Z13 Labs",
+      "url": "https://www.z13labs.com/"
     },
     "offers": {
       "@type": "Offer",
@@ -1086,13 +1086,13 @@ steps:
   </main>
 
   <footer class="site-footer shell">
-    <span>PROOFSLIP · A Z13Labs PROJECT</span>
+    <span>PROOFSLIP · BY Z13 LABS</span>
     <div class="footer-links">
       <a href="/privacy">Privacy</a>
       <a href="mailto:hello@z13labs.com">hello@z13labs.com</a>
       <a href="/llms.txt">llms.txt</a>
       <a href="https://github.com/Johnny-Z13/proofslip" target="_blank" rel="noreferrer">GitHub</a>
-      <a href="https://z13labs.com" target="_blank" rel="noreferrer">Z13Labs</a>
+      <a href="https://www.z13labs.com/" target="_blank" rel="noreferrer">Z13 Labs</a>
     </div>
   </footer>
   <script>
